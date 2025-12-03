@@ -81,6 +81,28 @@
         }
         .glass-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.15); }
 
+        /* --- NAME MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #111; border: 1px solid var(--glass-border);
+            padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .name-input {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #333;
+            background: #222; color: #fff; margin-bottom: 15px; font-size: 14px;
+            text-align: center;
+        }
+        .save-btn {
+            background: var(--accent); color: white; border: none; width: 100%;
+            padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
+        }
+
         /* REAL CHAT UI */
         .chat-container {
             height: 0; opacity: 0; overflow: hidden; margin: 0 10px;
@@ -94,16 +116,24 @@
 
         .chat-messages {
             flex: 1; overflow-y: auto; padding: 15px;
-            display: flex; flex-direction: column; gap: 10px;
+            display: flex; flex-direction: column; gap: 12px;
         }
 
         .message { 
-            max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
+            max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
             line-height: 1.4; position: relative; word-wrap: break-word; color: #fff;
+            display: flex; flex-direction: column;
         }
         .message.others { align-self: flex-start; background: var(--other-msg); border-bottom-left-radius: 2px; }
         .message.me { align-self: flex-end; background: var(--self-msg); border-bottom-right-radius: 2px; }
-        .msg-time { font-size: 9px; opacity: 0.6; display: block; text-align: right; margin-top: 4px; }
+        
+        .sender-name {
+            font-size: 10px; font-weight: 700; opacity: 0.8; margin-bottom: 2px;
+            color: #fbbf24; /* Gold color for names */
+        }
+        .message.me .sender-name { display: none; } /* Hide own name */
+
+        .msg-time { font-size: 9px; opacity: 0.5; align-self: flex-end; margin-top: 2px; }
 
         .chat-input-area {
             padding: 10px; border-top: 1px solid rgba(255,255,255,0.1);
@@ -153,6 +183,15 @@
 </head>
 <body>
 
+    <!-- NAME MODAL -->
+    <div id="nameModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">Join Chat</div>
+            <input type="text" id="nameInput" class="name-input" placeholder="Enter your name..." autocomplete="off">
+            <button class="save-btn" onclick="saveName()">Start Chatting</button>
+        </div>
+    </div>
+
     <header>
         <div class="logo"><i class="fas fa-graduation-cap"></i> Toppers Academy</div>
         <div class="live-pill">LIVE</div>
@@ -176,8 +215,9 @@
     <div class="chat-container" id="chatBox">
         <div class="chat-messages" id="messagesList">
             <div class="message others">
-                Welcome to the Global Chat! Say Hi 👋
-                <span class="msg-time">System</span>
+                <span class="sender-name">System</span>
+                Welcome to the Global Chat!
+                <span class="msg-time">Now</span>
             </div>
         </div>
         <div class="chat-input-area">
@@ -202,14 +242,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- YOUR FIREBASE CONFIG (INTEGRATED) ---
+        // --- YOUR CONFIG (INTEGRATED) ---
         const firebaseConfig = {
-            apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
-            authDomain: "toppers-chat.firebaseapp.com",
-            projectId: "toppers-chat",
-            storageBucket: "toppers-chat.firebasestorage.app",
-            messagingSenderId: "855764275912",
-            appId: "1:855764275912:web:c3098e8239c93fb1f54bfd"
+          apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
+          authDomain: "toppers-chat.firebaseapp.com",
+          projectId: "toppers-chat",
+          storageBucket: "toppers-chat.firebasestorage.app",
+          messagingSenderId: "855764275912",
+          appId: "1:855764275912:web:c3098e8239c93fb1f54bfd"
         };
 
         // Initialize Firebase
@@ -217,29 +257,49 @@
         const db = getFirestore(app);
         const messagesRef = collection(db, "messages");
         
-        // Simple Random User ID
-        let userId = localStorage.getItem("chatUserId");
-        if (!userId) {
-            userId = "Student_" + Math.floor(Math.random() * 1000);
-            localStorage.setItem("chatUserId", userId);
+        // --- NAME LOGIC ---
+        let currentUserName = localStorage.getItem("chatUserName");
+        const modal = document.getElementById("nameModal");
+
+        // If no name, show modal
+        if (!currentUserName) {
+            modal.style.display = "flex";
         }
+
+        // Global function for Save Button
+        window.saveName = () => {
+            const input = document.getElementById("nameInput");
+            const name = input.value.trim();
+            if (name) {
+                currentUserName = name;
+                localStorage.setItem("chatUserName", name);
+                modal.style.display = "none";
+            }
+        };
 
         // Send Message
         const sendMessage = async () => {
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
+            
+            // Check if name is set
+            if (!currentUserName) {
+                modal.style.display = "flex";
+                return;
+            }
+
             if (!text) return;
 
             try {
                 await addDoc(messagesRef, {
                     text: text,
-                    user: userId,
+                    user: currentUserName, // Save actual Name
+                    senderId: localStorage.getItem("uid") || Math.random().toString(), // Hidden ID
                     createdAt: serverTimestamp()
                 });
                 input.value = "";
             } catch (e) {
-                console.error("Error sending message: ", e);
-                alert("Chat Error! Did you enable 'Test Mode' in Firebase Firestore?");
+                console.error("Error:", e);
             }
         };
 
@@ -255,16 +315,19 @@
 
             msgs.forEach((msg) => {
                 const div = document.createElement("div");
-                const isMe = msg.user === userId ? "me" : "others";
+                const isMe = msg.user === currentUserName ? "me" : "others";
                 
-                // Handle Timestamp
-                let timeString = "...";
+                // Timestamp
+                let timeString = "";
                 if(msg.createdAt) {
                     timeString = new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
 
                 div.className = `message ${isMe}`;
-                div.innerHTML = `${msg.text} <span class="msg-time">${timeString}</span>`;
+                // Only show name if it's NOT me
+                const nameTag = isMe === "others" ? `<span class="sender-name">${msg.user}</span>` : "";
+                
+                div.innerHTML = `${nameTag} ${msg.text} <span class="msg-time">${timeString}</span>`;
                 list.appendChild(div);
             });
             list.scrollTop = list.scrollHeight;
