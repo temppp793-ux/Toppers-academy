@@ -184,7 +184,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.5s ease; /* Smoother fade */
         }
         .btn-glass:hover { background: rgba(255, 255, 255, 0.2); }
         .btn-glass.active { background: #fff; color: #000; }
@@ -198,6 +198,7 @@
             font-size: 13px;
             font-weight: 600;
             display: flex; align-items: center; gap: 8px;
+            transition: opacity 0.5s ease;
         }
 
         footer { 
@@ -208,17 +209,13 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* --- CINEMA MODE CSS --- */
+        /* --- CINEMA MODE LOGIC (UPDATED) --- */
         body.cinema-mode {
             background: #000; /* Pure black background */
         }
         
-        body.cinema-mode header {
-            opacity: 0;
-            transform: translateY(-20px);
-            pointer-events: none;
-        }
-        
+        /* Hide these elements completely */
+        body.cinema-mode header,
         body.cinema-mode .countdown-wrapper,
         body.cinema-mode footer,
         body.cinema-mode .blob,
@@ -227,9 +224,16 @@
             pointer-events: none;
         }
 
+        /* Hide the 'Fix Stream' button specifically */
+        body.cinema-mode #fixStreamBtn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Highlight the Video */
         body.cinema-mode .video-glass-container {
             border-color: #333;
-            box-shadow: 0 0 40px rgba(41, 151, 255, 0.1); /* Soft glow */
+            box-shadow: 0 0 40px rgba(41, 151, 255, 0.1);
         }
 
     </style>
@@ -276,8 +280,8 @@
                     <i class="fas fa-lightbulb"></i> Cinema Mode
                 </button>
                 
-                <!-- Refresh Button (Hidden bonus feature to fix freeze) -->
-                <button class="btn-glass" onclick="document.querySelector('iframe').src = document.querySelector('iframe').src">
+                <!-- Refresh Button -->
+                <button class="btn-glass" id="fixStreamBtn" onclick="document.querySelector('iframe').src = document.querySelector('iframe').src">
                     <i class="fas fa-sync-alt"></i> Fix Stream
                 </button>
             </div>
@@ -303,7 +307,6 @@
 
         // Cinema Mode Logic
         const cinemaBtn = document.getElementById('cinemaToggle');
-        const icon = cinemaBtn.querySelector('i');
         
         cinemaBtn.addEventListener('click', () => {
             document.body.classList.toggle('cinema-mode');
