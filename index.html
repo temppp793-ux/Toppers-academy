@@ -11,19 +11,18 @@
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
-        /* --- PINK / SAKURA THEME --- */
+        /* --- THEME --- */
         :root {
             --bg-color: #000;
-            --chat-bg: #1a050b; /* Deep Rose Dark */
+            --chat-bg: #1a050b;
             --header-bg: rgba(40, 10, 20, 0.98);
-            
-            --my-msg: #880e4f; /* Deep Pink */
-            --other-msg: #2d0c15; /* Dark Maroon */
-            --accent: #ff4081; /* Bright Pink */
+            --accent: #ff4081;
             --danger: #ff3b30;
             --zoom-color: #2D8CFF;
-            --admin-gold: #FFD700;
             --glass-border: rgba(255, 105, 180, 0.2);
+            --my-msg: #880e4f;
+            --other-msg: #2d0c15;
+            --admin-gold: #FFD700;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,14 +31,14 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #fff;
-            height: 100vh; /* Fixed Height */
+            height: 100dvh; /* Full Mobile Height */
             display: flex;
             flex-direction: column;
             overflow: hidden;
             background: radial-gradient(circle at center, #2a0a18, #000);
         }
 
-        /* --- VIEW 1: MATCH ENDED SCREEN --- */
+        /* --- VIEW 1: LANDING (MATCH ENDED) --- */
         #landing-view {
             display: flex;
             flex-direction: column;
@@ -53,46 +52,41 @@
         }
 
         .teacher-big-img {
-            width: 120px; height: 120px;
+            width: 130px; height: 130px;
             border-radius: 50%; object-fit: cover;
             border: 4px solid var(--danger);
             box-shadow: 0 0 30px rgba(255, 59, 48, 0.3);
             margin-bottom: 20px;
             animation: pulse-red 2s infinite;
+            background-color: #333; /* Fallback color */
         }
 
         .match-ended-label {
             font-size: 12px; font-weight: 800; letter-spacing: 1px;
             color: var(--danger); text-transform: uppercase;
             background: rgba(255, 59, 48, 0.1); padding: 5px 10px;
-            border-radius: 20px; margin-bottom: 10px;
+            border-radius: 20px; margin-bottom: 15px;
             border: 1px solid rgba(255, 59, 48, 0.3);
         }
 
         .scold-headline {
-            font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px;
-            line-height: 1.4;
+            font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 10px;
+            line-height: 1.4; text-shadow: 0 0 20px rgba(255, 64, 129, 0.5);
         }
 
         .open-chat-btn {
             background: linear-gradient(135deg, #ff4081, #c60055);
             color: white; border: none;
-            padding: 15px 30px; border-radius: 50px;
+            padding: 16px 32px; border-radius: 50px;
             font-size: 16px; font-weight: 600;
-            margin-top: 30px; cursor: pointer;
+            margin-top: 40px; cursor: pointer;
             box-shadow: 0 10px 30px rgba(255, 64, 129, 0.4);
             display: flex; align-items: center; gap: 10px;
             transition: transform 0.2s;
         }
         .open-chat-btn:active { transform: scale(0.95); }
 
-        .zoom-link-btn {
-            margin-top: 15px; color: var(--zoom-color); text-decoration: none;
-            font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 5px;
-            background: rgba(45, 140, 255, 0.1); padding: 8px 16px; border-radius: 20px;
-        }
-
-        /* --- VIEW 2: FULL SCREEN CHAT (Hidden by Default) --- */
+        /* --- VIEW 2: FULL SCREEN CHAT --- */
         #chat-view {
             display: none; /* Hidden initially */
             flex-direction: column;
@@ -100,6 +94,7 @@
             width: 100%;
             background: var(--chat-bg);
             animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         /* Chat Header */
@@ -116,35 +111,26 @@
         }
 
         .chat-info { display: flex; align-items: center; gap: 10px; }
-        .chat-title { font-size: 15px; font-weight: 600; }
+        .chat-title { font-size: 16px; font-weight: 700; }
         .chat-status { font-size: 11px; color: var(--accent); }
 
         /* Messages Area */
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px;
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 15px;
             display: flex; flex-direction: column; gap: 8px;
             position: relative; z-index: 5;
-        }
-
-        /* Petals Background */
-        .petals-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            overflow: hidden; pointer-events: none; z-index: 0;
-        }
-        .petal {
-            position: absolute; background: rgba(255, 182, 193, 0.5);
-            border-radius: 150% 0 150% 0; animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
-            100% { transform: translate(20px, 500px) rotate(360deg); opacity: 0; }
+            /* Petals Background */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         /* Message Bubbles */
         .message { 
-            max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13.5px; 
-            line-height: 1.3; position: relative; color: #ffd1dc;
+            max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
+            line-height: 1.4; position: relative; color: #ffd1dc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+            word-wrap: break-word;
         }
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
@@ -161,15 +147,15 @@
         }
         .message:hover .msg-actions, .message:active .msg-actions { display: flex; }
         .action-btn {
-            width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 10px; cursor: pointer; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 11px; cursor: pointer; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .delete-btn { background: var(--danger); color: white; }
         .reply-btn { background: #fff; color: #000; }
 
         /* Quote */
         .reply-quote {
-            font-size: 11px; padding: 4px 8px; margin-bottom: 4px;
+            font-size: 11px; padding: 4px 8px; margin-bottom: 5px;
             border-left: 3px solid var(--accent);
             background: rgba(0,0,0,0.3); border-radius: 4px;
             opacity: 0.9; color: #ffc1e3;
@@ -178,48 +164,48 @@
         /* Chat Footer */
         .chat-footer {
             background: var(--header-bg); border-top: 1px solid var(--glass-border);
-            padding: 8px; padding-bottom: env(safe-area-inset-bottom);
+            padding: 10px; padding-bottom: env(safe-area-inset-bottom);
             flex-shrink: 0; z-index: 20;
+            width: 100%;
         }
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
             padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
-            font-size: 11px; color: #fff; margin-bottom: 5px; border-radius: 4px;
+            font-size: 12px; color: #fff; margin-bottom: 8px; border-radius: 6px;
         }
         .reply-preview.show { display: flex; }
 
-        .chat-input-area { padding: 5px; display: flex; gap: 8px; align-items: center; }
+        .chat-input-area { display: flex; gap: 10px; align-items: center; }
         .chat-input {
-            flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 20px; 
-            padding: 10px 15px; color: #fff; font-size: 14px;
+            flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 25px; 
+            padding: 12px 18px; color: #fff; font-size: 15px;
         }
         .chat-input:focus { outline: none; border-color: var(--accent); }
         .send-btn {
-            background: var(--accent); border: none; width: 40px; height: 40px;
+            background: var(--accent); border: none; width: 45px; height: 45px;
             border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 10px rgba(255, 64, 129, 0.4);
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
         }
 
-        /* Modal */
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: #2a0a18; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; 
+            background: #2a0a18; padding: 25px; border-radius: 16px; width: 85%; max-width: 320px; 
             text-align: center; border: 1px solid var(--accent);
-            box-shadow: 0 0 30px rgba(255, 64, 129, 0.2);
         }
         .name-input {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-            background: #000; color: #fff; margin: 15px 0; font-size: 16px; text-align: center;
+            width: 100%; padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: #000; color: #fff; margin: 20px 0; font-size: 16px; text-align: center;
         }
         .save-btn {
             background: var(--accent); color: white; border: none; width: 100%;
-            padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
+            padding: 14px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer;
         }
 
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
 
@@ -230,10 +216,10 @@
     <!-- NAME MODAL -->
     <div id="nameModal" class="modal-overlay">
         <div class="modal-box">
-            <h2 style="margin:0; font-size:18px; color:#ff80ab;">Toppers Academy</h2>
-            <p style="color:#aaa; font-size:13px; margin-top:5px;">Enter Name to Chat</p>
+            <h2 style="margin:0; font-size:20px; color:#ff80ab;">Toppers Academy</h2>
+            <p style="color:#aaa; font-size:14px; margin-top:5px;">Enter Name to Chat</p>
             <input type="text" id="nameInput" class="name-input" placeholder="Your Name" autocomplete="off">
-            <button class="save-btn" onclick="saveName()">Enter</button>
+            <button class="save-btn" onclick="saveName()">Join Chat</button>
         </div>
     </div>
 
@@ -241,26 +227,25 @@
     <div id="landing-view">
         <div class="match-ended-label">● Match Ended</div>
         
-        <!-- Alakh Sir Image -->
-        <img src="1000023112.jpg" alt="Sir" class="teacher-big-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+        <!-- ALAKH SIR PHOTO -->
+        <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
         
         <h1 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h1>
-        
-        <!-- Open Chat Button -->
+        <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Join the discussion for assignments.</p>
+
+        <!-- BIG OPEN CHAT BUTTON -->
         <button class="open-chat-btn" onclick="openChat()">
-            <i class="fas fa-comments"></i> Open Chat
+            <i class="fas fa-comments"></i> Open Global Chat
         </button>
 
-        <!-- Zoom Link -->
-        <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="zoom-link-btn">
+        <!-- ZOOM LINK -->
+        <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" style="margin-top:20px; color:#2D8CFF; text-decoration:none; font-size:14px; font-weight:600; display:flex; align-items:center; gap:5px;">
             <i class="fas fa-video"></i> Join Class (06:30 AM)
         </a>
     </div>
 
     <!-- VIEW 2: FULL SCREEN CHAT -->
-    <div id="chat-view" class="chat-wrapper">
-        <div class="petals-container" id="petals"></div>
-
+    <div id="chat-view">
         <div class="chat-header">
             <div style="display:flex; align-items:center;">
                 <button class="back-btn" onclick="closeChat()"><i class="fas fa-arrow-left"></i></button>
@@ -280,6 +265,7 @@
             </div>
         </div>
 
+        <!-- FIXED BOTTOM INPUT -->
         <div class="chat-footer">
             <div id="replyPreview" class="reply-preview">
                 <span id="replyText">Replying...</span>
@@ -316,7 +302,7 @@
 
         if (!currentUserName) modal.style.display = "flex";
 
-        // GLOBAL FUNCTIONS
+        // --- FUNCTIONS ---
         window.saveName = () => {
             const input = document.getElementById("nameInput");
             const name = input.value.trim();
@@ -405,22 +391,6 @@
 
         document.getElementById("sendBtn").addEventListener("click", sendMessage);
         document.getElementById("msgInput").addEventListener("keypress", (e) => { if(e.key==="Enter") sendMessage(); });
-
-        // Petals
-        function createPetal() {
-            const container = document.getElementById('petals');
-            if(!container || document.getElementById("chat-view").style.display === "none") return;
-            
-            const petal = document.createElement('div');
-            petal.classList.add('petal');
-            petal.style.left = Math.random() * 100 + '%';
-            petal.style.width = Math.random() * 8 + 5 + 'px';
-            petal.style.height = petal.style.width;
-            petal.style.animationDuration = Math.random() * 3 + 4 + 's';
-            container.appendChild(petal);
-            setTimeout(() => petal.remove(), 7000);
-        }
-        setInterval(createPetal, 800);
     </script>
 </body>
 </html>
