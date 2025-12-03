@@ -11,17 +11,17 @@
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
-        /* --- PINK / SUKUNA THEME --- */
+        /* --- THEME --- */
         :root {
             --bg-color: #000;
-            --header-bg: rgba(40, 10, 20, 0.98);
             --chat-bg: #1a050b;
-            --my-msg: #880e4f;
-            --other-msg: #2d0c15;
+            --header-bg: rgba(40, 10, 20, 0.98);
             --accent: #ff4081;
             --danger: #ff3b30;
             --zoom-color: #2D8CFF;
             --glass-border: rgba(255, 105, 180, 0.2);
+            --my-msg: #880e4f;
+            --other-msg: #2d0c15;
             --admin-gold: #FFD700;
         }
 
@@ -35,7 +35,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background: radial-gradient(circle at top left, #2a0a18, #000);
+            background: radial-gradient(circle at center, #2a0a18, #000);
         }
 
         /* --- VIEW 1: LANDING (MATCH ENDED) --- */
@@ -74,22 +74,48 @@
             line-height: 1.4; text-shadow: 0 0 20px rgba(255, 64, 129, 0.5);
         }
 
+        /* BUTTON CONTAINER */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        /* CHAT BUTTON (PINK) */
         .open-chat-btn {
             background: linear-gradient(135deg, #ff4081, #c60055);
             color: white; border: none;
-            padding: 16px 32px; border-radius: 50px;
+            padding: 16px 0; border-radius: 50px;
             font-size: 16px; font-weight: 600;
-            margin-top: 40px; cursor: pointer;
+            cursor: pointer; width: 100%;
             box-shadow: 0 10px 30px rgba(255, 64, 129, 0.4);
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: transform 0.2s;
         }
         .open-chat-btn:active { transform: scale(0.95); }
 
+        /* ZOOM BUTTON (BLUE - SAME STYLE) */
+        .zoom-link-btn {
+            background: linear-gradient(135deg, #2D8CFF, #0055ff);
+            color: white; text-decoration: none; border: none;
+            padding: 16px 0; border-radius: 50px;
+            font-size: 16px; font-weight: 600;
+            cursor: pointer; width: 100%;
+            box-shadow: 0 10px 30px rgba(45, 140, 255, 0.4);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: transform 0.2s;
+        }
+        .zoom-link-btn:active { transform: scale(0.95); }
+
         /* --- VIEW 2: FULL SCREEN CHAT --- */
         #chat-view {
-            display: none; flex-direction: column;
-            height: 100%; width: 100%;
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
             background: var(--chat-bg);
             animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -108,14 +134,18 @@
             padding: 5px; margin-right: 10px;
         }
 
+        .chat-info { display: flex; align-items: center; gap: 10px; }
         .chat-title { font-size: 16px; font-weight: 700; }
         .chat-status { font-size: 11px; color: var(--accent); }
 
         /* Messages Area */
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px;
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 15px;
             display: flex; flex-direction: column; gap: 8px;
             position: relative; z-index: 5;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
         /* Message Bubbles */
@@ -123,7 +153,7 @@
             max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
             line-height: 1.4; position: relative; color: #ffd1dc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px);
-            word-wrap: break-word; display: flex; flex-direction: column;
+            word-wrap: break-word;
         }
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
@@ -132,18 +162,19 @@
 
         .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; }
         .message.me .sender-name { display: none; }
+        .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
 
-        .msg-footer {
-            display: flex; justify-content: flex-end; align-items: center; gap: 8px;
-            margin-top: 4px;
+        /* Actions */
+        .msg-actions {
+            position: absolute; top: -8px; right: -8px; display: none; gap: 4px; z-index: 10;
         }
-        .msg-time { font-size: 9px; opacity: 0.6; }
-
-        /* Actions (Visible now) */
-        .msg-actions { display: flex; gap: 8px; opacity: 0.8; }
-        .action-icon { font-size: 12px; cursor: pointer; padding: 2px; }
-        .delete-icon { color: #ff3b30; }
-        .reply-icon { color: #fff; }
+        .message:hover .msg-actions, .message:active .msg-actions { display: flex; }
+        .action-btn {
+            width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 11px; cursor: pointer; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .delete-btn { background: var(--danger); color: white; }
+        .reply-btn { background: #fff; color: #000; }
 
         /* Quote */
         .reply-quote {
@@ -162,7 +193,7 @@
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
             padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
-            font-size: 11px; color: #fff; margin-bottom: 8px; border-radius: 6px;
+            font-size: 12px; color: #fff; margin-bottom: 8px; border-radius: 6px;
         }
         .reply-preview.show { display: flex; }
 
@@ -210,7 +241,7 @@
             <h2 style="margin:0; font-size:18px; color:#ff80ab;">Toppers Academy</h2>
             <p style="color:#aaa; font-size:13px; margin-top:5px;">Enter Name to Chat</p>
             <input type="text" id="nameInput" class="name-input" placeholder="Your Name" autocomplete="off">
-            <button class="save-btn" onclick="saveName()">Join Chat</button>
+            <button class="save-btn" onclick="saveName()">Join</button>
         </div>
     </div>
 
@@ -222,17 +253,20 @@
         <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
         
         <h1 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h1>
-        <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Join the discussion for assignments.</p>
+        <p style="color:#aaa; font-size:14px; margin-bottom:10px;">Join the discussion for assignments.</p>
 
-        <!-- OPEN CHAT BUTTON -->
-        <button class="open-chat-btn" onclick="openChat()">
-            <i class="fas fa-comments"></i> Open Global Chat
-        </button>
+        <!-- BUTTON GROUP -->
+        <div class="button-group">
+            <!-- OPEN CHAT BUTTON -->
+            <button class="open-chat-btn" onclick="openChat()">
+                <i class="fas fa-comments"></i> Open Chat
+            </button>
 
-        <!-- ZOOM LINK -->
-        <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" style="margin-top:20px; color:#2D8CFF; text-decoration:none; font-size:14px; font-weight:600; display:flex; align-items:center; gap:5px;">
-            <i class="fas fa-video"></i> Join Class (06:30 AM)
-        </a>
+            <!-- ZOOM LINK BUTTON (MATCHING STYLE) -->
+            <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="zoom-link-btn">
+                <i class="fas fa-video"></i> Join Class (06:30 AM)
+            </a>
+        </div>
     </div>
 
     <!-- VIEW 2: FULL SCREEN CHAT -->
@@ -245,13 +279,14 @@
                     <div class="chat-status">● Online</div>
                 </div>
             </div>
+            <i class="fas fa-ellipsis-v" style="color:#ff80ab;"></i>
         </div>
 
         <div class="chat-messages" id="messagesList">
             <div class="message others">
                 <span class="sender-name">System</span>
                 Welcome to the Study Group!
-                <div class="msg-footer"><span class="msg-time">Now</span></div>
+                <span class="msg-time">Now</span>
             </div>
         </div>
 
@@ -291,7 +326,6 @@
 
         if (!currentUserName) modal.style.display = "flex";
 
-        // GLOBAL FUNCTIONS
         window.saveName = () => {
             const input = document.getElementById("nameInput");
             const name = input.value.trim();
@@ -360,23 +394,19 @@
                 const div = document.createElement("div");
                 const isMe = msg.user === currentUserName ? "me" : "others";
                 const isAdminMsg = msg.user.toLowerCase() === "rangreja" ? "admin-msg" : "";
-                const isAdminUser = currentUserName.toLowerCase() === "rangreja";
-
+                
                 let time = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
                 let quote = msg.replyTo ? `<div class="reply-quote"><strong>${msg.replyTo.name}</strong>${msg.replyTo.text}</div>` : "";
                 
-                let actions = "";
-                if (isMe !== "me") {
-                    actions += `<i class="fas fa-reply action-icon reply-icon" onclick="startReply('${msg.user}', '${msg.text.replace(/'/g, "\\'")}')"></i>`;
-                }
-                if (isMe === "me" || isAdminUser) {
-                    actions += `<i class="fas fa-trash action-icon delete-icon" onclick="deleteMessage('${msg.id}')"></i>`;
-                }
+                let actions = `<div class="msg-actions">`;
+                if(isMe !== "me") actions += `<button class="action-btn reply-btn" onclick="startReply('${msg.user}', '${msg.text.replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i></button>`;
+                if(isMe === "me" || isAdminMsg) actions += `<button class="action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>`;
+                actions += `</div>`;
 
                 const nameTag = (isMe === "others" || isAdminMsg) ? `<span class="sender-name">${msg.user}</span>` : "";
 
                 div.className = `message ${isMe} ${isAdminMsg}`;
-                div.innerHTML = `${quote} ${nameTag} ${msg.text} <div class="msg-footer"><div class="msg-actions">${actions}</div><span class="msg-time">${time}</span></div>`;
+                div.innerHTML = `${actions} ${quote} ${nameTag} ${msg.text} <span class="msg-time">${time}</span>`;
                 list.appendChild(div);
             });
             list.scrollTop = list.scrollHeight;
