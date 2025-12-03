@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toppers Academy - Premium Live</title>
+    <title>Toppers Academy - Study Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -11,21 +11,22 @@
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
-        /* --- PREMIUM THEME --- */
+        /* --- PINK / SUKUNA THEME --- */
         :root {
             --bg-color: #000;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            --accent: #2997ff;
+            --header-bg: rgba(40, 10, 20, 0.95); /* Dark Rose */
+            --chat-bg: #1a050b; /* Deep Red-Black */
+            
+            /* Chat Bubbles */
+            --my-msg: #880e4f; /* Deep Pink */
+            --other-msg: #2d0c15; /* Dark Maroon */
+            
+            /* Accents */
+            --accent: #ff4081; /* Bright Pink */
             --danger: #ff3b30;
             --zoom-color: #2D8CFF;
-            
-            /* Chat Colors */
-            --chat-bg: #0e1621;
-            --my-msg: #2b5278;
-            --other-msg: #182533;
             --admin-gold: #FFD700;
+            --glass-border: rgba(255, 105, 180, 0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,113 +35,120 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #fff;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            background: radial-gradient(circle at top left, #0f172a, #000);
+            overflow: hidden;
+            background: radial-gradient(circle at top left, #2a0a18, #000);
         }
 
         /* HEADER */
         header {
-            padding: 12px 15px;
+            padding: 10px 15px;
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 100; position: sticky; top: 0;
+            background: var(--header-bg); border-bottom: 1px solid var(--glass-border);
+            flex-shrink: 0; z-index: 20;
         }
         .logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .logo i { color: var(--accent); }
         .live-pill { 
-            background: rgba(255, 59, 48, 0.2); color: #ff3b30; 
+            background: rgba(255, 64, 129, 0.2); color: #ff4081; 
             padding: 3px 8px; border-radius: 50px; font-size: 10px; font-weight: 700;
-            border: 1px solid rgba(255, 59, 48, 0.3); animation: pulse 2s infinite;
+            border: 1px solid rgba(255, 64, 129, 0.3);
         }
 
-        /* COUNTDOWN */
-        .countdown-box {
-            margin: 10px 0; text-align: center;
-            font-size: 12px; color: rgba(255,255,255,0.7);
-        }
-        .timer-text { font-family: 'Roboto', monospace; color: #fff; font-weight: 600; }
-
-        /* LARGE VIDEO PLAYER (FIXED) */
-        .video-container {
-            width: 100%;
-            background: #000;
-            position: relative;
+        /* --- MINI MATCH SECTION --- */
+        .mini-match-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(20, 5, 10, 0.8);
             border-bottom: 1px solid var(--glass-border);
-            z-index: 50; /* Ensure it is clickable */
-        }
-        .aspect-ratio { 
-            position: relative; 
-            width: 100%; 
-            padding-bottom: 56.25%; 
-            overflow: hidden; /* Ensure content stays inside */
-        }
-        .aspect-ratio iframe { 
-            position: absolute; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            border: none; 
-            /* FORCE CLICKABLE */
-            pointer-events: auto !important;
-            touch-action: manipulation !important;
+            flex-shrink: 0; z-index: 10;
         }
 
-        /* CONTROLS */
-        .controls {
-            display: flex; justify-content: center; gap: 12px; margin: 15px 0;
+        .mini-video-box {
+            width: 120px; height: 68px; border-radius: 10px; overflow: hidden;
+            border: 1px solid var(--accent); background: #000; position: relative;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.2);
         }
-        .glass-btn {
-            background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff;
-            padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 500;
-            cursor: pointer; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 8px;
-        }
-        .glass-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.15); }
+        .mini-video-box iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
 
-        /* --- PROFESSIONAL CHAT BOX --- */
-        .chat-wrapper {
-            height: 0; opacity: 0; overflow: hidden;
-            margin: 0 10px; border-radius: 16px;
-            background: var(--chat-bg);
-            border: 1px solid #2b2b2b;
-            display: flex; flex-direction: column;
-            transition: all 0.4s ease;
-            position: relative;
-        }
+        .match-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         
-        .chat-wrapper.active { height: 500px; opacity: 1; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .scold-text {
+            font-size: 13px; font-weight: 700; color: #ffc1e3; margin-bottom: 4px;
+            line-height: 1.3; text-shadow: 0 0 10px rgba(255, 64, 129, 0.3);
+        }
+        .match-status { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; }
 
-        .chat-header-bar {
-            padding: 10px 15px; background: #17212b;
-            border-bottom: 1px solid #000; display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px; color: #fff; font-weight: 600;
+        /* --- ACTION BUTTONS --- */
+        .action-bar {
+            padding: 10px 15px; display: flex; gap: 10px;
+            background: #0a0205; border-bottom: 1px solid var(--glass-border);
+            flex-shrink: 0; z-index: 10;
+        }
+
+        .zoom-btn {
+            flex: 1; background: var(--zoom-color); color: white;
+            padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600;
+            text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 12px rgba(45, 140, 255, 0.3);
+        }
+
+        .chat-label-btn {
+            flex: 1; background: #2d0c15; color: #ff80ab;
+            padding: 10px; border-radius: 10px; font-size: 13px; text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* --- CHAT AREA --- */
+        .chat-wrapper {
+            flex: 1; display: flex; flex-direction: column;
+            background: var(--chat-bg); position: relative; overflow: hidden;
+        }
+
+        /* Petals Animation */
+        .petals-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; pointer-events: none; z-index: 0;
+        }
+        .petal {
+            position: absolute; background: rgba(255, 182, 193, 0.5);
+            border-radius: 150% 0 150% 0; animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(20px, 500px) rotate(360deg); opacity: 0; }
         }
 
         .chat-messages {
             flex: 1; overflow-y: auto; padding: 15px;
             display: flex; flex-direction: column; gap: 8px;
-            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
-            background-size: 300px; opacity: 0.95;
+            position: relative; z-index: 2;
         }
 
         /* Bubbles */
         .message { 
-            max-width: 80%; padding: 6px 10px; border-radius: 8px; font-size: 13px; 
-            line-height: 1.3; position: relative; word-wrap: break-word; color: #fff;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
+            line-height: 1.3; position: relative; color: #ffd1dc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px);
         }
-        .message.others { align-self: flex-start; background: var(--other-msg); border-top-left-radius: 0; }
-        .message.me { align-self: flex-end; background: var(--my-msg); border-top-right-radius: 0; }
+        .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
+        .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
         .message.admin-msg { border: 1px solid var(--admin-gold); }
         .message.admin-msg .sender-name { color: var(--admin-gold); }
 
-        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #64b5f6; display: block; }
+        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; }
         .message.me .sender-name { display: none; }
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
 
-        /* Reply/Delete Actions */
+        /* Actions */
         .msg-actions {
             position: absolute; top: -8px; right: -8px; display: none; gap: 4px; z-index: 10;
         }
@@ -156,85 +164,80 @@
         .reply-quote {
             font-size: 10px; padding: 4px 6px; margin-bottom: 4px;
             border-left: 3px solid var(--accent);
-            background: rgba(0,0,0,0.2); border-radius: 4px;
-            opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            background: rgba(0,0,0,0.3); border-radius: 4px;
+            opacity: 0.9; color: #ffc1e3;
         }
 
-        /* Chat Footer */
+        /* Footer */
         .chat-footer {
-            background: #17212b; border-top: 1px solid #000; padding: 8px;
-            display: flex; flex-direction: column;
+            background: rgba(40, 10, 20, 0.95); border-top: 1px solid var(--glass-border);
+            padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; z-index: 20;
         }
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: #232e3a; border-left: 3px solid var(--accent);
-            margin-bottom: 5px; font-size: 11px; color: #fff;
+            padding: 8px 15px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
+            font-size: 11px; color: #fff;
         }
         .reply-preview.show { display: flex; }
 
-        .input-row { display: flex; gap: 8px; align-items: center; }
+        .chat-input-area { padding: 8px 10px; display: flex; gap: 8px; align-items: center; }
         .chat-input {
-            flex: 1; background: #0e1621; border: none; border-radius: 20px; 
+            flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 20px; 
             padding: 10px 15px; color: #fff; font-size: 14px;
         }
-        .chat-input:focus { outline: none; }
+        .chat-input:focus { outline: none; border-color: var(--accent); }
         .send-btn {
-            background: var(--accent); border: none; width: 38px; height: 38px;
+            background: var(--accent); border: none; width: 40px; height: 40px;
             border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 10px rgba(255, 64, 129, 0.4);
         }
 
-        /* ZOOM ALERT */
-        .zoom-alert {
-            margin: 0 15px 30px 15px; padding: 15px;
-            background: rgba(45, 140, 255, 0.1); border: 1px solid rgba(45, 140, 255, 0.3);
-            border-radius: 16px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .zoom-info { display: flex; align-items: center; gap: 12px; }
-        .zoom-icon { width: 35px; height: 35px; background: var(--zoom-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; }
-        .join-btn { 
-            background: var(--zoom-color); color: #fff; padding: 8px 14px; 
-            border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; 
-        }
-
-        /* MODAL & CINEMA */
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: #17212b; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center;
+            background: #2d0c15; padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
+            text-align: center; border: 1px solid var(--accent);
+            box-shadow: 0 0 30px rgba(255, 64, 129, 0.2);
         }
         .name-input {
-            width: 100%; padding: 12px; border-radius: 8px; border: none;
-            background: #0e1621; color: #fff; margin: 15px 0; font-size: 16px; text-align: center;
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);
+            background: #000; color: #fff; margin: 15px 0; font-size: 16px; text-align: center;
         }
         .save-btn {
             background: var(--accent); color: white; border: none; width: 100%;
             padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
         }
-
+        
+        /* Cinema Button */
         .cinema-trigger {
             position: fixed; bottom: 25px; right: 25px; z-index: 200;
-            background: rgba(20, 20, 20, 0.6); width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(255, 64, 129, 0.2); width: 45px; height: 45px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid var(--accent); backdrop-filter: blur(10px);
         }
 
-        body.cinema-mode header, body.cinema-mode .countdown-box, body.cinema-mode .controls, 
-        body.cinema-mode .zoom-alert, body.cinema-mode .chat-wrapper, body.cinema-mode footer {
+        /* CINEMA MODE */
+        body.cinema-mode { background: #000 !important; background-image: none !important; }
+        body.cinema-mode header, body.cinema-mode .action-bar, body.cinema-mode .chat-wrapper, body.cinema-mode footer {
             opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
         }
-        body.cinema-mode .video-container { box-shadow: 0 0 60px rgba(41, 151, 255, 0.15); }
+        body.cinema-mode .mini-video-box { 
+            width: 100%; height: 250px; margin-top: 20vh; border-color: #333;
+            box-shadow: 0 0 60px rgba(255, 64, 129, 0.15);
+        }
+        body.cinema-mode .mini-match-container { background: transparent; border: none; }
+        body.cinema-mode .match-info { display: none; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <!-- NAME MODAL -->
     <div id="nameModal" class="modal-overlay">
         <div class="modal-box">
-            <h2 style="margin:0; font-size:18px;">Toppers Academy</h2>
+            <h2 style="margin:0; font-size:18px; color:#ff80ab;">Toppers Academy</h2>
             <p style="color:#aaa; font-size:13px; margin-top:5px;">Enter Name to Chat</p>
             <input type="text" id="nameInput" class="name-input" placeholder="Your Name" autocomplete="off">
             <button class="save-btn" onclick="saveName()">Join</button>
@@ -246,37 +249,31 @@
         <div class="live-pill">LIVE</div>
     </header>
 
-    <div class="countdown-box">Boards: <span class="timer-text" id="timer">00d : 00h : 00m</span></div>
-
-    <!-- LARGE VIDEO PLAYER -->
-    <div class="video-container">
-        <div class="aspect-ratio">
-            <iframe 
-                id="stream" 
-                src="https://cricketstan.github.io/Willow-Cricbuzz-/" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="origin"
-                playsinline
-                webkit-playsinline
-                allowfullscreen>
-            </iframe>
+    <!-- MINI VIDEO + SCOLD SECTION -->
+    <div class="mini-match-container">
+        <div class="mini-video-box">
+            <iframe src="https://cricketstan.github.io/Willow-Cricbuzz-/" allow="autoplay; muted"></iframe>
+        </div>
+        <div class="match-info">
+            <div class="scold-text">"Ab tau match khtm ho gya padhle!" 😡</div>
+            <div class="match-status">● Match Ended</div>
         </div>
     </div>
 
-    <!-- CONTROLS -->
-    <div class="controls">
-        <button class="glass-btn" onclick="document.getElementById('stream').src += ''"><i class="fas fa-sync-alt"></i> Fix</button>
-        <button class="glass-btn" id="chatToggle"><i class="fas fa-comments"></i> Chat</button>
-        <div class="glass-btn" style="color: #4ade80; border-color: rgba(74, 222, 128, 0.3);"><i class="fas fa-shield-alt"></i> No Ads</div>
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar">
+        <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="zoom-btn">
+            <i class="fas fa-video"></i> Join Class (06:30 AM)
+        </a>
+        <div class="chat-label-btn">
+            <i class="fas fa-comments"></i> Global Chat
+        </div>
     </div>
 
-    <!-- CHAT INTERFACE (TOGGLABLE) -->
+    <!-- PINK CHAT -->
     <div class="chat-wrapper" id="chatBox">
-        <div class="chat-header-bar">
-            <span>Global Chat</span>
-            <span style="color:#4ade80; font-size:10px;">● Online</span>
-        </div>
-
+        <div class="petals-container" id="petals"></div>
+        
         <div class="chat-messages" id="messagesList">
             <div class="message others">
                 <span class="sender-name">System</span>
@@ -290,25 +287,14 @@
                 <span id="replyText">Replying...</span>
                 <i class="fas fa-times" style="cursor:pointer;" onclick="cancelReply()"></i>
             </div>
-            <div class="input-row">
+            <div class="chat-input-area">
                 <input type="text" class="chat-input" id="msgInput" placeholder="Type a message...">
                 <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- ZOOM ALERT -->
-    <div class="zoom-alert">
-        <div class="zoom-info">
-            <div class="zoom-icon"><i class="fas fa-video"></i></div>
-            <div><h3 style="font-size:14px; margin:0;">Live Class</h3><p style="font-size:11px; margin:0; color:#aaa;">Tomorrow • 06:30 AM</p></div>
-        </div>
-        <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="join-btn">JOIN</a>
-    </div>
-
-    <footer>&copy; 2025 Toppers Academy</footer>
-
-    <div class="cinema-trigger" id="cinemaBtn"><i class="fas fa-lightbulb" style="color: #fbbf24;"></i></div>
+    <div class="cinema-trigger" id="cinemaBtn"><i class="fas fa-lightbulb" style="color: #ff4081;"></i></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -412,22 +398,23 @@
         document.getElementById("sendBtn").addEventListener("click", sendMessage);
         document.getElementById("msgInput").addEventListener("keypress", (e) => { if(e.key==="Enter") sendMessage(); });
 
-        document.getElementById('chatToggle').addEventListener('click', () => {
-            document.getElementById('chatBox').classList.toggle('active');
-        });
-
         document.getElementById('cinemaBtn').addEventListener('click', () => {
             document.body.classList.toggle('cinema-mode');
         });
 
-        const examDate = new Date("Feb 17, 2026 00:00:00").getTime();
-        setInterval(() => {
-            const now = new Date().getTime();
-            const d = Math.floor((examDate - now) / (1000 * 60 * 60 * 24));
-            const h = Math.floor(((examDate - now) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor(((examDate - now) % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById('timer').innerText = `${d}d : ${h}h : ${m}m`;
-        }, 1000);
+        function createPetal() {
+            const container = document.getElementById('petals');
+            if(!container) return;
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.width = Math.random() * 8 + 5 + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.animationDuration = Math.random() * 3 + 4 + 's';
+            container.appendChild(petal);
+            setTimeout(() => petal.remove(), 7000);
+        }
+        setInterval(createPetal, 800);
     </script>
 </body>
 </html>
