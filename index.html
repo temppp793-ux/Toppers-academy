@@ -23,7 +23,7 @@
             --zoom-color: #2D8CFF;
             --glass-border: rgba(255, 105, 180, 0.2);
             --admin-gold: #FFD700;
-            --verified-blue: #1DA1F2; /* Insta/Twitter Blue */
+            --verified-blue: #1DA1F2;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -104,10 +104,10 @@
 
         /* Messages Area */
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px;
+            flex: 1; overflow-y: auto; 
+            padding: 25px 15px 15px 15px; /* Extra top padding for first message actions */
             display: flex; flex-direction: column; gap: 8px;
             position: relative; z-index: 5;
-            /* Petals Background */
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
@@ -116,38 +116,35 @@
             max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
             line-height: 1.4; position: relative; color: #ffd1dc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px);
-            word-wrap: break-word; cursor: pointer; /* Shows it's clickable */
-            transition: background 0.2s;
+            word-wrap: break-word; cursor: pointer;
         }
-        .message:active { filter: brightness(1.2); } /* Feedback on tap */
+        .message:active { background-color: rgba(255,255,255,0.05); } /* Tap feedback */
 
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
         
-        /* Admin Styling */
         .message.admin-msg { border: 1px solid var(--admin-gold); }
         .message.admin-msg .sender-name { color: var(--admin-gold); display: flex; align-items: center; gap: 4px; }
 
-        /* Name */
         .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; }
         .message.me .sender-name { display: none; }
-
-        /* Verified Tick */
-        .verified-tick { color: var(--verified-blue); font-size: 12px; }
-
-        .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
-
-        /* ACTIONS MENU (Hidden by default) */
-        .msg-actions {
-            position: absolute; top: -35px; right: 0;
-            background: #222; padding: 5px; border-radius: 8px;
-            display: none; gap: 8px; z-index: 20;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            border: 1px solid var(--glass-border);
-        }
         
-        /* Show when 'active' class is added by JS */
-        .message.show-actions .msg-actions { display: flex; animation: popIn 0.2s ease; }
+        /* Blue Tick Logic */
+        .verified-tick { color: var(--verified-blue); font-size: 12px; margin-left: 4px; }
+        
+        .msg-footer { display: flex; justify-content: flex-end; align-items: center; margin-top: 4px; gap: 4px; }
+        .msg-time { font-size: 9px; opacity: 0.6; }
+
+        /* Actions */
+        .msg-actions {
+            position: absolute; top: -35px; right: 0; 
+            display: none; gap: 6px; z-index: 20;
+            background: #222; padding: 6px; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            animation: popIn 0.2s ease;
+        }
+        .message.show-actions .msg-actions { display: flex; }
 
         .action-btn {
             padding: 6px 12px; border-radius: 6px;
@@ -165,7 +162,7 @@
             opacity: 0.9; color: #ffc1e3;
         }
 
-        /* Footer */
+        /* Chat Footer */
         .chat-footer {
             background: var(--header-bg); border-top: 1px solid var(--glass-border);
             padding: 10px; padding-bottom: env(safe-area-inset-bottom);
@@ -174,7 +171,7 @@
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
             padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
-            font-size: 12px; color: #fff; margin-bottom: 8px; border-radius: 6px;
+            font-size: 11px; color: #fff; margin-bottom: 8px; border-radius: 6px;
         }
         .reply-preview.show { display: flex; }
 
@@ -227,28 +224,21 @@
         </div>
     </div>
 
-    <!-- VIEW 1: LANDING (MATCH ENDED) -->
+    <!-- VIEW 1: LANDING -->
     <div id="landing-view">
         <div class="match-ended-label">● Match Ended</div>
-        
-        <!-- ALAKH SIR PHOTO -->
         <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-        
         <h1 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h1>
         <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Join the discussion for assignments.</p>
-
-        <!-- OPEN CHAT BUTTON -->
         <button class="open-chat-btn" onclick="openChat()">
-            <i class="fas fa-comments"></i> Open Global Chat
+            <i class="fas fa-comments"></i> Open Chat
         </button>
-
-        <!-- ZOOM LINK -->
         <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" style="margin-top:20px; color:#2D8CFF; text-decoration:none; font-size:14px; font-weight:600; display:flex; align-items:center; gap:5px;">
             <i class="fas fa-video"></i> Join Class (06:30 AM)
         </a>
     </div>
 
-    <!-- VIEW 2: FULL SCREEN CHAT -->
+    <!-- VIEW 2: CHAT -->
     <div id="chat-view">
         <div class="chat-header">
             <div style="display:flex; align-items:center;">
@@ -261,7 +251,7 @@
         </div>
 
         <div class="chat-messages" id="messagesList">
-            <!-- Messages load here -->
+            <!-- Messages -->
         </div>
 
         <div class="chat-footer">
@@ -300,7 +290,6 @@
 
         if (!currentUserName) modal.style.display = "flex";
 
-        // GLOBAL FUNCTIONS
         window.saveName = () => {
             const input = document.getElementById("nameInput");
             const name = input.value.trim();
@@ -324,14 +313,20 @@
             document.getElementById("landing-view").style.display = "flex";
         };
 
-        // TOGGLE ACTION MENU
-        window.toggleActions = (el) => {
-            // Close all other open menus first
+        // Toggle Actions (Tap to show)
+        window.toggleActions = (el, e) => {
+            e.stopPropagation(); // Prevent bubble events
+            // Close others
             document.querySelectorAll('.message').forEach(m => {
                 if(m !== el) m.classList.remove('show-actions');
             });
             el.classList.toggle('show-actions');
         };
+
+        // Close on background click
+        document.getElementById('chat-view').addEventListener('click', () => {
+            document.querySelectorAll('.message').forEach(m => m.classList.remove('show-actions'));
+        });
 
         window.startReply = (name, text) => {
             replyingTo = { name, text };
@@ -378,28 +373,29 @@
                 const div = document.createElement("div");
                 const isMe = msg.user === currentUserName ? "me" : "others";
                 const isAdminMsg = msg.user.toLowerCase() === "rangreja" ? "admin-msg" : "";
-                const isAdminUser = currentUserName && currentUserName.toLowerCase() === "rangreja";
+                const isAdminUser = currentUserName.toLowerCase() === "rangreja";
                 
                 let time = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
                 let quote = msg.replyTo ? `<div class="reply-quote"><strong>${msg.replyTo.name}</strong>${msg.replyTo.text}</div>` : "";
                 
-                // ACTIONS MENU (Pop-up)
+                // Action Buttons
                 let actions = `<div class="msg-actions">`;
                 actions += `<button class="action-btn reply-btn" onclick="event.stopPropagation(); startReply('${msg.user}', '${msg.text.replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i></button>`;
-                
                 if (isMe === "me" || isAdminUser) {
                     actions += `<button class="action-btn delete-btn" onclick="event.stopPropagation(); deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>`;
                 }
                 actions += `</div>`;
 
-                // Admin Blue Tick
-                const tick = isAdminMsg ? `<i class="fas fa-check-circle verified-tick"></i>` : "";
-                const nameTag = (isMe === "others" || isAdminMsg) ? `<span class="sender-name">${msg.user} ${tick}</span>` : "";
+                // Admin Tick (For YOU too if you are Admin)
+                const isMsgSenderAdmin = msg.user.toLowerCase() === "rangreja";
+                const tick = isMsgSenderAdmin ? `<i class="fas fa-check-circle verified-tick"></i>` : "";
+                
+                // Name Tag (Show for others OR Admin)
+                const nameTag = (isMe === "others" || isMsgSenderAdmin) ? `<span class="sender-name">${msg.user} ${tick}</span>` : "";
 
-                // CLICK TO TOGGLE
-                div.onclick = function() { toggleActions(this); };
+                div.onclick = function(e) { toggleActions(this, e); };
                 div.className = `message ${isMe} ${isAdminMsg}`;
-                div.innerHTML = `${actions} ${quote} ${nameTag} ${msg.text} <span class="msg-time">${time}</span>`;
+                div.innerHTML = `${actions} ${quote} ${nameTag} ${msg.text} <div class="msg-footer"><span class="msg-time">${time}</span></div>`;
                 list.appendChild(div);
             });
             list.scrollTop = list.scrollHeight;
