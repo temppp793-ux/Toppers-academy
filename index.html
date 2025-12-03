@@ -113,17 +113,23 @@
 
         .msg-time { font-size: 9px; opacity: 0.5; align-self: flex-end; margin-top: 2px; }
 
-        /* DELETE BUTTON */
-        .delete-btn {
-            position: absolute; top: -5px; right: -5px;
-            background: #ff3b30; color: white; border: none; border-radius: 50%;
-            width: 18px; height: 18px; font-size: 10px; cursor: pointer;
-            display: none; justify-content: center; align-items: center;
+        /* --- ACTION BUTTONS (DELETE & REPLY) --- */
+        .msg-actions {
+            position: absolute; top: -8px; right: -8px;
+            display: none; gap: 5px;
+        }
+        
+        /* Show actions on hover or active (touch) */
+        .message:hover .msg-actions, .message:active .msg-actions { display: flex; }
+
+        .action-btn {
+            width: 22px; height: 22px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 10px; cursor: pointer; border: none;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        .message.me:hover .delete-btn { display: flex; } /* Show on hover */
-        /* For mobile touch */
-        .message.me .delete-btn { display: flex; opacity: 0.7; }
+        .delete-btn { background: #ff3b30; color: white; }
+        .reply-btn { background: #fff; color: #000; }
 
         .chat-input-area {
             padding: 10px; border-top: 1px solid rgba(255,255,255,0.1);
@@ -286,6 +292,24 @@
             }
         };
 
+        // GLOBAL REPLY FUNCTION
+        window.replyTo = (name) => {
+            const input = document.getElementById("msgInput");
+            input.value = `@${name} `;
+            input.focus();
+        };
+
+        // GLOBAL DELETE FUNCTION
+        window.deleteMessage = async (msgId) => {
+            if(confirm("Delete this message?")) {
+                try {
+                    await deleteDoc(doc(db, "messages", msgId));
+                } catch(e) {
+                    console.error("Error deleting:", e);
+                }
+            }
+        };
+
         // Send Message
         const sendMessage = async () => {
             const input = document.getElementById("msgInput");
@@ -301,24 +325,13 @@
             try {
                 await addDoc(messagesRef, {
                     text: text,
-                    user: currentUserName, // Save actual Name
-                    senderId: localStorage.getItem("uid") || Math.random().toString(), // Hidden ID
+                    user: currentUserName,
+                    senderId: localStorage.getItem("uid") || Math.random().toString(),
                     createdAt: serverTimestamp()
                 });
                 input.value = "";
             } catch (e) {
                 console.error("Error:", e);
-            }
-        };
-
-        // GLOBAL DELETE FUNCTION
-        window.deleteMessage = async (msgId) => {
-            if(confirm("Delete this message?")) {
-                try {
-                    await deleteDoc(doc(db, "messages", msgId));
-                } catch(e) {
-                    console.error("Error deleting:", e);
-                }
             }
         };
 
@@ -331,7 +344,7 @@
             const msgs = [];
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                data.id = doc.id; // Store Doc ID for deleting
+                data.id = doc.id; // Store Doc ID
                 msgs.push(data);
             });
             msgs.reverse();
@@ -346,12 +359,23 @@
                 }
 
                 div.className = `message ${isMe}`;
+                
+                // Name Tag (Only for others)
                 const nameTag = isMe === "others" ? `<span class="sender-name">${msg.user}</span>` : "";
                 
-                // Add Delete Button only if it's ME
-                const deleteBtn = isMe === "me" ? `<button class="delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>` : "";
+                // Action Buttons
+                let actions = "";
+                if(isMe === "me") {
+                    actions = `<div class="msg-actions">
+                        <button class="action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>
+                    </div>`;
+                } else {
+                    actions = `<div class="msg-actions">
+                        <button class="action-btn reply-btn" onclick="replyTo('${msg.user}')"><i class="fas fa-reply"></i></button>
+                    </div>`;
+                }
 
-                div.innerHTML = `${deleteBtn} ${nameTag} ${msg.text} <span class="msg-time">${timeString}</span>`;
+                div.innerHTML = `${actions} ${nameTag} ${msg.text} <span class="msg-time">${timeString}</span>`;
                 list.appendChild(div);
             });
             list.scrollTop = list.scrollHeight;
