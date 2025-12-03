@@ -14,11 +14,15 @@
         /* --- PINK / SUKUNA THEME --- */
         :root {
             --bg-color: #000;
-            --header-bg: rgba(40, 10, 20, 0.95);
-            --chat-bg: #1a050b;
-            --my-msg: #880e4f;
-            --other-msg: #2d0c15;
-            --accent: #ff4081;
+            --header-bg: rgba(40, 10, 20, 0.95); /* Dark Rose */
+            --chat-bg: #1a050b; /* Deep Red-Black */
+            
+            /* Chat Bubbles */
+            --my-msg: #880e4f; /* Deep Pink */
+            --other-msg: #2d0c15; /* Dark Maroon */
+            
+            /* Accents */
+            --accent: #ff4081; /* Bright Pink */
             --danger: #ff3b30;
             --zoom-color: #2D8CFF;
             --admin-gold: #FFD700;
@@ -27,18 +31,20 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* FIXED LAYOUT STRUCTURE */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: #fff;
-            height: 100vh;
+            height: 100vh; /* Fixed viewport height */
+            height: 100dvh; /* Dynamic viewport height for mobile */
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* No scroll on body */
             background: radial-gradient(circle at top left, #2a0a18, #000);
         }
 
-        /* HEADER */
+        /* --- HEADER (Fixed Height) --- */
         header {
             padding: 10px 15px;
             display: flex; align-items: center; justify-content: space-between;
@@ -47,21 +53,13 @@
         }
         .logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .logo i { color: var(--accent); }
-        
-        .header-right { display: flex; align-items: center; gap: 10px; }
-
         .live-pill { 
             background: rgba(255, 64, 129, 0.2); color: #ff4081; 
             padding: 3px 8px; border-radius: 50px; font-size: 10px; font-weight: 700;
             border: 1px solid rgba(255, 64, 129, 0.3);
         }
-        
-        /* MOVED CINEMA BUTTON HERE */
-        .cinema-btn-header {
-            background: transparent; border: none; color: #fbbf24; font-size: 16px; cursor: pointer;
-        }
 
-        /* --- MINI MATCH SECTION --- */
+        /* --- MINI MATCH SECTION (Fixed Height) --- */
         .mini-match-container {
             display: flex;
             flex-direction: row;
@@ -74,14 +72,12 @@
         }
 
         .mini-video-box {
-            width: 130px; height: 74px; border-radius: 10px; overflow: hidden;
+            width: 120px; height: 68px; border-radius: 10px; overflow: hidden;
             border: 1px solid var(--accent); background: #000; position: relative;
             box-shadow: 0 4px 15px rgba(255, 64, 129, 0.2);
+            flex-shrink: 0;
         }
-        .mini-video-box iframe { 
-            width: 100%; height: 100%; border: none; 
-            pointer-events: auto; /* Allow clicking inside video */
-        }
+        .mini-video-box iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
 
         .match-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         
@@ -91,7 +87,7 @@
         }
         .match-status { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; }
 
-        /* --- ACTION BUTTONS --- */
+        /* --- ACTION BUTTONS (Fixed Height) --- */
         .action-bar {
             padding: 10px 15px; display: flex; gap: 10px;
             background: #0a0205; border-bottom: 1px solid var(--glass-border);
@@ -99,23 +95,28 @@
         }
 
         .zoom-btn {
-            flex: 2; background: var(--zoom-color); color: white;
+            flex: 1; background: var(--zoom-color); color: white;
             padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600;
             text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;
             box-shadow: 0 4px 12px rgba(45, 140, 255, 0.3);
         }
-        
-        .fix-btn {
-            flex: 1; background: #2d0c15; color: #aaa;
-            padding: 10px; border-radius: 10px; font-size: 12px; text-align: center;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-            border: 1px solid var(--glass-border); cursor: pointer;
+
+        .chat-label-btn {
+            flex: 1; background: #2d0c15; color: #ff80ab;
+            padding: 10px; border-radius: 10px; font-size: 13px; text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border: 1px solid var(--glass-border);
         }
 
-        /* --- CHAT AREA --- */
+        /* --- CHAT AREA (FLEX GROW) --- */
         .chat-wrapper {
-            flex: 1; display: flex; flex-direction: column;
-            background: var(--chat-bg); position: relative; overflow: hidden;
+            flex: 1; /* This makes it take all remaining space */
+            display: flex;
+            flex-direction: column;
+            background: var(--chat-bg);
+            position: relative;
+            overflow: hidden;
+            min-height: 0; /* Crucial for nested flex scroll */
         }
 
         /* Petals Animation */
@@ -135,18 +136,19 @@
         }
 
         .chat-header-bar {
-            padding: 8px 15px; background: rgba(60, 10, 30, 0.9);
+            padding: 8px 15px; background: rgba(60, 10, 30, 0.95);
             border-bottom: 1px solid rgba(255,255,255,0.1); 
             display: flex; justify-content: space-between; align-items: center;
             font-size: 12px; color: #ffd1dc; font-weight: 600;
-            position: relative; z-index: 2;
+            flex-shrink: 0; z-index: 2;
         }
 
         .chat-messages {
-            flex: 1; overflow-y: auto; padding: 15px;
+            flex: 1; /* Grows to fill space between header and input */
+            overflow-y: auto; /* Enables scrolling */
+            padding: 15px;
             display: flex; flex-direction: column; gap: 8px;
             position: relative; z-index: 2;
-            padding-bottom: 20px;
         }
 
         /* Bubbles */
@@ -184,11 +186,16 @@
             opacity: 0.9; color: #ffc1e3;
         }
 
-        /* Chat Footer - FIXED AT BOTTOM */
+        /* --- FIXED FOOTER --- */
         .chat-footer {
-            background: rgba(40, 10, 20, 0.95); border-top: 1px solid var(--glass-border);
-            padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; z-index: 20;
+            background: rgba(40, 10, 20, 1); 
+            border-top: 1px solid var(--glass-border);
+            padding-bottom: env(safe-area-inset-bottom); 
+            flex-shrink: 0; /* Prevents shrinking */
+            z-index: 20;
+            width: 100%;
         }
+
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
             padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
@@ -196,7 +203,7 @@
         }
         .reply-preview.show { display: flex; }
 
-        .chat-input-area { padding: 8px 10px; display: flex; gap: 8px; align-items: center; }
+        .chat-input-area { padding: 10px; display: flex; gap: 10px; align-items: center; }
         .chat-input {
             flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 20px; 
             padding: 10px 15px; color: #fff; font-size: 14px;
@@ -208,26 +215,7 @@
             box-shadow: 0 0 10px rgba(255, 64, 129, 0.4);
         }
 
-        /* CINEMA MODE */
-        body.cinema-mode { background: #000 !important; background-image: none !important; }
-        body.cinema-mode header, body.cinema-mode .action-bar, body.cinema-mode .chat-wrapper, body.cinema-mode footer {
-            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
-        }
-        
-        /* Center Video in Cinema Mode */
-        body.cinema-mode .mini-match-container {
-            background: black; border: none;
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 50; padding: 0;
-            display: flex; justify-content: center; align-items: center;
-        }
-        body.cinema-mode .mini-video-box { 
-            width: 100%; height: 300px; border: none; box-shadow: none;
-        }
-        body.cinema-mode .match-info { display: none; }
-        body.cinema-mode .header-right { z-index: 60; position: fixed; top: 20px; right: 20px; }
-
-        /* Modal */
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center;
@@ -235,6 +223,7 @@
         .modal-box {
             background: #2a0a18; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; 
             text-align: center; border: 1px solid var(--accent);
+            box-shadow: 0 0 30px rgba(255, 64, 129, 0.2);
         }
         .name-input {
             width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
@@ -244,6 +233,27 @@
             background: var(--accent); color: white; border: none; width: 100%;
             padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
         }
+
+        /* Cinema Button */
+        .cinema-trigger {
+            position: fixed; bottom: 80px; right: 20px; z-index: 200; /* Moved up above chat bar */
+            background: rgba(255, 64, 129, 0.2); width: 40px; height: 40px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            border: 1px solid var(--accent); backdrop-filter: blur(10px);
+        }
+
+        /* CINEMA MODE */
+        body.cinema-mode { background: #000 !important; background-image: none !important; }
+        body.cinema-mode header, body.cinema-mode .action-bar, body.cinema-mode .chat-wrapper, body.cinema-mode footer {
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        body.cinema-mode .mini-video-box { 
+            width: 100%; height: 250px; margin-top: 20vh; border-color: #333;
+            box-shadow: 0 0 60px rgba(255, 64, 129, 0.15);
+        }
+        body.cinema-mode .mini-match-container { background: transparent; border: none; }
+        body.cinema-mode .match-info { display: none; }
+
     </style>
 </head>
 <body>
@@ -259,19 +269,13 @@
 
     <header>
         <div class="logo"><i class="fas fa-graduation-cap"></i> Toppers Academy</div>
-        <div class="header-right">
-            <div class="live-pill">LIVE</div>
-            <!-- MOVED CINEMA BUTTON HERE -->
-            <button class="cinema-btn-header" id="cinemaBtn">
-                <i class="fas fa-lightbulb"></i>
-            </button>
-        </div>
+        <div class="live-pill">LIVE</div>
     </header>
 
     <!-- MINI VIDEO + SCOLD SECTION -->
     <div class="mini-match-container">
         <div class="mini-video-box">
-            <iframe id="stream" src="https://cricketstan.github.io/Willow-Cricbuzz-/" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="origin"></iframe>
+            <iframe src="https://cricketstan.github.io/Willow-Cricbuzz-/" allow="autoplay; muted"></iframe>
         </div>
         <div class="match-info">
             <div class="scold-text">"Ab tau match khtm ho gya padhle!" 😡</div>
@@ -284,9 +288,9 @@
         <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="zoom-btn">
             <i class="fas fa-video"></i> Join Class (06:30 AM)
         </a>
-        <button class="fix-btn" onclick="document.getElementById('stream').src += ''">
-            <i class="fas fa-sync-alt"></i> Fix Stream
-        </button>
+        <div class="chat-label-btn">
+            <i class="fas fa-comments"></i> Global Chat
+        </div>
     </div>
 
     <!-- PINK CHAT -->
@@ -317,6 +321,8 @@
             </div>
         </div>
     </div>
+
+    <div class="cinema-trigger" id="cinemaBtn"><i class="fas fa-lightbulb" style="color: #ff4081;"></i></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
