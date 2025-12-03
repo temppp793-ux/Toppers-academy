@@ -4,24 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Toppers Academy - Study Mode</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Vercel Web Analytics -->
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
-        /* --- APP THEME --- */
+        /* --- MINIMAL THEME --- */
         :root {
             --bg-color: #000;
-            --chat-bg: #0e1621;
-            --header-bg: #17212b;
+            --chat-bg: #0f0f0f;
+            --header-bg: #1a1a1a;
             --accent: #2997ff;
             --danger: #ff3b30;
-            --zoom-color: #2D8CFF;
-            --text-sec: #7f91a4;
-            --my-msg: #2b5278;
-            --other-msg: #182533;
+            --my-msg: #005c4b; /* WhatsApp Greenish */
+            --other-msg: #202c33;
             --admin-gold: #FFD700;
         }
 
@@ -34,15 +32,15 @@
             height: 100vh; /* Fixed Height */
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Prevent body scroll */
+            overflow: hidden; /* No Body Scroll */
         }
 
         /* HEADER */
         header {
             padding: 10px 15px;
             display: flex; align-items: center; justify-content: space-between;
-            background: var(--header-bg); border-bottom: 1px solid #222;
-            flex-shrink: 0; /* Don't shrink */
+            background: var(--header-bg); border-bottom: 1px solid #333;
+            flex-shrink: 0;
         }
         .logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .logo i { color: var(--accent); }
@@ -55,117 +53,119 @@
         /* --- STUDY REMINDER (COMPACT) --- */
         .study-container {
             display: flex;
-            flex-direction: row; /* Horizontal layout saves space */
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
             gap: 15px;
-            padding: 15px;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000 70%);
-            border-bottom: 1px solid #333;
+            padding: 10px 15px;
+            background: #111;
+            border-bottom: 1px solid #222;
             flex-shrink: 0;
         }
 
-        .teacher-img {
-            width: 70px; /* Much Smaller */
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
+        .header-teacher-img {
+            width: 50px; height: 50px;
+            object-fit: cover; border-radius: 50%;
             border: 2px solid var(--danger);
-            animation: pulse-red 2s infinite;
         }
 
-        .text-group { text-align: left; }
-
-        .scolding-text {
-            font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px;
-        }
-
+        .text-group { flex: 1; }
+        .scolding-text { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px; }
         .sub-text { font-size: 11px; color: #aaa; }
 
-        /* --- ZOOM BUTTON (RESTORED) --- */
         .zoom-btn {
-            margin-top: 5px;
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--zoom-color); color: white;
-            padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
-            text-decoration: none; box-shadow: 0 4px 10px rgba(45, 140, 255, 0.3);
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #2D8CFF; color: white;
+            padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+            text-decoration: none; margin-top: 4px;
         }
 
-        /* --- FULL SCREEN CHAT (FLEXIBLE) --- */
+        /* --- CHAT AREA (FLEX GROW) --- */
         .chat-wrapper {
-            flex: 1; /* Takes all remaining height */
+            flex: 1; /* Fills remaining space */
             display: flex;
             flex-direction: column;
             background: var(--chat-bg);
-            background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox='0 0 42 44' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='Page-1' fill='none' fill-rule='evenodd'%3E%3Cg id='brick-wall' fill='%2317212b' fill-opacity='0.4'%3E%3Cpath d='M0 0h42v44H0V0zm1 1h40v20H1V1zM0 23h20v20H0V23zm22 0h20v20H22V23z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            overflow: hidden; /* Contains scroll inside */
-        }
-
-        .chat-header-bar {
-            padding: 8px 15px; background: var(--header-bg);
-            border-bottom: 1px solid #000; display: flex; justify-content: space-between; align-items: center;
-            font-size: 12px; color: #aaa; flex-shrink: 0;
+            /* WhatsApp Dark Pattern */
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+            background-size: 400px;
+            overflow: hidden; 
+            position: relative;
         }
 
         .chat-messages {
-            flex: 1; /* Grows to fill space */
-            overflow-y: auto; /* Enables scroll here ONLY */
+            flex: 1; /* Takes all available space */
+            overflow-y: auto; /* Scrollable */
             padding: 15px;
-            display: flex; flex-direction: column; gap: 8px;
+            display: flex; flex-direction: column; gap: 6px;
         }
 
-        /* Message Styles */
+        /* --- MESSAGE BUBBLES --- */
         .message { 
-            max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
-            line-height: 1.4; position: relative; word-wrap: break-word; color: #fff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            max-width: 80%; padding: 6px 10px; border-radius: 10px; font-size: 13px; 
+            line-height: 1.3; position: relative; color: #e9edef;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.2);
         }
-        .message.others { align-self: flex-start; background: var(--other-msg); border-bottom-left-radius: 0; }
-        .message.me { align-self: flex-end; background: var(--my-msg); border-bottom-right-radius: 0; }
+        .message.others { align-self: flex-start; background: var(--other-msg); border-top-left-radius: 0; }
+        .message.me { align-self: flex-end; background: var(--my-msg); border-top-right-radius: 0; }
+        
+        /* Admin (Rangreja) Styling */
         .message.admin-msg { border: 1px solid var(--admin-gold); }
         .message.admin-msg .sender-name { color: var(--admin-gold); }
 
-        .sender-name { font-size: 10px; font-weight: 600; margin-bottom: 2px; color: #64b5f6; display: block; }
+        /* Avatar for Rangreja */
+        .admin-avatar {
+            width: 20px; height: 20px; border-radius: 50%;
+            object-fit: cover; vertical-align: middle; margin-right: 5px;
+            border: 1px solid var(--admin-gold);
+        }
+
+        .sender-name {
+            font-size: 11px; font-weight: 600; margin-bottom: 2px; color: #53bdeb; display: block;
+        }
         .message.me .sender-name { display: none; }
-        .msg-time { font-size: 9px; opacity: 0.5; float: right; margin-left: 8px; margin-top: 4px; }
+        .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
 
         /* Reply/Delete Actions */
         .msg-actions {
-            position: absolute; top: -8px; right: -5px; display: none; gap: 5px; z-index: 10;
+            position: absolute; top: -8px; right: -8px; display: none; gap: 4px; z-index: 10;
         }
         .message:hover .msg-actions, .message:active .msg-actions { display: flex; }
+        
         .action-btn {
-            width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 10px; cursor: pointer; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 10px; cursor: pointer; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .delete-btn { background: #ff3b30; color: white; }
         .reply-btn { background: #fff; color: #000; }
 
-        /* Reply Quote */
+        /* Reply Quote Block */
         .reply-quote {
-            font-size: 11px; padding: 4px 8px; margin-bottom: 5px;
-            border-left: 3px solid rgba(255,255,255,0.5);
+            font-size: 10px; padding: 4px 6px; margin-bottom: 4px;
+            border-left: 3px solid var(--accent);
             background: rgba(0,0,0,0.2); border-radius: 4px;
             opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .reply-quote strong { display: block; font-size: 10px; opacity: 0.7; }
 
-        /* Footer (Sticky) */
+        /* --- FOOTER (FIXED) --- */
         .chat-footer { 
-            background: var(--header-bg); border-top: 1px solid #000; 
-            padding-bottom: env(safe-area-inset-bottom); /* For iPhone Home Bar */
-            flex-shrink: 0; 
+            background: var(--header-bg); 
+            border-top: 1px solid #333; 
+            padding-bottom: env(safe-area-inset-bottom);
+            flex-shrink: 0; /* Prevents shrinking */
+            width: 100%;
         }
+        
         .reply-preview {
             display: none; justify-content: space-between; align-items: center;
             padding: 8px 15px; background: #232e3a; border-left: 3px solid var(--accent);
-            font-size: 12px; color: #fff;
+            font-size: 11px; color: #fff;
         }
         .reply-preview.show { display: flex; }
-        .chat-input-area { padding: 10px; display: flex; gap: 10px; align-items: center; }
+
+        .chat-input-area { padding: 8px; display: flex; gap: 8px; align-items: center; }
         .chat-input {
-            flex: 1; background: #000; border: none; border-radius: 20px; 
-            padding: 12px 15px; color: #fff; font-size: 14px;
+            flex: 1; background: #2a3942; border: none; border-radius: 20px; 
+            padding: 10px 15px; color: #fff; font-size: 14px;
         }
         .chat-input:focus { outline: none; }
         .send-btn {
@@ -212,26 +212,21 @@
         <div class="live-pill">LIVE</div>
     </header>
 
-    <!-- STUDY SCOLDING SECTION (COMPACT) -->
+    <!-- STUDY REMINDER -->
     <div class="study-container">
-        <img src="images (8).jpeg" alt="Alakh Sir" class="teacher-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+        <!-- Main Study Image -->
+        <img src="images (8).jpeg" alt="Alakh Sir" class="header-teacher-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
         <div class="text-group">
             <p class="scolding-text">"Ab tau match khtm ho gya!" 😡</p>
             <p class="sub-text">Join the discussion for assignments.</p>
-            <!-- RESTORED ZOOM BUTTON -->
             <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="zoom-btn">
                 <i class="fas fa-video"></i> Join Class (06:30 AM)
             </a>
         </div>
     </div>
 
-    <!-- MAIN CHAT AREA -->
+    <!-- MAIN CHAT -->
     <div class="chat-wrapper">
-        <div class="chat-header-bar">
-            <span>Global Chat</span>
-            <span style="color:#4ade80;">● Online</span>
-        </div>
-
         <div class="chat-messages" id="messagesList">
             <div class="message others">
                 <span class="sender-name">System</span>
@@ -258,7 +253,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- YOUR FIREBASE CONFIG ---
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
           authDomain: "toppers-chat.firebaseapp.com",
@@ -333,13 +328,16 @@
             list.innerHTML = "";
             const msgs = [];
             snapshot.forEach((doc) => { const d = doc.data(); d.id = doc.id; msgs.push(d); });
-            msgs.reverse().forEach((msg) => {
+            msgs.reverse();
+
+            const isAdmin = currentUserName && currentUserName.toLowerCase() === "rangreja";
+
+            msgs.forEach((msg) => {
                 const div = document.createElement("div");
                 const isMe = msg.user === currentUserName ? "me" : "others";
-                const isAdmin = currentUserName === "Rangreja";
+                const isAdminMsg = msg.user.toLowerCase() === "rangreja" ? "admin-msg" : "";
                 
                 let time = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
-                
                 let quote = msg.replyTo ? `<div class="reply-quote"><strong>${msg.replyTo.name}</strong>${msg.replyTo.text}</div>` : "";
                 
                 let actions = `<div class="msg-actions">`;
@@ -347,10 +345,20 @@
                 if(isMe === "me" || isAdmin) actions += `<button class="action-btn delete-btn" onclick="deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>`;
                 actions += `</div>`;
 
-                const nameTag = isMe === "others" ? `<span class="sender-name" ${msg.user === 'Rangreja' ? 'style="color:#FFD700"' : ''}>${msg.user}</span>` : "";
+                // Admin Avatar (Alakh Sir Image)
+                let nameHtml = `<span class="sender-name">${msg.user}</span>`;
+                if (isAdminMsg) {
+                    nameHtml = `<div style="display:flex; align-items:center; margin-bottom:4px;">
+                        <img src="images (8).jpeg" class="admin-avatar">
+                        <span class="sender-name" style="margin:0; color:#FFD700;">Rangreja</span>
+                    </div>`;
+                }
 
-                div.className = `message ${isMe} ${msg.user === 'Rangreja' ? 'admin-msg' : ''}`;
-                div.innerHTML = `${actions} ${quote} ${nameTag} ${msg.text} <span class="msg-time">${time}</span>`;
+                div.className = `message ${isMe} ${isAdminMsg}`;
+                // Only show name for others or Admin
+                const content = (isMe === "others" || isAdminMsg) ? nameHtml : "";
+
+                div.innerHTML = `${actions} ${quote} ${content} ${msg.text} <span class="msg-time">${time}</span>`;
                 list.appendChild(div);
             });
             list.scrollTop = list.scrollHeight;
