@@ -81,28 +81,6 @@
         }
         .glass-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.15); }
 
-        /* --- NAME MODAL --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
-            z-index: 1000; display: none; justify-content: center; align-items: center;
-        }
-        .modal-box {
-            background: #111; border: 1px solid var(--glass-border);
-            padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
-        .name-input {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #333;
-            background: #222; color: #fff; margin-bottom: 15px; font-size: 14px;
-            text-align: center;
-        }
-        .save-btn {
-            background: var(--accent); color: white; border: none; width: 100%;
-            padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
-        }
-
         /* REAL CHAT UI */
         .chat-container {
             height: 0; opacity: 0; overflow: hidden; margin: 0 10px;
@@ -116,11 +94,11 @@
 
         .chat-messages {
             flex: 1; overflow-y: auto; padding: 15px;
-            display: flex; flex-direction: column; gap: 12px;
+            display: flex; flex-direction: column; gap: 10px;
         }
 
         .message { 
-            max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
+            max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; 
             line-height: 1.4; position: relative; word-wrap: break-word; color: #fff;
             display: flex; flex-direction: column;
         }
@@ -131,7 +109,7 @@
             font-size: 10px; font-weight: 700; opacity: 0.8; margin-bottom: 2px;
             color: #fbbf24; /* Gold color for names */
         }
-        .message.me .sender-name { display: none; } /* Hide own name */
+        .message.me .sender-name { display: none; }
 
         .msg-time { font-size: 9px; opacity: 0.5; align-self: flex-end; margin-top: 2px; }
 
@@ -177,6 +155,27 @@
             box-shadow: 0 0 60px rgba(41, 151, 255, 0.15); 
         }
 
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #111; border: 1px solid var(--glass-border);
+            padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+        .name-input {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #333;
+            background: #222; color: #fff; margin-bottom: 15px; font-size: 14px; text-align: center;
+        }
+        .save-btn {
+            background: var(--accent); color: white; border: none; width: 100%;
+            padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;
+        }
+
         footer { text-align: center; font-size: 11px; color: #555; padding-bottom: 20px; transition: opacity 0.5s; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
@@ -201,12 +200,13 @@
 
     <div class="video-container">
         <div class="aspect-ratio">
+            <!-- ORIGINAL WORKING LINK RESTORED -->
             <iframe id="stream" src="https://cricketstan.github.io/Willow-Cricbuzz-/" allow="autoplay; fullscreen" referrerpolicy="origin"></iframe>
         </div>
     </div>
 
     <div class="controls">
-        <button class="glass-btn" onclick="document.getElementById('stream').src += ''"><i class="fas fa-sync-alt"></i> Fix</button>
+        <button class="glass-btn" onclick="fixStream()"><i class="fas fa-sync-alt"></i> Fix</button>
         <button class="glass-btn" id="chatToggle"><i class="fas fa-comments"></i> Chat</button>
         <div class="glass-btn" style="color: #4ade80; border-color: rgba(74, 222, 128, 0.3);"><i class="fas fa-shield-alt"></i> No Ads</div>
     </div>
@@ -242,7 +242,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- YOUR CONFIG (INTEGRATED) ---
+        // --- YOUR CONFIG (Auto-Filled) ---
         const firebaseConfig = {
           apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
           authDomain: "toppers-chat.firebaseapp.com",
@@ -261,12 +261,10 @@
         let currentUserName = localStorage.getItem("chatUserName");
         const modal = document.getElementById("nameModal");
 
-        // If no name, show modal
         if (!currentUserName) {
             modal.style.display = "flex";
         }
 
-        // Global function for Save Button
         window.saveName = () => {
             const input = document.getElementById("nameInput");
             const name = input.value.trim();
@@ -282,7 +280,6 @@
             const input = document.getElementById("msgInput");
             const text = input.value.trim();
             
-            // Check if name is set
             if (!currentUserName) {
                 modal.style.display = "flex";
                 return;
@@ -293,13 +290,14 @@
             try {
                 await addDoc(messagesRef, {
                     text: text,
-                    user: currentUserName, // Save actual Name
-                    senderId: localStorage.getItem("uid") || Math.random().toString(), // Hidden ID
+                    user: currentUserName,
                     createdAt: serverTimestamp()
                 });
                 input.value = "";
             } catch (e) {
                 console.error("Error:", e);
+                // Fallback alert for debugging
+                // alert("Message failed. Check console."); 
             }
         };
 
@@ -317,14 +315,12 @@
                 const div = document.createElement("div");
                 const isMe = msg.user === currentUserName ? "me" : "others";
                 
-                // Timestamp
                 let timeString = "";
                 if(msg.createdAt) {
                     timeString = new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
 
                 div.className = `message ${isMe}`;
-                // Only show name if it's NOT me
                 const nameTag = isMe === "others" ? `<span class="sender-name">${msg.user}</span>` : "";
                 
                 div.innerHTML = `${nameTag} ${msg.text} <span class="msg-time">${timeString}</span>`;
@@ -333,25 +329,24 @@
             list.scrollTop = list.scrollHeight;
         });
 
-        // Event Listeners
         document.getElementById("sendBtn").addEventListener("click", sendMessage);
         document.getElementById("msgInput").addEventListener("keypress", (e) => {
             if (e.key === "Enter") sendMessage();
         });
 
-        // Toggle Chat UI
-        const chatBtn = document.getElementById('chatToggle');
-        const chatBox = document.getElementById('chatBox');
-        chatBtn.addEventListener('click', () => {
-            chatBox.classList.toggle('active');
+        // UI Logic
+        document.getElementById('chatToggle').addEventListener('click', () => {
+            document.getElementById('chatBox').classList.toggle('active');
         });
 
-        // Cinema Mode
         document.getElementById('cinemaBtn').addEventListener('click', () => {
             document.body.classList.toggle('cinema-mode');
         });
 
-        // Timer
+        window.fixStream = () => {
+            document.getElementById('stream').src += '';
+        };
+
         const examDate = new Date("Feb 17, 2026 00:00:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
