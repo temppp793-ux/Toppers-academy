@@ -17,6 +17,7 @@
             --accent-color: #2997ff;
             --danger-color: #ff3b30;
             --success-color: #30d158;
+            --zoom-blue: #2D8CFF;
             --transition-speed: 0.5s;
         }
 
@@ -184,7 +185,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.5s ease; /* Smoother fade */
+            transition: all 0.5s ease;
         }
         .btn-glass:hover { background: rgba(255, 255, 255, 0.2); }
         .btn-glass.active { background: #fff; color: #000; }
@@ -201,6 +202,41 @@
             transition: opacity 0.5s ease;
         }
 
+        /* --- CLASS REMINDER PILL --- */
+        .class-alert {
+            width: 100%;
+            background: rgba(45, 140, 255, 0.1);
+            border: 1px solid rgba(45, 140, 255, 0.3);
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: opacity 0.5s ease;
+        }
+        
+        .class-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+        }
+        
+        .class-info i { color: var(--zoom-blue); font-size: 16px; }
+        
+        .join-btn {
+            background: var(--zoom-blue);
+            color: white;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(45, 140, 255, 0.4);
+        }
+
         footer { 
             text-align: center; padding: 20px; font-size: 11px; 
             color: rgba(255,255,255,0.4); 
@@ -209,22 +245,18 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* --- CINEMA MODE LOGIC (UPDATED) --- */
+        /* --- CINEMA MODE LOGIC --- */
         body.cinema-mode {
-            background: #000; /* Pure black background */
+            background: #000;
         }
         
-        /* Hide these elements completely */
+        /* Hide everything except video and toggle button */
         body.cinema-mode header,
         body.cinema-mode .countdown-wrapper,
         body.cinema-mode footer,
         body.cinema-mode .blob,
-        body.cinema-mode .no-ads-badge {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Hide the 'Fix Stream' button specifically */
+        body.cinema-mode .no-ads-badge,
+        body.cinema-mode .class-alert, /* Hide class alert too */
         body.cinema-mode #fixStreamBtn {
             opacity: 0;
             pointer-events: none;
@@ -284,6 +316,17 @@
                 <button class="btn-glass" id="fixStreamBtn" onclick="document.querySelector('iframe').src = document.querySelector('iframe').src">
                     <i class="fas fa-sync-alt"></i> Fix Stream
                 </button>
+            </div>
+
+            <!-- ZOOM CLASS REMINDER -->
+            <div class="class-alert">
+                <div class="class-info">
+                    <i class="fas fa-video"></i>
+                    <span>Tom 06:30 AM • Live Class</span>
+                </div>
+                <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="join-btn">
+                    Join Zoom
+                </a>
             </div>
 
             <div class="no-ads-badge"><i class="fas fa-shield-alt"></i> 100% Ad-Free Experience</div>
