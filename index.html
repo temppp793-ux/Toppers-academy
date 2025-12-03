@@ -60,14 +60,21 @@
         }
         .timer-text { font-family: 'SF Mono', monospace; color: #fff; font-weight: 600; }
 
-        /* VIDEO PLAYER */
+        /* VIDEO PLAYER (FIXED TOUCH EVENTS) */
         .video-container {
             margin: 10px; border-radius: 16px; overflow: hidden; background: #000;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 1px solid var(--glass-border);
             position: relative; z-index: 50; transition: all 0.5s ease;
         }
         .aspect-ratio { position: relative; width: 100%; padding-bottom: 56.25%; }
-        .aspect-ratio iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .aspect-ratio iframe { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            border: none;
+            /* CRITICAL FIXES FOR CLICKING */
+            pointer-events: auto !important; 
+            touch-action: auto !important;
+        }
 
         /* CONTROLS */
         .controls {
@@ -200,8 +207,16 @@
 
     <div class="video-container">
         <div class="aspect-ratio">
-            <!-- ORIGINAL WORKING LINK RESTORED -->
-            <iframe id="stream" src="https://cricketstan.github.io/Willow-Cricbuzz-/" allow="autoplay; fullscreen" referrerpolicy="origin"></iframe>
+            <!-- RESTORED: playsinline + extra permissions -->
+            <iframe 
+                id="stream" 
+                src="https://cricketstan.github.io/Willow-Cricbuzz-/" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="origin"
+                playsinline
+                webkit-playsinline
+                allowfullscreen>
+            </iframe>
         </div>
     </div>
 
@@ -242,7 +257,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- YOUR CONFIG (Auto-Filled) ---
+        // --- YOUR CONFIG (INTEGRATED) ---
         const firebaseConfig = {
           apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
           authDomain: "toppers-chat.firebaseapp.com",
@@ -296,8 +311,6 @@
                 input.value = "";
             } catch (e) {
                 console.error("Error:", e);
-                // Fallback alert for debugging
-                // alert("Message failed. Check console."); 
             }
         };
 
