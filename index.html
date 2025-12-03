@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toppers Academy - Premium Live</title>
+    <!-- Inter Font (Apple Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=SF+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --blur-amount: 12px;
+            --accent-color: #2997ff; /* Apple Blue */
+            --danger-color: #ff3b30; /* Apple Red */
+            --success-color: #30d158; /* Apple Green */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            /* Animated Deep Background */
+            background: radial-gradient(circle at top left, #1a1a2e, #000000);
+            background-size: 100% 100%;
+        }
+
+        /* Abstract Background blobs */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(41, 151, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(255, 59, 48, 0.1) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 40px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: sticky;
+            top: 20px;
+            margin: 0 20px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 20px;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .logo { 
+            font-size: 20px; 
+            font-weight: 700; 
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo i { color: var(--accent-color); font-size: 18px; }
+
+        .live-pill {
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--danger-color);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            box-shadow: 0 0 10px rgba(255, 59, 48, 0.2);
+        }
+
+        .dot {
+            width: 6px; height: 6px;
+            background-color: var(--danger-color);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* --- COUNTDOWN --- */
+        .countdown-wrapper {
+            margin: 20px 20px 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .countdown-glass {
+            background: linear-gradient(90deg, rgba(255, 59, 48, 0.1), rgba(255, 159, 10, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .countdown-label { font-size: 13px; color: #ff9f0a; font-weight: 600; letter-spacing: 0.5px; }
+        .timer-text { 
+            font-family: 'SF Mono', monospace; 
+            font-weight: 700; 
+            font-size: 15px;
+            color: #fff;
+        }
+
+        /* --- MAIN VIDEO --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .video-glass-container {
+            width: 100%;
+            max-width: 950px;
+            padding: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .video-wrapper {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; 
+            height: 0;
+        }
+        
+        .iframe-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        /* --- NO ADS BADGE AREA --- */
+        .no-ads-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .no-ads-badge {
+            background: rgba(48, 209, 88, 0.15); /* Subtle Green */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(48, 209, 88, 0.3);
+            color: var(--success-color);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .no-ads-badge:hover {
+            transform: translateY(-2px);
+            background: rgba(48, 209, 88, 0.25);
+        }
+
+        .no-ads-badge i { font-size: 16px; }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Responsive */
+        @media (max-width: 650px) {
+            header { margin: 10px; padding: 12px 15px; }
+            .countdown-wrapper { margin: 15px 10px 0 10px; }
+            .countdown-glass { width: 100%; justify-content: space-between; padding: 10px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            Toppers Academy
+        </div>
+        <div class="live-pill">
+            <div class="dot"></div> Live
+        </div>
+    </header>
+
+    <!-- Floating Glass Countdown -->
+    <div class="countdown-wrapper">
+        <div class="countdown-glass">
+            <span class="countdown-label">BOARD EXAMS IN</span>
+            <span class="timer-text" id="board-timer">00d : 00h : 00m : 00s</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Glass Container for Video -->
+        <div class="video-glass-container">
+            <div class="video-wrapper">
+                <div class="iframe-container">
+                    <iframe 
+                        src="https://cricketstan.github.io/Willow-Cricbuzz-/" 
+                        allowfullscreen="true" 
+                        scrolling="no" 
+                        allow="autoplay; encrypted-media">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Ads Badge Only -->
+        <div class="no-ads-container">
+            <div class="no-ads-badge">
+                <i class="fas fa-shield-alt"></i> 100% Ad-Free Experience
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Toppers Academy. Designed for Excellence.</p>
+    </footer>
+
+    <!-- Timer Script -->
+    <script>
+        // Set Exam Date: Feb 17, 2026
+        const examDate = new Date("Feb 17, 2026 00:00:00").getTime();
+        const timerElement = document.getElementById("board-timer");
+
+        const countdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = examDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const d = days < 10 ? "0" + days : days;
+            const h = hours < 10 ? "0" + hours : hours;
+            const m = minutes < 10 ? "0" + minutes : minutes;
+            const s = seconds < 10 ? "0" + seconds : seconds;
+
+            timerElement.innerHTML = `${d}d : ${h}h : ${m}m : ${s}s`;
+
+            if (distance < 0) {
+                clearInterval(countdown);
+                timerElement.innerHTML = "EXAM STARTED";
+                timerElement.style.color = "#ff3b30";
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
+
+
