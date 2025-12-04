@@ -10,7 +10,7 @@
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
-        /* --- THEME VARIABLES --- */
+        /* --- MAIN APP THEME VARIABLES --- */
         :root {
             --bg-color: #000;
             --header-bg: rgba(40, 10, 20, 0.98);
@@ -19,7 +19,6 @@
             --other-msg: #2d0c15;
             --accent: #ff4081;
             --danger: #ff3b30;
-            --zoom-color: #2D8CFF;
             --glass-border: rgba(255, 105, 180, 0.2);
             --admin-gold: #FFD700;
             --verified-blue: #1DA1F2;
@@ -86,9 +85,9 @@
             color: white; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.4);
         }
 
-        .zoom-btn-style {
-            background: linear-gradient(135deg, #2D8CFF, #0055ff);
-            color: white; box-shadow: 0 10px 30px rgba(45, 140, 255, 0.4);
+        .syllabus-btn-style {
+            background: linear-gradient(135deg, #ffffff, #e0e0e0);
+            color: #333; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
         }
 
         /* --- VIEW 2: CHAT --- */
@@ -118,104 +117,86 @@
         /* Messages Area */
         .chat-messages {
             flex: 1; overflow-y: auto; padding: 15px;
-            display: flex; flex-direction: column; gap: 12px; /* More gap for buttons */
+            display: flex; flex-direction: column; gap: 12px;
             position: relative; z-index: 5;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* Message Bubbles */
         .message { 
-            max-width: 75%; /* Reduced width to fit side buttons */
-            padding: 8px 12px; border-radius: 12px; font-size: 14px; 
+            max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
             line-height: 1.4; position: relative; color: #ffd1dc;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px);
-            word-wrap: break-word; cursor: pointer;
-            overflow: visible; /* Allow buttons to show outside */
+            word-wrap: break-word; cursor: pointer; overflow: visible;
         }
-        .message:active { filter: brightness(1.2); }
-
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
-        
         .message.admin-msg { border: 1px solid var(--admin-gold); }
         .message.admin-msg .sender-name { color: var(--admin-gold); display: flex; align-items: center; gap: 4px; }
-
         .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; }
         .message.me .sender-name { display: none; }
-        
         .verified-tick { color: var(--verified-blue); font-size: 12px; margin-left: 4px; }
-
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
-
-        /* --- SIDE ACTIONS (NEW) --- */
-        .msg-actions {
-            position: absolute; 
-            top: 0;
-            height: 100%; /* Vertically center relative to message height */
-            display: none; 
-            align-items: center;
-            gap: 8px; 
-            z-index: 20;
-        }
-        
+        .msg-actions { position: absolute; top: 0; height: 100%; display: none; align-items: center; gap: 8px; z-index: 20; }
         .message.show-actions .msg-actions { display: flex; animation: fadeIn 0.2s ease; }
-
-        /* Position for Others' messages (Right Side) */
-        .message.others .msg-actions {
-            left: 100%;
-            margin-left: 10px;
-        }
-
-        /* Position for My messages (Left Side) */
-        .message.me .msg-actions {
-            right: 100%;
-            margin-right: 10px;
-            flex-direction: row-reverse; /* Keep delete close to bubble */
-        }
-
-        .action-btn {
-            width: 30px; height: 30px; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center;
-            font-size: 12px; cursor: pointer; border: none; color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
+        .message.others .msg-actions { left: 100%; margin-left: 10px; }
+        .message.me .msg-actions { right: 100%; margin-right: 10px; flex-direction: row-reverse; }
+        .action-btn { width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; border: none; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
         .delete-btn { background: var(--danger); }
         .reply-btn { background: #333; border: 1px solid var(--glass-border); }
-
-        /* Quote */
-        .reply-quote {
-            font-size: 11px; padding: 4px 8px; margin-bottom: 5px;
-            border-left: 3px solid var(--accent);
-            background: rgba(0,0,0,0.3); border-radius: 4px;
-            opacity: 0.9; color: #ffc1e3;
-        }
-
-        /* Chat Footer */
-        .chat-footer {
-            background: var(--header-bg); border-top: 1px solid var(--glass-border);
-            padding: 10px; padding-bottom: env(safe-area-inset-bottom);
-            flex-shrink: 0; z-index: 20; width: 100%;
-        }
-        .reply-preview {
-            display: none; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent);
-            font-size: 11px; color: #fff; margin-bottom: 8px; border-radius: 6px;
-        }
+        .reply-quote { font-size: 11px; padding: 4px 8px; margin-bottom: 5px; border-left: 3px solid var(--accent); background: rgba(0,0,0,0.3); border-radius: 4px; opacity: 0.9; color: #ffc1e3; }
+        .chat-footer { background: var(--header-bg); border-top: 1px solid var(--glass-border); padding: 10px; padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; z-index: 20; width: 100%; }
+        .reply-preview { display: none; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(136, 14, 79, 0.5); border-left: 3px solid var(--accent); font-size: 11px; color: #fff; margin-bottom: 8px; border-radius: 6px; }
         .reply-preview.show { display: flex; }
-
         .chat-input-area { display: flex; gap: 10px; align-items: center; }
-        .chat-input {
-            flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 25px; 
-            padding: 12px 18px; color: #fff; font-size: 15px;
-        }
+        .chat-input { flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 25px; padding: 12px 18px; color: #fff; font-size: 15px; }
         .chat-input:focus { outline: none; border-color: var(--accent); }
-        .send-btn {
-            background: var(--accent); border: none; width: 45px; height: 45px;
-            border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
+        .send-btn { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(255, 64, 129, 0.4); }
+
+        /* --- VIEW 3: CHECKLIST (NOTION STYLE) --- */
+        #checklist-view {
+            display: none; flex-direction: column;
+            height: 100%; width: 100%;
+            background: #fff; /* Light mode for paper feel */
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
-        /* MODAL */
+        #checklist-content {
+            flex: 1; overflow-y: auto; padding: 20px;
+            color: rgb(55, 53, 47); /* Notion Text Color */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        /* --- NOTION EXPORT STYLES (Scoped to #checklist-content) --- */
+        #checklist-content a { color: inherit; text-decoration: underline; }
+        #checklist-content h1, #checklist-content h2, #checklist-content h3 { letter-spacing: -0.01em; line-height: 1.2; font-weight: 600; margin-bottom: 0; }
+        #checklist-content .page-title { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.75em; margin-top: 10px; }
+        #checklist-content h3 { font-size: 1.25rem; margin-top: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        #checklist-content ul.to-do-list { padding-inline-start: 0; margin-top: 0.5em; }
+        #checklist-content ul.to-do-list > li { list-style: none; padding: 4px 0; display: flex; align-items: flex-start; }
+        #checklist-content .to-do-children-checked { text-decoration: line-through; opacity: 0.5; }
+        #checklist-content .indented { padding-left: 1.5em; }
+        #checklist-content .callout { border-radius: 10px; padding: 1rem; background: rgb(247, 246, 243); display: flex; margin-top: 20px; }
+        #checklist-content hr { border: none; border-bottom: 1px solid rgba(55, 53, 47, 0.09); margin: 20px 0; }
+        #checklist-content blockquote { border-left: 3px solid rgb(55, 53, 47); padding-left: 1em; margin: 1em 0; opacity: 0.8; }
+        
+        /* Highlight colors */
+        .block-color-blue_background { background: rgba(229, 242, 252, 1); }
+        
+        /* Custom Checkbox Styling for the Integration */
+        .custom-checkbox {
+            appearance: none; -webkit-appearance: none;
+            width: 18px; height: 18px; border: 2px solid #555; border-radius: 3px;
+            margin-right: 10px; cursor: pointer; flex-shrink: 0; position: relative; top: 3px;
+        }
+        .custom-checkbox:checked { background-color: #2D8CFF; border-color: #2D8CFF; }
+        .custom-checkbox:checked::after {
+            content: '✔'; font-size: 12px; color: white; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+
+        /* --- MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 2000; display: none; justify-content: center; align-items: center;
@@ -263,7 +244,10 @@
                 <i class="fas fa-comments"></i> Open Chat
             </button>
 
-            </div>
+            <button class="big-btn syllabus-btn-style" onclick="openChecklist()">
+                <i class="fas fa-tasks"></i> Syllabus Checklist
+            </button>
+        </div>
     </div>
 
     <div id="chat-view">
@@ -290,6 +274,139 @@
                 <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
+    </div>
+
+    <div id="checklist-view">
+        <div class="chat-header" style="background: #fff; border-bottom: 1px solid #eee;">
+            <div style="display:flex; align-items:center;">
+                <button class="back-btn" onclick="closeChecklist()" style="color:#333"><i class="fas fa-arrow-left"></i></button>
+                <div style="color:#333">
+                    <div class="chat-title">Syllabus Tracker</div>
+                    <div class="chat-status" style="color:#666">Class 10 (2025-26)</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="checklist-content">
+            <article class="page sans">
+                <header>
+                    <h1 class="page-title">Class 10 Syllabus Checklist (AY 2025–26) - Yahi krte reh jayenge 🥺</h1>
+                </header>
+                <div class="page-body">
+                    <blockquote>Use the checkboxes to track coverage and completion for each unit and chapter. Update or add items as needed for your board.</blockquote>
+                    
+                    <h3>Social Science (SST)</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>History: The Rise of Nationalism in Europe</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>History: Nationalism in India</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>History: The Making of a Global World (page 53-57 tak hi ayega)</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>History: Print Culture and the Modern World</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Resources and Development</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Forest and Wildlife Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Water Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Agriculture</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Minerals and Energy Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Manufacturing Industries</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Lifelines of indian economy (map work)</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Power Sharing</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Federalism</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Gender, Religion and Caste</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Political Parties</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Outcomes of Democracy</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Development</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Sectors of the Indian Economy</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Money and Credit</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Globalisation (Only "What is Globalization" etc)</span></li>
+                    </ul>
+
+                    <h3>Science</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>Chemical Reactions and Equations</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Acids, Bases and Salts</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Metals and Non-metals</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Carbon and its Compounds</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Life Processes</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Control and Coordination</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>How do Organisms Reproduce?</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Heredity and Evolution</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Light – Reflection and Refraction</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Human Eye and the Colourful World</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Electricity</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Magnetic Effects of Electric Current</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Our Environment</span></li>
+                    </ul>
+
+                    <h3>Mathematics</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>Real Numbers</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Polynomials</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Pair of Linear Equations in Two Variables</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Quadratic Equations</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Arithmetic Progressions</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Triangles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Coordinate Geometry</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Trigonometry: Introduction and Identities</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Trigonometry: Applications</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Circles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Areas Related to Circles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Surface Areas and Volumes</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Statistics</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Probability</span></li>
+                    </ul>
+
+                    <h3>English</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>A Letter to God</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Nelson Mandela — Long Walk to Freedom</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Two Stories about Flying</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>From the Diary of Anne Frank</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Glimpses of India</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Mijbil the Otter</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Madam Rides the Bus</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Sermon at Benares</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Proposal (Play)</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Dust of Snow</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Fire and Ice</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Tiger in the Zoo</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>How to Tell Wild Animals</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Ball Poem</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Amanda!</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Trees</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Fog</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Tale of Custard the Dragon</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>For Anne Gregory</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Triumph of Surgery</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Thief’s Story</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Midnight Visitor</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Question of Trust</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Footprints without Feet</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Making of a Scientist</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Necklace</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Bholi</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Book That Saved the Earth</span></li>
+                    </ul>
+
+                    <p style="opacity:0.6; font-size:12px; margin-top:20px;">🙏 Disclaimer - Maaf krdena waise mzs wale bachhe ko ye dekhne ki koi jaroorat tau padti nhi hai phir bhi add kr diya 🙏</p>
+
+                    <hr />
+
+                    <h3>Exam Planning</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>Term-wise plan created</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Monthly targets set</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Weekly revision schedule</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Sample papers identified</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Mock tests scheduled</span></li>
+                    </ul>
+
+                    <figure class="callout">
+                        <div style="font-size:1.5em; margin-right:15px;">📝</div>
+                        <div>Update chapter names to match your board's latest list and add due dates if needed.</div>
+                    </figure>
+                </div>
+            </article>
+            <div style="height: 50px;"></div>
+            </div>
     </div>
 
     <script type="module">
@@ -328,6 +445,7 @@
             }
         };
 
+        // --- NAVIGATION FUNCTIONS ---
         window.openChat = () => {
             document.getElementById("landing-view").style.display = "none";
             document.getElementById("chat-view").style.display = "flex";
@@ -338,7 +456,17 @@
             document.getElementById("landing-view").style.display = "flex";
         };
 
-        // Toggle Actions
+        window.openChecklist = () => {
+            document.getElementById("landing-view").style.display = "none";
+            document.getElementById("checklist-view").style.display = "flex";
+        };
+
+        window.closeChecklist = () => {
+            document.getElementById("checklist-view").style.display = "none";
+            document.getElementById("landing-view").style.display = "flex";
+        };
+
+        // --- CHAT LOGIC ---
         window.toggleActions = (el, e) => {
             e.stopPropagation();
             document.querySelectorAll('.message').forEach(m => {
@@ -396,21 +524,18 @@
                 const div = document.createElement("div");
                 const isMe = msg.user === currentUserName ? "me" : "others";
                 const isAdminMsg = msg.user.toLowerCase() === "rangreja" ? "admin-msg" : "";
-                const isAdminUser = currentUserName.toLowerCase() === "rangreja";
+                const isAdminUser = currentUserName && currentUserName.toLowerCase() === "rangreja";
 
                 let time = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
                 let quote = msg.replyTo ? `<div class="reply-quote"><strong>${msg.replyTo.name}</strong>${msg.replyTo.text}</div>` : "";
                 
-                // Action Buttons (SIDE)
                 let actions = `<div class="msg-actions">`;
                 actions += `<button class="action-btn reply-btn" onclick="event.stopPropagation(); startReply('${msg.user}', '${msg.text.replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i></button>`;
-                
                 if (isMe === "me" || isAdminUser) {
                     actions += `<button class="action-btn delete-btn" onclick="event.stopPropagation(); deleteMessage('${msg.id}')"><i class="fas fa-trash"></i></button>`;
                 }
                 actions += `</div>`;
 
-                // Admin Blue Tick
                 const isMsgSenderAdmin = msg.user.toLowerCase() === "rangreja";
                 const tick = isMsgSenderAdmin ? `<i class="fas fa-check-circle verified-tick"></i>` : "";
                 const nameTag = (isMe === "others" || isMsgSenderAdmin) ? `<span class="sender-name">${msg.user} ${tick}</span>` : "";
@@ -425,6 +550,44 @@
 
         document.getElementById("sendBtn").addEventListener("click", sendMessage);
         document.getElementById("msgInput").addEventListener("keypress", (e) => { if(e.key==="Enter") sendMessage(); });
+
+        // --- CHECKLIST LOGIC ---
+        // Initialize checkboxes with local storage state
+        document.querySelectorAll("ul.to-do-list > li").forEach((li, i) => {
+            const fake = li.querySelector(".checkbox");
+            const text = li.querySelector("span");
+
+            if (!fake || !text) return;
+
+            const real = document.createElement("input");
+            real.type = "checkbox";
+            real.className = "custom-checkbox";
+            real.dataset.id = "cbox_" + i;
+
+            // Load saved state
+            const saved = localStorage.getItem(real.dataset.id);
+            if (saved !== null) {
+                real.checked = saved === "true";
+            } else {
+                real.checked = fake.classList.contains("checkbox-on");
+            }
+
+            fake.replaceWith(real);
+
+            function update() {
+                if (real.checked) {
+                    text.style.textDecoration = "line-through";
+                    text.style.opacity = "0.45";
+                } else {
+                    text.style.textDecoration = "none";
+                    text.style.opacity = "1";
+                }
+                localStorage.setItem(real.dataset.id, real.checked);
+            }
+
+            update();
+            real.addEventListener("change", update);
+        });
     </script>
 </body>
 </html>
