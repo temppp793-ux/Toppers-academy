@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Vercel Web Analytics -->
     <script src="https://cdn.vercel-insights.com/v1/script.js"></script>
     
     <style>
@@ -242,7 +241,6 @@
 </head>
 <body>
 
-    <!-- NAME MODAL -->
     <div id="nameModal" class="modal-overlay">
         <div class="modal-box">
             <h2 style="margin:0; font-size:18px; color:#ff80ab;">Toppers Academy</h2>
@@ -252,7 +250,6 @@
         </div>
     </div>
 
-    <!-- VIEW 1: LANDING (MATCH ENDED) -->
     <div id="landing-view">
         <div class="match-ended-label">● Match Ended</div>
         
@@ -262,19 +259,13 @@
         <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Join the discussion for assignments.</p>
 
         <div class="btn-group">
-            <!-- OPEN CHAT BUTTON -->
             <button class="big-btn chat-btn-style" onclick="openChat()">
                 <i class="fas fa-comments"></i> Open Chat
             </button>
 
-            <!-- ZOOM LINK BUTTON -->
-            <a href="https://us04web.zoom.us/j/4766026969?pwd=V1ZpQ1R4MmRVT2RxU1VpT2k0a0thZz09" class="big-btn zoom-btn-style">
-                <i class="fas fa-video"></i> Join Class (06:30 AM)
-            </a>
-        </div>
+            </div>
     </div>
 
-    <!-- VIEW 2: FULL SCREEN CHAT -->
     <div id="chat-view">
         <div class="chat-header">
             <div style="display:flex; align-items:center;">
@@ -287,8 +278,7 @@
         </div>
 
         <div class="chat-messages" id="messagesList">
-            <!-- Messages load here -->
-        </div>
+            </div>
 
         <div class="chat-footer">
             <div id="replyPreview" class="reply-preview">
@@ -302,7 +292,6 @@
         </div>
     </div>
 
-    <!-- FIREBASE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -439,8 +428,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
