@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toppers Academy - Ultimate</title>
+    <title>Toppers Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -69,7 +69,7 @@
         .btn-syllabus { background: #eee; color: #333; }
 
         /* RED DOT FOR UNREAD MSG */
-        .home-badge {
+        .notif-dot {
             position: absolute; top: 15px; right: 25px;
             width: 12px; height: 12px; background: #00e676;
             border-radius: 50%; border: 2px solid var(--my-msg);
@@ -94,10 +94,10 @@
             text-align: center; margin-bottom: 15px;
         }
 
-        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; cursor: pointer; text-decoration: underline; }
+        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: underline; }
         .message.me .sender-name { display: none; }
-        .message.admin-post .sender-name { display: flex; justify-content: center; color: var(--admin-gold); }
-        .verified-tick { color: var(--verified-blue); margin-left: 4px; }
+        .message.admin-post .sender-name { justify-content: center; color: var(--admin-gold); }
+        .verified-tick { color: var(--verified-blue); font-size: 12px; }
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
         .edited-tag { font-size: 10px; color: #aaa; font-style: italic; margin-left: 4px; }
         
@@ -106,9 +106,13 @@
 
         /* --- ACTIONS (Long Press) --- */
         .msg-actions { 
-            position: absolute; top: -45px; background: #222; padding: 5px 10px; border-radius: 25px; 
+            position: absolute; background: #222; padding: 5px 10px; border-radius: 25px; 
             display: none; align-items: center; gap: 10px; z-index: 100; border: 1px solid var(--glass-border); 
         }
+        /* Top default, Bottom if near top edge */
+        .msg-actions.top { top: -45px; }
+        .msg-actions.bottom { top: 100%; margin-top: 5px; }
+        
         .message.show-actions .msg-actions { display: flex; }
         .message.others .msg-actions { left: 0; }
         .message.me .msg-actions { right: 0; }
@@ -138,6 +142,31 @@
         .edit-mode-indicator { display: none; background: var(--verified-blue); color: white; padding: 5px 12px; font-size: 11px; border-radius: 6px 6px 0 0; width: fit-content; margin-left: 15px; }
         .edit-mode-indicator.show { display: block; }
 
+        /* --- INBOX LIST --- */
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; padding: 15px; 
+            background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; 
+        }
+        
+        /* --- CHECKLIST STYLE (Strict Black/White) --- */
+        #checklist-content { 
+            background: #ffffff !important; 
+            color: #000000 !important; 
+            height: 100%; overflow-y: auto; padding: 20px; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        #checklist-content h3 { color: #000 !important; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 20px; }
+        .to-do-list { padding: 0; list-style: none; }
+        .to-do-list li { 
+            padding: 8px 0; display: flex; align-items: flex-start; 
+            border-bottom: 1px solid #f0f0f0; color: #333; 
+        }
+        .custom-checkbox { 
+            width: 18px; height: 18px; margin-right: 10px; flex-shrink: 0; 
+            cursor: pointer; accent-color: #2D8CFF;
+        }
+        .completed-text { text-decoration: line-through; opacity: 0.5; color: #888; }
+
         /* --- MODALS --- */
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
         .action-modal { 
@@ -147,16 +176,6 @@
         }
         .action-modal.open { transform: translateY(0); }
         .modal-option { padding: 15px; background: #333; margin-bottom: 10px; text-align: center; border-radius: 10px; font-weight: 600; cursor: pointer; }
-
-        /* --- CHECKLIST STYLE --- */
-        #checklist-content { background: #fff; color: #333; height: 100%; overflow-y: auto; padding: 20px; font-family: sans-serif; }
-        .to-do-list { padding: 0; }
-        .to-do-list li { list-style: none; padding: 8px 0; display: flex; align-items: flex-start; border-bottom: 1px solid #eee; }
-        .custom-checkbox { width: 18px; height: 18px; margin-right: 10px; flex-shrink: 0; }
-        .completed-text { text-decoration: line-through; opacity: 0.5; }
-
-        /* --- INBOX LIST --- */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; }
 
         /* --- CANVAS --- */
         #onlineCanvas { position: fixed; top: 15px; right: 15px; z-index: 3000; pointer-events: none; }
@@ -188,9 +207,12 @@
         <div class="btn-group">
             <button class="big-btn btn-chat" onclick="openView('chat-view')">
                 <i class="fas fa-comments"></i> Public Chat
-                <span id="homeBadge" class="home-badge"></span>
+                <span id="homeUnreadBadge" class="notif-dot"></span>
             </button>
-            <button class="big-btn btn-inbox" onclick="openInbox()"><i class="fas fa-envelope"></i> My Inbox 📩</button>
+            <button class="big-btn btn-inbox" onclick="openInbox()">
+                <i class="fas fa-envelope"></i> My Inbox 📩
+                <span id="inboxBadge" class="notif-dot"></span>
+            </button>
             <button class="big-btn btn-verse" onclick="openView('rangreja-view')"><i class="fas fa-crown"></i> Rangreja Verse</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
             <button class="big-btn btn-syllabus" onclick="openView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
@@ -213,7 +235,7 @@
                 <input type="file" id="imgInput" hidden accept="image/*" onchange="handleImg('public')">
                 <button class="icon-btn" style="background:none; border:none; color:#aaa; font-size:20px;" onclick="document.getElementById('imgInput').click()"><i class="fas fa-paperclip"></i></button>
                 <input type="text" class="chat-input" id="msgInput" placeholder="Type a message...">
-                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                <button class="send-btn" onclick="sendMsg('public')"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -231,7 +253,7 @@
                 <input type="file" id="dmImgInput" hidden accept="image/*" onchange="handleImg('private')">
                 <button class="icon-btn" style="background:none; border:none; color:#aaa; font-size:20px;" onclick="document.getElementById('dmImgInput').click()"><i class="fas fa-paperclip"></i></button>
                 <input type="text" class="chat-input" id="dmMsgInput" placeholder="Private Message...">
-                <button class="send-btn" id="dmSendBtn"><i class="fas fa-paper-plane"></i></button>
+                <button class="send-btn" onclick="sendMsg('private')"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
@@ -264,100 +286,51 @@
     <div id="checklist-view" class="app-view">
         <div class="chat-header" style="background:#fff; border-bottom:1px solid #ccc;">
             <button class="back-btn" style="background:none; border:none; color:#333; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus Checklist</div></div>
+            <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus</div></div>
         </div>
         <div id="checklist-content">
-            <h2 style="margin-bottom:10px;">Full Syllabus (2025-26)</h2>
-            
             <h3>Maths</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> Real Numbers</li>
-                <li><input type="checkbox" class="custom-checkbox"> Polynomials</li>
-                <li><input type="checkbox" class="custom-checkbox"> Pair of Linear Equations</li>
-                <li><input type="checkbox" class="custom-checkbox"> Quadratic Equations</li>
-                <li><input type="checkbox" class="custom-checkbox"> Arithmetic Progressions</li>
-                <li><input type="checkbox" class="custom-checkbox"> Triangles</li>
-                <li><input type="checkbox" class="custom-checkbox"> Coordinate Geometry</li>
-                <li><input type="checkbox" class="custom-checkbox"> Introduction to Trigonometry</li>
-                <li><input type="checkbox" class="custom-checkbox"> Applications of Trigonometry</li>
-                <li><input type="checkbox" class="custom-checkbox"> Circles</li>
-                <li><input type="checkbox" class="custom-checkbox"> Areas Related to Circles</li>
-                <li><input type="checkbox" class="custom-checkbox"> Surface Areas and Volumes</li>
-                <li><input type="checkbox" class="custom-checkbox"> Statistics</li>
-                <li><input type="checkbox" class="custom-checkbox"> Probability</li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
             </ul>
-
             <h3>Science</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> Chemical Reactions & Equations</li>
-                <li><input type="checkbox" class="custom-checkbox"> Acids, Bases and Salts</li>
-                <li><input type="checkbox" class="custom-checkbox"> Metals and Non-metals</li>
-                <li><input type="checkbox" class="custom-checkbox"> Carbon and its Compounds</li>
-                <li><input type="checkbox" class="custom-checkbox"> Life Processes</li>
-                <li><input type="checkbox" class="custom-checkbox"> Control and Coordination</li>
-                <li><input type="checkbox" class="custom-checkbox"> How do Organisms Reproduce?</li>
-                <li><input type="checkbox" class="custom-checkbox"> Heredity</li>
-                <li><input type="checkbox" class="custom-checkbox"> Light – Reflection and Refraction</li>
-                <li><input type="checkbox" class="custom-checkbox"> Human Eye and Colourful World</li>
-                <li><input type="checkbox" class="custom-checkbox"> Electricity</li>
-                <li><input type="checkbox" class="custom-checkbox"> Magnetic Effects of Electric Current</li>
-                <li><input type="checkbox" class="custom-checkbox"> Our Environment</li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Control Coordination</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Light</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
             </ul>
-
-            <h3>Social Science</h3>
+            <h3>SST</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> Rise of Nationalism in Europe</li>
-                <li><input type="checkbox" class="custom-checkbox"> Nationalism in India</li>
-                <li><input type="checkbox" class="custom-checkbox"> Making of a Global World</li>
-                <li><input type="checkbox" class="custom-checkbox"> Print Culture</li>
-                <li><input type="checkbox" class="custom-checkbox"> Resources and Development</li>
-                <li><input type="checkbox" class="custom-checkbox"> Forest and Wildlife</li>
-                <li><input type="checkbox" class="custom-checkbox"> Water Resources</li>
-                <li><input type="checkbox" class="custom-checkbox"> Agriculture</li>
-                <li><input type="checkbox" class="custom-checkbox"> Minerals and Energy</li>
-                <li><input type="checkbox" class="custom-checkbox"> Manufacturing Industries</li>
-                <li><input type="checkbox" class="custom-checkbox"> Lifelines of Economy</li>
-                <li><input type="checkbox" class="custom-checkbox"> Power Sharing</li>
-                <li><input type="checkbox" class="custom-checkbox"> Federalism</li>
-                <li><input type="checkbox" class="custom-checkbox"> Gender, Religion and Caste</li>
-                <li><input type="checkbox" class="custom-checkbox"> Political Parties</li>
-                <li><input type="checkbox" class="custom-checkbox"> Outcomes of Democracy</li>
-                <li><input type="checkbox" class="custom-checkbox"> Development</li>
-                <li><input type="checkbox" class="custom-checkbox"> Sectors of Indian Economy</li>
-                <li><input type="checkbox" class="custom-checkbox"> Money and Credit</li>
-                <li><input type="checkbox" class="custom-checkbox"> Globalisation</li>
-            </ul>
-
-            <h3>English</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> A Letter to God</li>
-                <li><input type="checkbox" class="custom-checkbox"> Nelson Mandela</li>
-                <li><input type="checkbox" class="custom-checkbox"> Two Stories about Flying</li>
-                <li><input type="checkbox" class="custom-checkbox"> From the Diary of Anne Frank</li>
-                <li><input type="checkbox" class="custom-checkbox"> Glimpses of India</li>
-                <li><input type="checkbox" class="custom-checkbox"> Mijbil the Otter</li>
-                <li><input type="checkbox" class="custom-checkbox"> Madam Rides the Bus</li>
-                <li><input type="checkbox" class="custom-checkbox"> Sermon at Benares</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Proposal</li>
-                <li><input type="checkbox" class="custom-checkbox"> Dust of Snow</li>
-                <li><input type="checkbox" class="custom-checkbox"> Fire and Ice</li>
-                <li><input type="checkbox" class="custom-checkbox"> A Tiger in the Zoo</li>
-                <li><input type="checkbox" class="custom-checkbox"> How to Tell Wild Animals</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Ball Poem</li>
-                <li><input type="checkbox" class="custom-checkbox"> Amanda</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Trees</li>
-                <li><input type="checkbox" class="custom-checkbox"> Fog</li>
-                <li><input type="checkbox" class="custom-checkbox"> Custard the Dragon</li>
-                <li><input type="checkbox" class="custom-checkbox"> For Anne Gregory</li>
-                <li><input type="checkbox" class="custom-checkbox"> A Triumph of Surgery</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Thief's Story</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Midnight Visitor</li>
-                <li><input type="checkbox" class="custom-checkbox"> A Question of Trust</li>
-                <li><input type="checkbox" class="custom-checkbox"> Footprints without Feet</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Making of a Scientist</li>
-                <li><input type="checkbox" class="custom-checkbox"> The Necklace</li>
-                <li><input type="checkbox" class="custom-checkbox"> Bholi</li>
-                <li><input type="checkbox" class="custom-checkbox"> Book That Saved the Earth</li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in Europe</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Global World</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Resources</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Agriculture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
             </ul>
         </div>
     </div>
@@ -421,6 +394,7 @@
             if(currentUser.toLowerCase() === "rangreja") {
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminInputArea').classList.remove('hidden');
+                monitorInbox();
             }
         }
 
@@ -441,7 +415,6 @@
             onValue(onlineRef, snap => {
                 const count = snap.size || 0;
                 document.getElementById('onlineCount').innerText = `● ${count} Online`;
-                // Draw Canvas
                 const cvs = document.getElementById('onlineCanvas');
                 const ctx = cvs.getContext('2d');
                 ctx.clearRect(0,0,120,40);
@@ -450,27 +423,6 @@
                 ctx.fillText(`● ${count} Online`, 20, 25);
             });
         }
-
-        // --- NAVIGATION ---
-        window.openView = (id) => {
-            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
-            document.getElementById('landing-view').style.display = 'none';
-            document.getElementById(id).style.display = 'flex';
-            
-            isChatActive = (id === 'chat-view');
-            if(isChatActive) {
-                document.getElementById('homeBadge').style.display = 'none';
-                loadPublicChat();
-            }
-            if(id === 'rangreja-view') loadVerse();
-        };
-
-        window.goHome = () => {
-            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
-            document.getElementById('landing-view').style.display = 'flex';
-            isChatActive = false;
-            if(dmSubscription) dmSubscription();
-        };
 
         // --- PUBLIC CHAT ---
         function loadPublicChat() {
@@ -489,9 +441,8 @@
                     if(isChatActive && isAtBottom) {
                         list.scrollTop = list.scrollHeight;
                     } else if(!isChatActive) {
-                        document.getElementById('homeBadge').style.display = 'block';
+                        document.getElementById('homeUnreadBadge').style.display = 'block';
                     } else {
-                        // User scrolled up, show badge
                         const badge = document.getElementById('scrollBadge');
                         badge.innerText = parseInt(badge.innerText) + 1;
                         badge.style.display = 'block';
@@ -515,21 +466,19 @@
             list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
         };
 
-        // --- DM SYSTEM RESTRICTION ---
+        // --- DM SYSTEM ---
         window.openUserModal = (name) => {
             if(name === currentUser) return;
             selectedUser = name;
             
-            // LOGIC: Only Admin can DM anyone. Users can only DM Admin.
             const iamAdmin = currentUser.toLowerCase() === "rangreja";
             const targetIsAdmin = name.toLowerCase() === "rangreja";
             
-            const dmBtn = document.getElementById('dmOption');
-            
-            if (iamAdmin || targetIsAdmin) {
-                dmBtn.style.display = 'block';
+            // Only Admin can DM anyone, Others can ONLY DM Admin
+            if(iamAdmin || targetIsAdmin) {
+                document.getElementById('dmOption').style.display = 'block';
             } else {
-                dmBtn.style.display = 'none'; // Hide DM for user-to-user
+                document.getElementById('dmOption').style.display = 'none';
             }
 
             document.getElementById('modalUser').innerText = name;
@@ -563,7 +512,16 @@
             });
         };
 
+        function monitorInbox() {
+            onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
+                let hasChanges = false;
+                snap.docChanges().forEach(c => { if(c.type === 'added' || c.type === 'modified') hasChanges = true; });
+                if(hasChanges) document.getElementById('inboxBadge').style.display = 'block';
+            });
+        }
+
         window.openInbox = () => {
+            document.getElementById('inboxBadge').style.display = 'none';
             openView('list-view');
             document.getElementById('listTitle').innerText = "My Inbox";
             const list = document.getElementById("genericList");
@@ -572,36 +530,12 @@
                 snap.forEach(d => {
                     const div = document.createElement("div");
                     div.className = "list-item";
-                    div.innerHTML = `<b>${d.data().name}</b> <i class="fas fa-chevron-right"></i>`;
+                    div.innerHTML = `<b>${d.data().name}</b> <div><i class="fas fa-chevron-right"></i> <i class="fas fa-trash" style="color:red; margin-left:10px;" onclick="event.stopPropagation(); deleteDoc(doc(db,'users','${currentUser}','inbox','${d.id}'))"></i></div>`;
                     div.onclick = () => { selectedUser = d.data().name; startDM(); };
                     list.appendChild(div);
                 });
             });
         };
-
-        // --- ADMIN PANEL ---
-        window.openAdminPanel = () => {
-            openView('list-view');
-            document.getElementById('listTitle').innerText = "Admin Panel";
-            const list = document.getElementById("genericList");
-            onSnapshot(collection(db, "users"), (snap) => {
-                list.innerHTML = "";
-                snap.forEach(d => {
-                    const u = d.data();
-                    if(u.name.toLowerCase() === "rangreja") return;
-                    const div = document.createElement("div");
-                    div.className = "list-item";
-                    div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
-                    <div>
-                        <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
-                        <button onclick="event.stopPropagation(); selectedUser='${u.name}'; startDM();" style="color:cyan; background:none; border:1px solid cyan;">DM</button>
-                    </div>`;
-                    list.appendChild(div);
-                });
-            });
-        };
-
-        window.toggleBlock = async (uid, status) => { if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); };
 
         // --- RANGREJA VERSE ---
         function loadVerse() {
@@ -614,8 +548,8 @@
                     const div = document.createElement("div");
                     div.className = "message admin-post";
                     const imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
-                    const delBtn = currentUser.toLowerCase()==="rangreja" ? `<i class="fas fa-trash" style="float:right; color:red;" onclick="deleteDoc(doc(db,'rangreja_updates','${d.id}'))"></i>` : "";
-                    div.innerHTML = `${delBtn} <span class="sender-name">Rangreja 👑</span> ${imgHtml} <div>${msg.text}</div>`;
+                    const delBtn = currentUser.toLowerCase()==="rangreja" ? `<i class="fas fa-trash" style="float:right; color:red; cursor:pointer;" onclick="deleteDoc(doc(db,'rangreja_updates','${d.id}'))"></i>` : "";
+                    div.innerHTML = `${delBtn} <span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span> ${imgHtml} <div>${msg.text}</div>`;
                     list.appendChild(div);
                 });
             });
@@ -641,7 +575,7 @@
             div.className = `message ${isMe ? 'me' : 'others'} ${isAdminMsg ? 'admin-msg' : ''}`;
             
             let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
-            let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '👑' : ''}</span>`;
+            let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
             
             let actions = `<div class="msg-actions">
                 ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', ${isPrivate})"><i class="fas fa-pen"></i></button>` : ''}
@@ -649,16 +583,23 @@
                 <button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>
             </div>`;
 
-            // Long Press
+            // Long Press Fix: Top/Bottom
             let timer;
-            const startPress = () => timer = setTimeout(() => { document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions')); div.classList.add('show-actions'); navigator.vibrate(50); }, 500);
-            const endPress = () => clearTimeout(timer);
+            const startPress = () => timer = setTimeout(() => { 
+                document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
+                div.classList.add('show-actions');
+                const menu = div.querySelector('.msg-actions');
+                if(div.getBoundingClientRect().top < 100) { menu.classList.remove('top'); menu.classList.add('bottom'); }
+                else { menu.classList.remove('bottom'); menu.classList.add('top'); }
+                navigator.vibrate(50); 
+            }, 500);
             
-            div.addEventListener('touchstart', startPress);
+            const endPress = () => clearTimeout(timer);
+            div.addEventListener('touchstart', startPress, {passive: true});
             div.addEventListener('touchend', endPress);
             div.addEventListener('mousedown', startPress);
             div.addEventListener('mouseup', endPress);
-            div.addEventListener('contextmenu', e => { e.preventDefault(); div.classList.add('show-actions'); });
+            div.addEventListener('contextmenu', e => { e.preventDefault(); });
 
             div.innerHTML = `${actions} ${nameTag} ${imgHtml} <div>${msg.text} ${msg.isEdited?'<span class="edited-tag">(edited)</span>':''}</div> <div class="msg-time">${new Date(msg.createdAt?.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
             list.appendChild(div);
@@ -666,14 +607,20 @@
 
         window.sendMsg = async (type) => {
             const u = await getDoc(doc(db, "users", currentUser));
-            if(u.exists() && u.data().isBlocked) return alert("Blocked.");
+            // Block logic: Allow DM to Rangreja even if blocked
+            const isToRangreja = selectedUser && selectedUser.toLowerCase() === "rangreja";
+            if(u.exists() && u.data().isBlocked && !isToRangreja) return alert("You are Blocked.");
 
             const txtId = type==='public'?'msgInput':'dmMsgInput';
+            const imgId = type==='public'?'imgInput':'dmImgInput';
             const txt = document.getElementById(txtId).value.trim();
-            
-            if(!txt && !selectedImg) return;
+            const file = document.getElementById(imgId).files[0];
+
+            if(!txt && !file && !selectedImg) return;
+
+            let imgData = selectedImg;
             const data = { text: txt, user: currentUser, createdAt: serverTimestamp() };
-            if(selectedImg) data.image = selectedImg;
+            if(imgData) data.image = imgData;
 
             if(type === 'public') await addDoc(collection(db, "messages"), data);
             else {
@@ -693,6 +640,13 @@
             } else {
                 await deleteDoc(doc(db, "messages", id));
             }
+        };
+
+        window.editMsg = (id, txt, isPriv) => {
+            editingId = id; 
+            const input = document.getElementById(isPriv ? 'dmMsgInput' : 'msgInput');
+            input.value = txt; input.focus();
+            document.querySelector(isPriv ? '#dmSendBtn' : '#sendBtn').style.color = '#00e676';
         };
 
         window.handleImg = (type) => {
@@ -724,13 +678,52 @@
         window.clearDmImg = () => { selectedImg=null; document.getElementById('dmImgInput').value=''; document.getElementById('dmImgPreview').style.display='none'; };
         window.clearVerseImg = () => { selectedImg=null; document.getElementById('verseImgInput').value=''; document.getElementById('verseImgPreview').style.display='none'; };
         window.replyMsg = (u) => { document.getElementById('msgInput').value = `@${u} `; };
+        
+        window.openView = (id) => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            document.getElementById('landing-view').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
+            isChatActive = (id === 'chat-view');
+            if(isChatActive) { 
+                document.getElementById('homeUnreadBadge').style.display = 'none'; 
+                loadPublicChat();
+            }
+            if(id === 'rangreja-view') loadVerse();
+        };
 
-        document.getElementById("sendBtn").addEventListener("click", () => sendMsg('public'));
-        document.getElementById("dmSendBtn").addEventListener("click", () => sendMsg('private'));
+        window.goHome = () => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            document.getElementById('landing-view').style.display = 'flex';
+            isChatActive = false;
+            if(dmSubscription) dmSubscription();
+        };
+
+        window.openAdminPanel = () => {
+            openView('list-view');
+            document.getElementById('listTitle').innerText = "Admin Panel";
+            const list = document.getElementById("genericList");
+            onSnapshot(collection(db, "users"), (snap) => {
+                list.innerHTML = "";
+                snap.forEach(d => {
+                    const u = d.data();
+                    if(u.name.toLowerCase() === "rangreja") return;
+                    const div = document.createElement("div");
+                    div.className = "list-item";
+                    div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
+                    <div>
+                        <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
+                        <button onclick="event.stopPropagation(); selectedUser='${u.name}'; startDM();" style="color:cyan; background:none; border:1px solid cyan;">DM</button>
+                    </div>`;
+                    list.appendChild(div);
+                });
+            });
+        };
+        
+        window.toggleBlock = async (uid, status) => { if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); };
         document.getElementById("verseSendBtn").addEventListener("click", sendVerse);
-        document.getElementById("msgInput").addEventListener("keypress", (e) => { if(e.key==="Enter") sendMsg('public'); });
+        document.getElementById("adminSendBtn")?.addEventListener("click", sendVerse);
 
-        // Checklist Logic
+        // Checklist
         document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
             const label = cb.nextElementSibling;
             cb.checked = localStorage.getItem('cb_'+i) === 'true';
