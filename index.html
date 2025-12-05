@@ -97,7 +97,7 @@
         .chat-status { font-size: 11px; color: var(--accent); }
 
         /* --- MESSAGES --- */
-        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 5; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 5; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
 
         .message { 
             max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
@@ -119,13 +119,13 @@
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
         .edited-tag { font-size: 10px; color: #aaa; font-style: italic; margin-left: 4px; }
         
-        /* IMAGE STYLE - Controlled Size */
+        /* IMAGE STYLE */
         .chat-img { 
-            max-width: 100%; max-height: 250px; /* Limit height so it doesn't fill screen */
+            max-width: 100%; max-height: 250px; 
             width: auto;
             border-radius: 8px; margin-top: 5px; 
             border: 1px solid rgba(255,255,255,0.1); 
-            object-fit: contain; /* Keeps aspect ratio */
+            object-fit: contain;
             display: block;
         }
 
@@ -179,7 +179,6 @@
             text-align: center; margin-bottom: 15px; 
         }
         #rangreja-messages .sender-name { display: flex; justify-content: center; color: var(--admin-gold); font-size: 14px; margin-bottom: 6px; }
-        /* Fix Image size in Rangreja verse too */
         #rangreja-messages .chat-img { max-height: 200px; margin: 10px auto; }
         
         #adminInputArea { display: none; }
@@ -303,30 +302,118 @@
         </div>
         <div id="checklist-content">
              <article class="page sans">
-                <header><h1 class="page-title">Class 10 Syllabus Checklist</h1></header>
+                <header><h1 class="page-title">Class 10 Syllabus Checklist (AY 2025–26) - Yahi krte reh jayenge 🥺</h1></header>
                 <div class="page-body">
-                    <p>Use checkboxes to track progress.</p>
+                    <blockquote>Use the checkboxes to track coverage and completion for each unit and chapter. Update or add items as needed for your board.</blockquote>
+                    
                     <h3>Social Science (SST)</h3>
                     <ul class="to-do-list">
                         <li><div class="checkbox checkbox-off"></div> <span>History: The Rise of Nationalism in Europe</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>History: Nationalism in India</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>History: The Making of a Global World (page 53-57 tak hi ayega)</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>History: Print Culture and the Modern World</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Geography: Resources and Development</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Forest and Wildlife Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Water Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Agriculture</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Minerals and Energy Resources</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Geography: Manufacturing Industries</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Lifelines of indian economy (map work)</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Political Science: Power Sharing</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Federalism</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Gender, Religion and Caste</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Political Parties</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Political Science: Outcomes of Democracy</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Economics: Development</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Sectors of the Indian Economy</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Money and Credit</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Economics: Globalisation (Only "What is Globalization" etc)</span></li>
                     </ul>
+
                     <h3>Science</h3>
                     <ul class="to-do-list">
                         <li><div class="checkbox checkbox-off"></div> <span>Chemical Reactions and Equations</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Acids, Bases and Salts</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Metals and Non-metals</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Carbon and its Compounds</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Life Processes</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Control and Coordination</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>How do Organisms Reproduce?</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Heredity and Evolution</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Light – Reflection and Refraction</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Human Eye and the Colourful World</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Electricity</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Magnetic Effects of Electric Current</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Our Environment</span></li>
                     </ul>
+
                     <h3>Mathematics</h3>
                     <ul class="to-do-list">
                         <li><div class="checkbox checkbox-off"></div> <span>Real Numbers</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Polynomials</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Pair of Linear Equations in Two Variables</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Quadratic Equations</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Arithmetic Progressions</span></li>
                         <li><div class="checkbox checkbox-off"></div> <span>Triangles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Coordinate Geometry</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Trigonometry: Introduction and Identities</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Trigonometry: Applications</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Circles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Areas Related to Circles</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Surface Areas and Volumes</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Statistics</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Probability</span></li>
+                    </ul>
+
+                    <h3>English</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>A Letter to God</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Nelson Mandela — Long Walk to Freedom</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Two Stories about Flying</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>From the Diary of Anne Frank</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Glimpses of India</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Mijbil the Otter</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Madam Rides the Bus</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Sermon at Benares</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Proposal (Play)</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Dust of Snow</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Fire and Ice</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Tiger in the Zoo</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>How to Tell Wild Animals</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Ball Poem</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Amanda!</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Trees</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Fog</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Tale of Custard the Dragon</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>For Anne Gregory</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Triumph of Surgery</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Thief’s Story</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Midnight Visitor</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>A Question of Trust</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Footprints without Feet</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Making of a Scientist</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Necklace</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Bholi</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>The Book That Saved the Earth</span></li>
+                    </ul>
+                    
+                    <p style="opacity:0.6; font-size:12px; margin-top:20px;">🙏 Disclaimer - Maaf krdena waise mzs wale bachhe ko ye dekhne ki koi jaroorat tau padti nhi hai phir bhi add kr diya 🙏</p>
+                    <hr />
+                    
+                    <h3>Grammar & Writing</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>Grammar: Tenses, Modals, Subject–Verb Agreement, Reported Speech, Determiners, Prepositions</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Reading: Factual and Discursive Passages</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Writing: Letter, Analytical Paragraph, Story</span></li>
+                    </ul>
+
+                    <h3>Exam Planning</h3>
+                    <ul class="to-do-list">
+                        <li><div class="checkbox checkbox-off"></div> <span>Term-wise plan created</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Monthly targets set</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Weekly revision schedule</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Sample papers identified</span></li>
+                        <li><div class="checkbox checkbox-off"></div> <span>Mock tests scheduled</span></li>
                     </ul>
                 </div>
             </article>
