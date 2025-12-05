@@ -49,9 +49,26 @@
         .chat-title { font-size: 16px; font-weight: 700; }
         .chat-status { font-size: 11px; color: var(--accent); }
 
-        /* --- BUTTONS --- */
-        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; margin-top: 20px; }
-        .big-btn { border: none; padding: 14px 0; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s; color: white; text-decoration: none; }
+        /* --- LANDING & BUTTONS (CENTERED FIX) --- */
+        #landing-view {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; width: 100%; text-align: center; padding: 20px;
+        }
+        
+        .btn-group { 
+            display: flex; flex-direction: column; gap: 15px; 
+            width: 100%; max-width: 320px; /* Fixed max width */
+            margin-top: 30px; 
+            align-items: stretch; /* Stretch buttons to fill container */
+        }
+
+        .big-btn { 
+            border: none; padding: 16px 0; border-radius: 50px; 
+            font-size: 15px; font-weight: 600; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: transform 0.2s; color: white; text-decoration: none; 
+            width: 100%; /* Ensure full width */
+        }
         .big-btn:active { transform: scale(0.95); }
         
         .btn-chat { background: linear-gradient(135deg, #ff4081, #c60055); }
@@ -133,10 +150,24 @@
         .action-modal.open { transform: translateY(0); }
         .modal-option { padding: 15px; background: #333; margin-bottom: 10px; text-align: center; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
-        /* --- CHECKLIST STYLE --- */
-        #checklist-content { background: #fff; color: #333; height: 100%; overflow-y: auto; padding: 20px; }
-        .to-do-list li { list-style: none; padding: 5px 0; display: flex; align-items: flex-start; }
-        .custom-checkbox { width: 18px; height: 18px; margin-right: 10px; }
+        /* --- SYLLABUS CHECKLIST (Notion Style Restored) --- */
+        #checklist-content { 
+            background: #fff; color: #37352f; height: 100%; overflow-y: auto; padding: 30px; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+        }
+        #checklist-content h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        #checklist-content h3 { font-size: 20px; font-weight: 600; margin-top: 25px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        #checklist-content blockquote { border-left: 3px solid #333; margin: 10px 0; padding-left: 10px; opacity: 0.7; }
+        
+        .to-do-list { padding-inline-start: 0; }
+        .to-do-list li { list-style: none; padding: 6px 0; display: flex; align-items: flex-start; font-size: 15px; }
+        .custom-checkbox { 
+            width: 18px; height: 18px; margin-right: 10px; cursor: pointer; appearance: none; -webkit-appearance: none;
+            border: 2px solid #333; border-radius: 3px; flex-shrink: 0; position: relative; top: 2px;
+        }
+        .custom-checkbox:checked { background: #2D8CFF; border-color: #2D8CFF; }
+        .custom-checkbox:checked::after { content: '✔'; color: white; font-size: 12px; position: absolute; left: 3px; top: -1px; }
+        .completed-text { text-decoration: line-through; opacity: 0.5; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -144,7 +175,7 @@
 <body>
 
     <div id="landing-view">
-        <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" style="width:120px; height:120px; border-radius:50%; border:4px solid var(--danger); object-fit:cover; margin-bottom:20px;">
+        <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" style="width:130px; height:130px; border-radius:50%; border:4px solid var(--danger); object-fit:cover; margin-bottom:20px;">
         <h2 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h2>
         
         <div class="btn-group">
@@ -257,39 +288,58 @@
             </div>
         </div>
         <div id="checklist-content">
-            <h3>Class 10 Syllabus</h3>
+            <h1>Class 10 Syllabus Checklist</h1>
+            <blockquote>Use the checkboxes to track coverage and completion.</blockquote>
+            
+            <h3>Social Science (SST)</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>History: The Rise of Nationalism in Europe</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>History: Nationalism in India</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>History: The Making of a Global World</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Geography: Resources and Development</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Geography: Forest and Wildlife</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Geography: Water Resources</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Geography: Agriculture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Science: Power Sharing</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Science: Federalism</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Science: Gender, Religion & Caste</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Science: Political Parties</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Economics: Development</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Economics: Sectors of Indian Economy</span></li>
+            </ul>
+
+            <h3>Science</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions and Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases and Salts</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Metals and Non-metals</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon and its Compounds</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Control and Coordination</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>How do Organisms Reproduce?</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity and Evolution</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Light – Reflection and Refraction</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye and the Colourful World</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects of Electric Current</span></li>
+            </ul>
+
+            <h3>Mathematics</h3>
             <ul class="to-do-list">
                 <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations in Two Variables</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Applications of Trig</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry: Intro & Identities</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Applications of Trigonometry</span></li>
                 <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Control & Coordination</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Light Reflection</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Rise of Nationalism Europe</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Making Global World</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Gender Religion Caste</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Outcomes of Democracy</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
             </ul>
         </div>
     </div>
@@ -352,7 +402,9 @@
         window.saveName = () => {
             const name = document.getElementById('nameInput').value.trim();
             if(!name) return;
-            if(name.toLowerCase() === "rangreja" && prompt("Admin Pass:") !== "admin123") return;
+            if(name.toLowerCase() === "rangreja") {
+                if(prompt("Admin Pass:") !== "admin123") return alert("Wrong Password");
+            }
             
             localStorage.setItem("chatUserName", name);
             currentUser = name;
@@ -540,13 +592,17 @@
             const div = document.createElement("div");
             const isMe = msg.user === currentUser;
             const isAdmin = msg.user.toLowerCase() === "rangreja";
+            const amIAdmin = currentUser.toLowerCase() === "rangreja";
             
             div.className = `message ${isMe ? 'me' : 'others'} ${isAdmin ? 'admin-msg' : ''}`;
             
             let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
             let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdmin ? '👑' : ''}</span>`;
+            
+            // ACTION BUTTONS (DELETE FIXED FOR ADMIN)
             let actions = `<div class="msg-actions">
-                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}')"><i class="fas fa-pen"></i></button><button class="action-btn btn-del" onclick="delMsg('${msg.id}')"><i class="fas fa-trash"></i></button>` : ''}
+                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}')"><i class="fas fa-pen"></i></button>` : ''}
+                ${(isMe || amIAdmin) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}')"><i class="fas fa-trash"></i></button>` : ''}
                 <button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>
             </div>`;
 
@@ -564,7 +620,6 @@
         }
 
         window.sendMsg = async (type) => {
-            // Check Block
             const userSnap = await getDoc(doc(db, "users", currentUser));
             if(userSnap.exists() && userSnap.data().isBlocked) return alert("You are Blocked!");
 
@@ -633,8 +688,14 @@
 
         // Checklist Logic (Restored)
         document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
+            const label = cb.nextElementSibling;
             cb.checked = localStorage.getItem('cb_'+i) === 'true';
-            cb.onclick = () => localStorage.setItem('cb_'+i, cb.checked);
+            if(cb.checked) label.classList.add('completed-text');
+            
+            cb.onclick = () => {
+                localStorage.setItem('cb_'+i, cb.checked);
+                label.classList.toggle('completed-text', cb.checked);
+            };
         });
     </script>
 </body>
