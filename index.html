@@ -19,7 +19,6 @@
             --glass-border: rgba(255, 105, 180, 0.2);
             --admin-gold: #FFD700;
             --verified-blue: #1DA1F2;
-            --system-gray: #333;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -35,30 +34,34 @@
             user-select: none;
         }
 
-        /* --- UI COMPONENTS --- */
+        /* --- UI HELPERS --- */
         .app-view { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--chat-bg); animation: fadeIn 0.3s ease; }
+        .hidden { display: none !important; }
         
+        /* --- HEADER --- */
         .chat-header { 
             padding: 12px 15px; background: var(--header-bg); 
             border-bottom: 1px solid var(--glass-border); 
             display: flex; align-items: center; justify-content: space-between; 
             flex-shrink: 0; z-index: 10; 
         }
-        
-        .header-title-area { margin-left: 10px; }
+        .header-info { display: flex; flex-direction: column; margin-left: 10px; }
         .chat-title { font-size: 16px; font-weight: 700; }
-        .chat-status { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 5px; }
+        .chat-status { font-size: 11px; color: var(--accent); }
 
         /* --- BUTTONS --- */
-        .btn-group { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; margin-top: 30px; }
-        .big-btn { border: none; padding: 16px 0; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; position: relative; transition: 0.2s; }
+        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; margin-top: 20px; }
+        .big-btn { border: none; padding: 14px 0; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s; color: white; text-decoration: none; }
         .big-btn:active { transform: scale(0.95); }
-        .chat-btn { background: linear-gradient(135deg, #ff4081, #c60055); color: white; }
-        .admin-btn { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; display: none; } /* Hidden by default */
-        .syllabus-btn { background: #eee; color: #333; }
+        
+        .btn-chat { background: linear-gradient(135deg, #ff4081, #c60055); }
+        .btn-admin { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; }
+        .btn-verse { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
+        .btn-inbox { background: linear-gradient(135deg, #2D8CFF, #0055ff); }
+        .btn-syllabus { background: #eee; color: #333; }
 
         /* --- MESSAGES --- */
-        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; position: relative; scroll-behavior: smooth; }
         
         .message { 
             max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
@@ -69,159 +72,226 @@
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
         
-        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; }
+        /* Rangreja Verse Style */
+        .message.admin-post { 
+            width: 90%; max-width: 90%; align-self: center; 
+            background: rgba(40, 30, 10, 0.9); border: 1px solid var(--admin-gold); 
+            text-align: center; margin-bottom: 10px;
+        }
+
+        .sender-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #ff80ab; display: block; cursor: pointer; text-decoration: underline; }
         .message.me .sender-name { display: none; }
+        .verified-tick { color: var(--verified-blue); margin-left: 4px; }
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
         
-        /* UNREAD DIVIDER */
-        .unread-divider {
-            display: flex; align-items: center; justify-content: center; margin: 15px 0;
-            color: var(--accent); font-size: 11px; font-weight: 600; opacity: 0.8;
+        .chat-img { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 5px; object-fit: contain; cursor: zoom-in; }
+
+        /* --- ACTIONS (Long Press) --- */
+        .msg-actions { 
+            position: absolute; top: -45px; background: #222; padding: 5px 10px; border-radius: 25px; 
+            display: none; align-items: center; gap: 10px; z-index: 100; border: 1px solid var(--glass-border); 
         }
-        .unread-divider::before, .unread-divider::after {
-            content: ""; flex: 1; height: 1px; background: var(--accent); margin: 0 10px; opacity: 0.5;
+        .message.show-actions .msg-actions { display: flex; }
+        .message.others .msg-actions { left: 0; }
+        .message.me .msg-actions { right: 0; }
+        .action-btn { width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; color: #fff; cursor: pointer; }
+        .btn-del { background: var(--danger); }
+        .btn-edit { background: var(--verified-blue); }
+        .btn-reply { background: #444; }
+
+        /* --- SCROLL BTN --- */
+        #scrollDownBtn { 
+            position: absolute; bottom: 80px; right: 20px; width: 45px; height: 45px; 
+            border-radius: 50%; background: #2a0a18; border: 1px solid var(--accent); 
+            display: none; justify-content: center; align-items: center; z-index: 90; cursor: pointer;
+        }
+        .unread-badge { 
+            position: absolute; top: -5px; right: -5px; background: #00e676; color: #000; 
+            font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; 
         }
 
-        /* --- ADMIN PANEL --- */
-        .user-list-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: #1a1a1a; margin-bottom: 5px; border-radius: 8px;
+        /* --- ADMIN/INBOX LIST --- */
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; padding: 15px; 
+            background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; border-bottom: 1px solid #333; cursor: pointer;
         }
-        .user-info b { display: block; color: #fff; font-size: 15px; }
-        .user-info span { font-size: 11px; color: #888; }
-        .block-btn {
-            background: transparent; border: 1px solid var(--danger); color: var(--danger);
-            padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
-        }
-        .block-btn.blocked { background: var(--danger); color: white; }
+        .list-item:active { background: #252525; }
 
-        /* --- USER ACTION MODAL (Click on Name) --- */
-        .action-modal {
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #1e1e1e; border-top: 1px solid var(--accent);
-            border-radius: 20px 20px 0 0; padding: 20px; z-index: 4000;
-            transform: translateY(100%); transition: transform 0.3s ease;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .action-modal.open { transform: translateY(0); }
-        .action-option {
-            padding: 15px; background: #333; border-radius: 10px; text-align: center;
-            font-weight: 600; cursor: pointer; border: 1px solid #444;
-        }
-        
-        /* --- IMAGE & COMMON --- */
-        .chat-img { max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 5px; object-fit: contain; }
-        #imageViewer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; }
-        #fullImage { max-width: 95%; max-height: 80%; }
-        
         /* --- FOOTER --- */
         .chat-footer { background: var(--header-bg); border-top: 1px solid var(--glass-border); padding: 10px; }
         .chat-input-area { display: flex; gap: 10px; align-items: center; }
         .chat-input { flex: 1; background: #2d0c15; border: 1px solid var(--glass-border); border-radius: 25px; padding: 12px 18px; color: #fff; font-size: 15px; }
-        .send-btn { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .send-btn { background: var(--accent); border: none; width: 45px; height: 45px; border-radius: 50%; color: #fff; display: flex; justify-content: center; align-items: center; }
 
-        /* --- SCROLL BTN --- */
-        #scrollDownBtn { position: absolute; bottom: 80px; right: 20px; width: 45px; height: 45px; border-radius: 50%; background: #333; border: 1px solid var(--accent); display: none; justify-content: center; align-items: center; z-index: 90; }
+        /* --- MODALS --- */
+        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
+        .action-modal { 
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1e1e1e; 
+            border-radius: 20px 20px 0 0; padding: 20px; z-index: 4001; 
+            transform: translateY(100%); transition: transform 0.3s ease; 
+        }
+        .action-modal.open { transform: translateY(0); }
+        .modal-option { padding: 15px; background: #333; margin-bottom: 10px; text-align: center; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
-        /* --- LANDING --- */
-        #landing-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 20px; }
-        .teacher-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--danger); object-fit: cover; margin-bottom: 20px; }
+        /* --- CHECKLIST STYLE --- */
+        #checklist-content { background: #fff; color: #333; height: 100%; overflow-y: auto; padding: 20px; }
+        .to-do-list li { list-style: none; padding: 5px 0; display: flex; align-items: flex-start; }
+        .custom-checkbox { width: 18px; height: 18px; margin-right: 10px; }
 
-        /* --- OVERLAY --- */
-        .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3999; display: none; }
-        
-        /* Admin Badge */
-        .verified-tick { color: var(--verified-blue); margin-left: 4px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="landing-view">
-        <img src="images (8).jpeg" alt="Sir" class="teacher-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-        <h2 style="margin-bottom: 30px;">"Ab tau match khtm ho gya padhle!" 😡</h2>
+        <img src="images (8).jpeg" alt="Sir" class="teacher-big-img" style="width:120px; height:120px; border-radius:50%; border:4px solid var(--danger); object-fit:cover; margin-bottom:20px;">
+        <h2 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h2>
         
         <div class="btn-group">
-            <button class="big-btn chat-btn" onclick="openPublicChat()">
+            <button class="big-btn btn-chat" onclick="openView('chat-view')">
                 <i class="fas fa-comments"></i> Public Chat
+                <span id="homeUnreadBadge" class="unread-badge" style="display:none;"></span>
             </button>
             
-            <button id="adminPanelBtn" class="big-btn admin-btn" onclick="openAdminPanel()">
+            <button class="big-btn btn-inbox" onclick="openInbox()">
+                <i class="fas fa-envelope"></i> My Inbox 📩
+            </button>
+
+            <button class="big-btn btn-verse" onclick="openView('rangreja-view')">
+                <i class="fas fa-crown"></i> Rangreja Verse
+            </button>
+
+            <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()">
                 <i class="fas fa-shield-alt"></i> Admin Panel
             </button>
 
-            <button class="big-btn syllabus-btn" onclick="document.getElementById('landing-view').style.display='none'; document.getElementById('checklist-view').style.display='flex';">
-                <i class="fas fa-tasks"></i> Syllabus
+            <button class="big-btn btn-syllabus" onclick="openView('checklist-view')">
+                <i class="fas fa-tasks"></i> Syllabus Checklist
             </button>
         </div>
     </div>
 
     <div id="chat-view" class="app-view">
         <div class="chat-header">
-            <div style="display:flex; align-items:center;">
-                <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-                <div class="header-title-area">
-                    <div class="chat-title">Toppers Chat</div>
-                    <div class="chat-status" id="onlineCountDisplay">● Loading...</div>
-                </div>
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info">
+                <div class="chat-title">Public Chat</div>
+                <div class="chat-status" id="onlineCount">● Loading...</div>
             </div>
+            <div style="width:30px;"></div>
         </div>
+        
         <div class="chat-messages" id="messagesList"></div>
-        <div id="scrollDownBtn" onclick="scrollToBottomManual()"><i class="fas fa-arrow-down"></i></div>
+        
+        <div id="scrollDownBtn" onclick="scrollToBottom()">
+            <i class="fas fa-arrow-down"></i>
+            <span id="scrollBadge" class="unread-badge" style="display:none;">0</span>
+        </div>
+
         <div class="chat-footer">
-            <div id="imgPreviewArea" style="display:none; padding:10px;"><img id="previewThumb" style="height:50px;"> <i class="fas fa-times" onclick="clearImage()"></i></div>
+            <div id="imgPreview" style="display:none; padding:10px;"><img id="thumb" style="height:50px;"> <i class="fas fa-times" onclick="clearImg()"></i></div>
+            <div id="replyPreview" style="display:none; background:#333; padding:5px; font-size:12px; margin-bottom:5px;">Replying... <i class="fas fa-times" onclick="cancelReply()"></i></div>
+            
             <div class="chat-input-area">
-                <button class="icon-btn" onclick="document.getElementById('imageInput').click()"><i class="fas fa-paperclip" style="color:#aaa;"></i></button>
-                <input type="file" id="imageInput" hidden accept="image/*" onchange="handleImageSelect('public')">
+                <input type="file" id="imgInput" hidden accept="image/*" onchange="handleImg('public')">
+                <button class="icon-btn" style="background:none; border:none; color:#aaa; font-size:20px;" onclick="document.getElementById('imgInput').click()"><i class="fas fa-paperclip"></i></button>
                 <input type="text" class="chat-input" id="msgInput" placeholder="Type a message...">
-                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                <button class="send-btn" onclick="sendMsg('public')"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <div id="private-chat-view" class="app-view">
+    <div id="dm-view" class="app-view">
         <div class="chat-header" style="background:#1a050b;">
-            <div style="display:flex; align-items:center;">
-                <button class="back-btn" onclick="closePrivateChat()"><i class="fas fa-arrow-left"></i></button>
-                <div class="header-title-area">
-                    <div class="chat-title" id="dmUserName">User</div>
-                    <div class="chat-status" style="color:var(--verified-blue);">● Private Conversation</div>
-                </div>
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info">
+                <div class="chat-title" id="dmTitle">User</div>
+                <div class="chat-status" style="color:#1DA1F2;">Private Chat</div>
             </div>
+            <div style="width:30px;"></div>
         </div>
-        <div class="chat-messages" id="dmMessagesList"></div>
+        <div class="chat-messages" id="dmList"></div>
         <div class="chat-footer">
-            <div id="dmImgPreviewArea" style="display:none; padding:10px;"><img id="dmPreviewThumb" style="height:50px;"> <i class="fas fa-times" onclick="clearDmImage()"></i></div>
+            <div id="dmImgPreview" style="display:none; padding:10px;"><img id="dmThumb" style="height:50px;"> <i class="fas fa-times" onclick="clearDmImg()"></i></div>
             <div class="chat-input-area">
-                <button class="icon-btn" onclick="document.getElementById('dmImageInput').click()"><i class="fas fa-paperclip" style="color:#aaa;"></i></button>
-                <input type="file" id="dmImageInput" hidden accept="image/*" onchange="handleImageSelect('private')">
-                <input type="text" class="chat-input" id="dmMsgInput" placeholder="Message privately...">
-                <button class="send-btn" id="dmSendBtn"><i class="fas fa-paper-plane"></i></button>
+                <input type="file" id="dmImgInput" hidden accept="image/*" onchange="handleImg('private')">
+                <button class="icon-btn" style="background:none; border:none; color:#aaa; font-size:20px;" onclick="document.getElementById('dmImgInput').click()"><i class="fas fa-paperclip"></i></button>
+                <input type="text" class="chat-input" id="dmMsgInput" placeholder="Private Message...">
+                <button class="send-btn" onclick="sendMsg('private')"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <div id="admin-view" class="app-view">
+    <div id="list-view" class="app-view">
         <div class="chat-header">
-            <div style="display:flex; align-items:center;">
-                <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-                <div class="header-title-area">
-                    <div class="chat-title">Admin Panel</div>
-                    <div class="chat-status">Manage Users</div>
-                </div>
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info">
+                <div class="chat-title" id="listTitle">List</div>
             </div>
+            <div style="width:30px;"></div>
         </div>
-        <div class="chat-messages" id="userListContainer">
-            </div>
+        <div class="chat-messages" id="genericList"></div>
     </div>
 
-    <div class="overlay-bg" id="actionOverlay" onclick="closeUserModal()"></div>
-    <div class="action-modal" id="userActionModal">
-        <h3 style="color:var(--accent); text-align:center;" id="modalUserName">User Name</h3>
-        <div class="action-option" style="color:var(--verified-blue);" onclick="startPrivateChatFromModal()">
-            <i class="fas fa-comment-dots"></i> Message Privately
+    <div id="rangreja-view" class="app-view">
+        <div class="chat-header" style="border-bottom: 1px solid var(--admin-gold);">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info">
+                <div class="chat-title" style="color:var(--admin-gold);">Rangreja Verse 👑</div>
+            </div>
         </div>
-        <div class="action-option" style="color:#aaa;" onclick="closeUserModal()">Cancel</div>
+        <div class="chat-messages" id="verseList"></div>
+        <div class="chat-footer hidden" id="adminInputArea">
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="verseInput" placeholder="Admin Update...">
+                <button class="send-btn" onclick="sendVerse()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checklist-view" class="app-view">
+        <div class="chat-header" style="background:#fff; border-bottom:1px solid #ccc;">
+            <button class="back-btn" style="background:none; border:none; color:#333; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info">
+                <div class="chat-title" style="color:#333;">Syllabus Checklist</div>
+            </div>
+        </div>
+        <div id="checklist-content">
+            <h3>Class 10 Syllabus</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Applications of Trig</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Control & Coordination</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Light Reflection</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Rise of Nationalism Europe</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Making Global World</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Gender Religion Caste</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Outcomes of Democracy</span></li>
+            </ul>
+        </div>
     </div>
 
     <div id="nameModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:6000; display:flex; justify-content:center; align-items:center;">
@@ -232,27 +302,23 @@
         </div>
     </div>
 
-    <div id="imageViewer">
-        <button class="close-viewer-btn" onclick="document.getElementById('imageViewer').style.display='none'" style="position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px;">&times;</button>
-        <img id="fullImage">
+    <div class="overlay-bg" id="actionOverlay" onclick="closeModal()"></div>
+    <div class="action-modal" id="userModal">
+        <h3 id="modalUser" style="color:var(--accent); text-align:center; margin-bottom:20px;">User</h3>
+        <div class="modal-option" style="color:var(--verified-blue);" onclick="startDM()">
+            <i class="fas fa-comment"></i> Message Privately
+        </div>
+        <div class="modal-option" style="color:#aaa;" onclick="closeModal()">Cancel</div>
     </div>
 
-    <div id="checklist-view" class="app-view" style="background:white; color:black;">
-        <div class="chat-header" style="background:white; border-bottom:1px solid #ccc;">
-            <button class="back-btn" onclick="goHome()" style="color:black;"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-title-area">
-                <div class="chat-title">Syllabus</div>
-            </div>
-        </div>
-        <div style="padding:20px;">
-            <h3>Full Syllabus Checklist</h3>
-            <p>List is here (restored from previous code)...</p>
-            </div>
+    <div id="imageViewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:7000; justify-content:center; align-items:center;">
+        <button onclick="document.getElementById('imageViewer').style.display='none'" style="position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px;">&times;</button>
+        <img id="fullImage" style="max-width:100%; max-height:100%;">
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getDatabase, ref, onValue, push, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -270,298 +336,306 @@
         const rtdb = getDatabase(app);
         
         let currentUser = localStorage.getItem("chatUserName");
-        let selectedUserForAction = null;
-        let selectedDmUser = null;
+        let selectedUser = null;
         let dmSubscription = null;
-        let selectedImage = null;
+        let selectedImg = null;
+        let editingId = null;
+        let isAtBottom = true;
 
-        // --- INIT ---
-        if (!currentUser) {
+        if(!currentUser) {
             document.getElementById('nameModal').style.display = 'flex';
         } else {
             document.getElementById('nameModal').style.display = 'none';
-            checkAdmin();
-            registerUserInDb();
-            setupPresence();
+            initApp();
         }
 
         window.saveName = () => {
-            const name = document.getElementById("nameInput").value.trim();
-            if (!name) return alert("Name required!");
+            const name = document.getElementById('nameInput').value.trim();
+            if(!name) return;
+            if(name.toLowerCase() === "rangreja" && prompt("Admin Pass:") !== "admin123") return;
             
-            // Basic Admin Protection
-            if (name.toLowerCase() === "rangreja") {
-                if (prompt("Password:") !== "admin123") return alert("Wrong Password");
-            }
-
             localStorage.setItem("chatUserName", name);
             currentUser = name;
             document.getElementById('nameModal').style.display = 'none';
-            checkAdmin();
-            registerUserInDb();
-            setupPresence();
+            initApp();
         };
 
-        function checkAdmin() {
-            if (currentUser.toLowerCase() === "rangreja") {
-                document.getElementById('adminPanelBtn').style.display = 'flex';
+        function initApp() {
+            registerUser();
+            setupPresence();
+            
+            // Show Admin Button if Rangreja
+            if(currentUser.toLowerCase() === "rangreja") {
+                document.getElementById('adminBtn').classList.remove('hidden');
+                document.getElementById('adminInputArea').classList.remove('hidden');
             }
         }
 
-        // --- USER DB MANAGEMENT ---
-        async function registerUserInDb() {
-            // Create/Update user doc to track existence and block status
-            const userRef = doc(db, "users", currentUser);
-            await setDoc(userRef, {
-                name: currentUser,
-                lastActive: serverTimestamp(),
-                isBlocked: false // Default
-            }, { merge: true });
+        async function registerUser() {
+            await setDoc(doc(db, "users", currentUser), { name: currentUser, lastActive: serverTimestamp() }, { merge: true });
         }
 
-        async function isUserBlocked() {
-            const snap = await getDoc(doc(db, "users", currentUser));
-            return snap.exists() && snap.data().isBlocked;
-        }
-
-        // --- PRESENCE ---
         function setupPresence() {
-            const connectedRef = ref(rtdb, ".info/connected");
+            const conRef = ref(rtdb, ".info/connected");
             const onlineRef = ref(rtdb, "online_users");
-            onValue(connectedRef, (snap) => {
-                if (snap.val() === true) {
-                    const con = push(onlineRef);
-                    onDisconnect(con).remove();
-                    set(con, { user: currentUser });
+            onValue(conRef, (snap) => {
+                if(snap.val()) {
+                    const me = push(onlineRef);
+                    onDisconnect(me).remove();
+                    set(me, { user: currentUser });
                 }
             });
-            onValue(onlineRef, (snap) => {
-                document.getElementById('onlineCountDisplay').innerText = `● ${snap.size || 0} Online`;
-            });
+            onValue(onlineRef, snap => document.getElementById('onlineCount').innerText = `● ${snap.size || 0} Online`);
         }
 
-        // --- PUBLIC CHAT LOGIC ---
-        let lastReadTime = localStorage.getItem("lastReadTime") || 0;
-        let dividerInserted = false;
-
-        window.openPublicChat = () => {
+        // --- NAVIGATION ---
+        window.openView = (id) => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
             document.getElementById('landing-view').style.display = 'none';
-            document.getElementById('chat-view').style.display = 'flex';
-            loadMessages();
-            // Update last read time when leaving
-            window.addEventListener('beforeunload', () => {
-                localStorage.setItem("lastReadTime", Date.now());
-            });
+            document.getElementById(id).style.display = 'flex';
+            
+            if(id === 'chat-view') loadPublicChat();
+            if(id === 'rangreja-view') loadVerse();
         };
 
-        function loadMessages() {
+        window.goHome = () => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            document.getElementById('landing-view').style.display = 'flex';
+            if(dmSubscription) dmSubscription(); // Unsub DM
+        };
+
+        // --- PUBLIC CHAT ---
+        function loadPublicChat() {
             const q = query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(150));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById("messagesList");
                 list.innerHTML = "";
                 const msgs = [];
                 snapshot.forEach(d => msgs.push({id:d.id, ...d.data()}));
-                msgs.reverse();
-
-                dividerInserted = false;
-
-                msgs.forEach(msg => {
-                    // Check for Unread Divider
-                    const msgTime = msg.createdAt ? msg.createdAt.toMillis() : Date.now();
-                    if (!dividerInserted && msgTime > lastReadTime && msg.user !== currentUser) {
-                        const div = document.createElement('div');
-                        div.className = 'unread-divider';
-                        div.innerText = "Unread Messages";
-                        list.appendChild(div);
-                        dividerInserted = true;
-                    }
-
-                    renderMessage(msg, list, false);
-                });
+                msgs.reverse().forEach(msg => renderMessage(msg, list, false));
                 
-                // Auto scroll
-                if(list.lastElementChild) list.lastElementChild.scrollIntoView();
+                if(isAtBottom) list.scrollTop = list.scrollHeight;
             });
-        }
-
-        function renderMessage(msg, container, isPrivate) {
-            const div = document.createElement("div");
-            const isMe = msg.user === currentUser ? "me" : "others";
-            const isAdmin = msg.user.toLowerCase() === "rangreja";
             
-            let time = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
-            let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="viewImage(this.src)">` : "";
-            let nameTag = isMe === "others" ? `<span class="sender-name" onclick="openUserAction('${msg.user}')">${msg.user} ${isAdmin ? '👑' : ''}</span>` : "";
-
-            div.className = `message ${isMe} ${isAdmin ? 'admin-msg' : ''}`;
-            div.innerHTML = `${nameTag} ${imgHtml} <div>${msg.text}</div> <div class="msg-footer"><span class="msg-time">${time}</span></div>`;
-            container.appendChild(div);
-        }
-
-        // --- SEND MESSAGE ---
-        const sendMsg = async (type) => {
-            if (await isUserBlocked()) return alert("You are BLOCKED by Admin.");
-
-            const inputId = type === 'public' ? 'msgInput' : 'dmMsgInput';
-            const input = document.getElementById(inputId);
-            const text = input.value.trim();
-            
-            if (!text && !selectedImage) return;
-
-            const msgData = {
-                text: text,
-                user: currentUser,
-                createdAt: serverTimestamp()
+            // Scroll Listener
+            const list = document.getElementById("messagesList");
+            list.onscroll = () => {
+                isAtBottom = (list.scrollHeight - list.scrollTop - list.clientHeight) < 100;
+                document.getElementById('scrollDownBtn').style.display = isAtBottom ? 'none' : 'flex';
             };
-            if (selectedImage) msgData.image = selectedImage;
+        }
 
-            try {
-                if (type === 'public') {
-                    await addDoc(collection(db, "messages"), msgData);
-                    clearImage();
-                } else {
-                    // Private Chat ID: Alphabetical sort ensures unique ID for pair
-                    const chatId = [currentUser, selectedDmUser].sort().join("_");
-                    await addDoc(collection(db, "private_chats", chatId, "messages"), msgData);
-                    clearDmImage();
-                }
-                input.value = "";
-            } catch (e) { console.error(e); }
+        window.scrollToBottom = () => {
+            const list = document.getElementById("messagesList");
+            list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
         };
 
-        document.getElementById("sendBtn").onclick = () => sendMsg('public');
-        document.getElementById("dmSendBtn").onclick = () => sendMsg('private');
-
-        // --- PRIVATE CHAT SYSTEM ---
-        window.openUserAction = (targetUser) => {
-            if(targetUser === currentUser) return;
-            selectedUserForAction = targetUser;
-            document.getElementById("modalUserName").innerText = targetUser;
-            document.getElementById("actionOverlay").style.display = "block";
-            document.getElementById("userActionModal").classList.add("open");
+        // --- DM SYSTEM ---
+        window.openUserModal = (name) => {
+            if(name === currentUser) return;
+            selectedUser = name;
+            document.getElementById('modalUser').innerText = name;
+            document.getElementById('actionOverlay').style.display = 'block';
+            document.getElementById('userModal').classList.add('open');
         };
 
-        window.closeUserModal = () => {
-            document.getElementById("actionOverlay").style.display = "none";
-            document.getElementById("userActionModal").classList.remove("open");
+        window.closeModal = () => {
+            document.getElementById('actionOverlay').style.display = 'none';
+            document.getElementById('userModal').classList.remove('open');
         };
 
-        window.startPrivateChatFromModal = () => {
-            closeUserModal();
-            openPrivateChat(selectedUserForAction);
-        };
-
-        window.openPrivateChat = (targetUser) => {
-            selectedDmUser = targetUser;
-            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
+        window.startDM = () => {
+            closeModal();
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
             document.getElementById('landing-view').style.display = 'none';
-            document.getElementById('private-chat-view').style.display = 'flex';
-            document.getElementById('dmUserName').innerText = targetUser;
-
-            const chatId = [currentUser, targetUser].sort().join("_");
-            const q = query(collection(db, "private_chats", chatId, "messages"), orderBy("createdAt", "asc"));
+            document.getElementById('dm-view').style.display = 'flex';
+            document.getElementById('dmTitle').innerText = selectedUser;
             
-            if(dmSubscription) dmSubscription(); // Unsub prev
+            const chatId = [currentUser, selectedUser].sort().join("_");
+            // Register chat in inbox
+            setDoc(doc(db, "users", currentUser, "inbox", selectedUser), { name: selectedUser, lastMsg: serverTimestamp() });
+            setDoc(doc(db, "users", selectedUser, "inbox", currentUser), { name: currentUser, lastMsg: serverTimestamp() });
+
+            const q = query(collection(db, "private_chats", chatId, "messages"), orderBy("createdAt", "asc"));
+            if(dmSubscription) dmSubscription();
             dmSubscription = onSnapshot(q, (snap) => {
-                const list = document.getElementById("dmMessagesList");
+                const list = document.getElementById("dmList");
                 list.innerHTML = "";
-                snap.forEach(d => renderMessage(d.data(), list, true));
+                snap.forEach(d => renderMessage({id:d.id, ...d.data()}, list, true));
                 list.scrollTop = list.scrollHeight;
             });
         };
 
-        window.closePrivateChat = () => {
-            if(dmSubscription) dmSubscription();
-            goHome();
+        window.openInbox = () => {
+            openView('list-view');
+            document.getElementById('listTitle').innerText = "My Inbox";
+            const list = document.getElementById("genericList");
+            
+            onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
+                list.innerHTML = "";
+                snap.forEach(d => {
+                    const div = document.createElement("div");
+                    div.className = "list-item";
+                    div.innerHTML = `<b>${d.data().name}</b> <i class="fas fa-chevron-right"></i>`;
+                    div.onclick = () => { selectedUser = d.data().name; startDM(); };
+                    list.appendChild(div);
+                });
+            });
         };
 
         // --- ADMIN PANEL ---
         window.openAdminPanel = () => {
-            document.getElementById('landing-view').style.display = 'none';
-            document.getElementById('admin-view').style.display = 'flex';
-            loadUsers();
-        };
-
-        function loadUsers() {
-            const list = document.getElementById("userListContainer");
+            openView('list-view');
+            document.getElementById('listTitle').innerText = "All Users (Admin)";
+            const list = document.getElementById("genericList");
+            
             onSnapshot(collection(db, "users"), (snap) => {
                 list.innerHTML = "";
-                snap.forEach(doc => {
-                    const u = doc.data();
-                    if(u.name.toLowerCase() === "rangreja") return; // Don't show admin
-
+                snap.forEach(d => {
+                    const u = d.data();
+                    if(u.name.toLowerCase() === "rangreja") return;
                     const div = document.createElement("div");
-                    div.className = "user-list-item";
+                    div.className = "list-item";
                     div.innerHTML = `
-                        <div class="user-info">
-                            <b>${u.name}</b>
-                            <span>${u.isBlocked ? '🔴 Blocked' : '🟢 Active'}</span>
+                        <span>${u.name} ${u.isBlocked ? '(BLOCKED)' : ''}</span>
+                        <div>
+                            <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; padding:2px 8px; border-radius:10px;">${u.isBlocked ? 'Unblock' : 'Block'}</button>
                         </div>
-                        <button class="block-btn ${u.isBlocked ? 'blocked' : ''}" onclick="toggleBlock('${doc.id}', ${u.isBlocked})">
-                            ${u.isBlocked ? 'Unblock' : 'Block 🚫'}
-                        </button>
                     `;
+                    div.onclick = () => { selectedUser = u.name; startDM(); };
+                    list.appendChild(div);
+                });
+            });
+        };
+
+        window.toggleBlock = async (uid, status) => {
+            if(confirm("Change Block Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status });
+        };
+
+        // --- RANGREJA VERSE ---
+        function loadVerse() {
+            const q = query(collection(db, "rangreja_updates"), orderBy("createdAt", "desc"));
+            onSnapshot(q, snap => {
+                const list = document.getElementById("verseList");
+                list.innerHTML = "";
+                snap.forEach(d => {
+                    const msg = d.data();
+                    const div = document.createElement("div");
+                    div.className = "message admin-post";
+                    div.innerHTML = `<span class="sender-name" style="color:gold;">Rangreja 👑</span> ${msg.text} <div class="msg-time">${new Date(msg.createdAt?.seconds*1000).toLocaleDateString()}</div>`;
                     list.appendChild(div);
                 });
             });
         }
 
-        window.toggleBlock = async (userId, currentStatus) => {
-            if(confirm(`Are you sure you want to ${currentStatus ? 'Unblock' : 'Block'} this user?`)) {
-                await updateDoc(doc(db, "users", userId), { isBlocked: !currentStatus });
+        window.sendVerse = async () => {
+            const txt = document.getElementById("verseInput").value;
+            if(!txt) return;
+            await addDoc(collection(db, "rangreja_updates"), { text: txt, createdAt: serverTimestamp() });
+            document.getElementById("verseInput").value = "";
+        };
+
+        // --- SHARED FUNCTIONS ---
+        function renderMessage(msg, list, isPrivate) {
+            const div = document.createElement("div");
+            const isMe = msg.user === currentUser;
+            const isAdmin = msg.user.toLowerCase() === "rangreja";
+            
+            div.className = `message ${isMe ? 'me' : 'others'} ${isAdmin ? 'admin-msg' : ''}`;
+            
+            let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
+            let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdmin ? '👑' : ''}</span>`;
+            let actions = `<div class="msg-actions">
+                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}')"><i class="fas fa-pen"></i></button><button class="action-btn btn-del" onclick="delMsg('${msg.id}')"><i class="fas fa-trash"></i></button>` : ''}
+                <button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>
+            </div>`;
+
+            // Long Press
+            let pressTimer;
+            div.addEventListener('touchstart', () => pressTimer = setTimeout(() => {
+                document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
+                div.classList.add('show-actions');
+            }, 500));
+            div.addEventListener('touchend', () => clearTimeout(pressTimer));
+            div.addEventListener('contextmenu', e => { e.preventDefault(); div.classList.add('show-actions'); });
+
+            div.innerHTML = `${actions} ${nameTag} ${imgHtml} <div>${msg.text} ${msg.isEdited?'<i style="font-size:10px; color:#aaa;">(edited)</i>':''}</div> <div class="msg-time">${new Date(msg.createdAt?.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
+            list.appendChild(div);
+        }
+
+        window.sendMsg = async (type) => {
+            // Check Block
+            const userSnap = await getDoc(doc(db, "users", currentUser));
+            if(userSnap.exists() && userSnap.data().isBlocked) return alert("You are Blocked!");
+
+            const inputId = type === 'public' ? 'msgInput' : 'dmMsgInput';
+            const imgId = type === 'public' ? 'imgInput' : 'dmImgInput';
+            const txt = document.getElementById(inputId).value.trim();
+            const file = document.getElementById(imgId).files[0];
+
+            if(!txt && !file) return;
+
+            let imgData = null;
+            if(file) {
+                imgData = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const cvs = document.createElement('canvas');
+                            let w=img.width, h=img.height;
+                            if(w>800){ h*=800/w; w=800; }
+                            cvs.width=w; cvs.height=h;
+                            cvs.getContext('2d').drawImage(img,0,0,w,h);
+                            resolve(cvs.toDataURL('image/jpeg', 0.6));
+                        }
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
             }
+
+            const data = { text: txt, user: currentUser, createdAt: serverTimestamp(), image: imgData };
+
+            if(editingId) {
+                await updateDoc(doc(db, "messages", editingId), { text: txt, isEdited: true });
+                editingId = null;
+            } else if(type === 'public') {
+                await addDoc(collection(db, "messages"), data);
+            } else {
+                const chatId = [currentUser, selectedUser].sort().join("_");
+                await addDoc(collection(db, "private_chats", chatId, "messages"), data);
+            }
+
+            document.getElementById(inputId).value = "";
+            document.getElementById(imgId).value = "";
+            document.getElementById(type==='public'?'imgPreview':'dmImgPreview').style.display = 'none';
         };
 
-        // --- HELPERS ---
-        window.goHome = () => {
-            document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
-            document.getElementById('landing-view').style.display = 'flex';
-        };
-
-        window.viewImage = (src) => {
-            document.getElementById('fullImage').src = src;
-            document.getElementById('imageViewer').style.display = 'flex';
-        };
-
-        // --- IMAGE COMPRESSION ---
-        window.handleImageSelect = (type) => {
-            const input = document.getElementById(type === 'public' ? 'imageInput' : 'dmImageInput');
-            const file = input.files[0];
+        window.handleImg = (type) => {
+            const file = document.getElementById(type==='public'?'imgInput':'dmImgInput').files[0];
             if(file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width, h = img.height;
-                        if(w > 800) { h *= 800/w; w = 800; }
-                        canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img,0,0,w,h);
-                        selectedImage = canvas.toDataURL('image/jpeg', 0.6);
-                        
-                        if(type === 'public') {
-                            document.getElementById('previewThumb').src = selectedImage;
-                            document.getElementById('imgPreviewArea').style.display = 'block';
-                        } else {
-                            document.getElementById('dmPreviewThumb').src = selectedImage;
-                            document.getElementById('dmImgPreviewArea').style.display = 'block';
-                        }
-                    }
+                reader.onload = e => {
+                    document.getElementById(type==='public'?'thumb':'dmThumb').src = e.target.result;
+                    document.getElementById(type==='public'?'imgPreview':'dmImgPreview').style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             }
         };
+        
+        window.clearImg = () => { document.getElementById('imgInput').value=''; document.getElementById('imgPreview').style.display='none'; };
+        window.clearDmImg = () => { document.getElementById('dmImgInput').value=''; document.getElementById('dmImgPreview').style.display='none'; };
 
-        window.clearImage = () => { selectedImage = null; document.getElementById('imgPreviewArea').style.display='none'; document.getElementById('imageInput').value=''; };
-        window.clearDmImage = () => { selectedImage = null; document.getElementById('dmImgPreviewArea').style.display='none'; document.getElementById('dmImageInput').value=''; };
+        window.delMsg = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "messages", id)); };
+        window.editMsg = (id, txt) => { editingId = id; document.getElementById('msgInput').value = txt; document.getElementById('msgInput').focus(); };
+        window.replyMsg = (user) => { document.getElementById('msgInput').value = `@${user} `; };
 
-        // Scroll Manual
-        window.scrollToBottomManual = () => {
-            const list = document.getElementById("messagesList");
-            list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
-        };
+        // Checklist Logic (Restored)
+        document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
+            cb.checked = localStorage.getItem('cb_'+i) === 'true';
+            cb.onclick = () => localStorage.setItem('cb_'+i, cb.checked);
+        });
     </script>
 </body>
 </html>
-
