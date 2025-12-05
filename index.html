@@ -109,7 +109,7 @@
             position: absolute; background: #222; padding: 5px 10px; border-radius: 25px; 
             display: none; align-items: center; gap: 10px; z-index: 100; border: 1px solid var(--glass-border); 
         }
-        /* Top default, Bottom if near top edge */
+        /* Smart Positioning */
         .msg-actions.top { top: -45px; }
         .msg-actions.bottom { top: 100%; margin-top: 5px; }
         
@@ -145,24 +145,27 @@
         /* --- INBOX LIST --- */
         .list-item { 
             display: flex; justify-content: space-between; align-items: center; padding: 15px; 
-            background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; 
+            background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; border-bottom: 1px solid #333;
         }
+        .list-item:active { background: #333; }
         
-        /* --- CHECKLIST STYLE (Strict Black/White) --- */
+        /* --- CHECKLIST STYLE (Notion White) --- */
         #checklist-content { 
             background: #ffffff !important; 
             color: #000000 !important; 
             height: 100%; overflow-y: auto; padding: 20px; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-        #checklist-content h3 { color: #000 !important; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 20px; }
+        #checklist-content h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #000; }
+        #checklist-content h3 { font-size: 18px; font-weight: 600; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; color: #000; }
+        #checklist-content p, #checklist-content blockquote { color: #333; }
         .to-do-list { padding: 0; list-style: none; }
         .to-do-list li { 
             padding: 8px 0; display: flex; align-items: flex-start; 
-            border-bottom: 1px solid #f0f0f0; color: #333; 
+            border-bottom: 1px solid #f5f5f5; color: #000;
         }
         .custom-checkbox { 
-            width: 18px; height: 18px; margin-right: 10px; flex-shrink: 0; 
+            width: 18px; height: 18px; margin-right: 12px; flex-shrink: 0; 
             cursor: pointer; accent-color: #2D8CFF;
         }
         .completed-text { text-decoration: line-through; opacity: 0.5; color: #888; }
@@ -289,48 +292,108 @@
             <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus</div></div>
         </div>
         <div id="checklist-content">
-            <h3>Maths</h3>
+            <h1>Class 10 Syllabus</h1>
+            <blockquote>Checkboxes are saved automatically.</blockquote>
+            
+            <h3>Mathematics</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> Real Numbers</li>
+                <li><input type="checkbox" class="custom-checkbox"> Polynomials</li>
+                <li><input type="checkbox" class="custom-checkbox"> Pair of Linear Equations</li>
+                <li><input type="checkbox" class="custom-checkbox"> Quadratic Equations</li>
+                <li><input type="checkbox" class="custom-checkbox"> Arithmetic Progressions</li>
+                <li><input type="checkbox" class="custom-checkbox"> Triangles</li>
+                <li><input type="checkbox" class="custom-checkbox"> Coordinate Geometry</li>
+                <li><input type="checkbox" class="custom-checkbox"> Introduction to Trigonometry</li>
+                <li><input type="checkbox" class="custom-checkbox"> Applications of Trigonometry</li>
+                <li><input type="checkbox" class="custom-checkbox"> Circles</li>
+                <li><input type="checkbox" class="custom-checkbox"> Areas Related to Circles</li>
+                <li><input type="checkbox" class="custom-checkbox"> Surface Areas and Volumes</li>
+                <li><input type="checkbox" class="custom-checkbox"> Statistics</li>
+                <li><input type="checkbox" class="custom-checkbox"> Probability</li>
             </ul>
+
             <h3>Science</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Control Coordination</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Light</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> Chemical Reactions & Equations</li>
+                <li><input type="checkbox" class="custom-checkbox"> Acids, Bases and Salts</li>
+                <li><input type="checkbox" class="custom-checkbox"> Metals and Non-metals</li>
+                <li><input type="checkbox" class="custom-checkbox"> Carbon and its Compounds</li>
+                <li><input type="checkbox" class="custom-checkbox"> Life Processes</li>
+                <li><input type="checkbox" class="custom-checkbox"> Control and Coordination</li>
+                <li><input type="checkbox" class="custom-checkbox"> How do Organisms Reproduce?</li>
+                <li><input type="checkbox" class="custom-checkbox"> Heredity and Evolution</li>
+                <li><input type="checkbox" class="custom-checkbox"> Light – Reflection and Refraction</li>
+                <li><input type="checkbox" class="custom-checkbox"> Human Eye and Colourful World</li>
+                <li><input type="checkbox" class="custom-checkbox"> Electricity</li>
+                <li><input type="checkbox" class="custom-checkbox"> Magnetic Effects of Electric Current</li>
+                <li><input type="checkbox" class="custom-checkbox"> Our Environment</li>
             </ul>
-            <h3>SST</h3>
+
+            <h3>Social Science</h3>
             <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in Europe</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Global World</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Resources</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Agriculture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> Rise of Nationalism in Europe</li>
+                <li><input type="checkbox" class="custom-checkbox"> Nationalism in India</li>
+                <li><input type="checkbox" class="custom-checkbox"> Making of a Global World</li>
+                <li><input type="checkbox" class="custom-checkbox"> Print Culture</li>
+                <li><input type="checkbox" class="custom-checkbox"> Resources and Development</li>
+                <li><input type="checkbox" class="custom-checkbox"> Forest and Wildlife</li>
+                <li><input type="checkbox" class="custom-checkbox"> Water Resources</li>
+                <li><input type="checkbox" class="custom-checkbox"> Agriculture</li>
+                <li><input type="checkbox" class="custom-checkbox"> Minerals and Energy</li>
+                <li><input type="checkbox" class="custom-checkbox"> Manufacturing Industries</li>
+                <li><input type="checkbox" class="custom-checkbox"> Lifelines of Economy</li>
+                <li><input type="checkbox" class="custom-checkbox"> Power Sharing</li>
+                <li><input type="checkbox" class="custom-checkbox"> Federalism</li>
+                <li><input type="checkbox" class="custom-checkbox"> Gender, Religion and Caste</li>
+                <li><input type="checkbox" class="custom-checkbox"> Political Parties</li>
+                <li><input type="checkbox" class="custom-checkbox"> Outcomes of Democracy</li>
+                <li><input type="checkbox" class="custom-checkbox"> Development</li>
+                <li><input type="checkbox" class="custom-checkbox"> Sectors of Indian Economy</li>
+                <li><input type="checkbox" class="custom-checkbox"> Money and Credit</li>
+                <li><input type="checkbox" class="custom-checkbox"> Globalisation</li>
+            </ul>
+
+            <h3>English</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> A Letter to God</li>
+                <li><input type="checkbox" class="custom-checkbox"> Nelson Mandela</li>
+                <li><input type="checkbox" class="custom-checkbox"> Two Stories about Flying</li>
+                <li><input type="checkbox" class="custom-checkbox"> From the Diary of Anne Frank</li>
+                <li><input type="checkbox" class="custom-checkbox"> Glimpses of India</li>
+                <li><input type="checkbox" class="custom-checkbox"> Mijbil the Otter</li>
+                <li><input type="checkbox" class="custom-checkbox"> Madam Rides the Bus</li>
+                <li><input type="checkbox" class="custom-checkbox"> Sermon at Benares</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Proposal</li>
+                <li><input type="checkbox" class="custom-checkbox"> Dust of Snow</li>
+                <li><input type="checkbox" class="custom-checkbox"> Fire and Ice</li>
+                <li><input type="checkbox" class="custom-checkbox"> A Tiger in the Zoo</li>
+                <li><input type="checkbox" class="custom-checkbox"> How to Tell Wild Animals</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Ball Poem</li>
+                <li><input type="checkbox" class="custom-checkbox"> Amanda</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Trees</li>
+                <li><input type="checkbox" class="custom-checkbox"> Fog</li>
+                <li><input type="checkbox" class="custom-checkbox"> Custard the Dragon</li>
+                <li><input type="checkbox" class="custom-checkbox"> For Anne Gregory</li>
+                <li><input type="checkbox" class="custom-checkbox"> A Triumph of Surgery</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Thief's Story</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Midnight Visitor</li>
+                <li><input type="checkbox" class="custom-checkbox"> A Question of Trust</li>
+                <li><input type="checkbox" class="custom-checkbox"> Footprints without Feet</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Making of a Scientist</li>
+                <li><input type="checkbox" class="custom-checkbox"> The Necklace</li>
+                <li><input type="checkbox" class="custom-checkbox"> Bholi</li>
+                <li><input type="checkbox" class="custom-checkbox"> Book That Saved the Earth</li>
+            </ul>
+            
+            <h3>Grammar & Exam Prep</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> Tenses, Modals, Subject-Verb Agreement</li>
+                <li><input type="checkbox" class="custom-checkbox"> Reported Speech, Determiners</li>
+                <li><input type="checkbox" class="custom-checkbox"> Reading Comprehension</li>
+                <li><input type="checkbox" class="custom-checkbox"> Writing (Letter, Analytical Para)</li>
+                <li><input type="checkbox" class="custom-checkbox"> Solve Sample Papers</li>
+                <li><input type="checkbox" class="custom-checkbox"> Mock Tests</li>
             </ul>
         </div>
     </div>
@@ -395,6 +458,8 @@
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminInputArea').classList.remove('hidden');
                 monitorInbox();
+            } else {
+                monitorInbox(); // Also monitor for normal users to see Red Dot
             }
         }
 
@@ -423,6 +488,27 @@
                 ctx.fillText(`● ${count} Online`, 20, 25);
             });
         }
+
+        // --- NAVIGATION ---
+        window.openView = (id) => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            document.getElementById('landing-view').style.display = 'none';
+            document.getElementById(id).style.display = 'flex';
+            
+            isChatActive = (id === 'chat-view');
+            if(isChatActive) { 
+                document.getElementById('homeUnreadBadge').style.display = 'none'; 
+                loadPublicChat();
+            }
+            if(id === 'rangreja-view') loadVerse();
+        };
+
+        window.goHome = () => {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            document.getElementById('landing-view').style.display = 'flex';
+            isChatActive = false;
+            if(dmSubscription) dmSubscription();
+        };
 
         // --- PUBLIC CHAT ---
         function loadPublicChat() {
@@ -466,7 +552,7 @@
             list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' });
         };
 
-        // --- DM SYSTEM ---
+        // --- DM SYSTEM RESTRICTION ---
         window.openUserModal = (name) => {
             if(name === currentUser) return;
             selectedUser = name;
@@ -530,12 +616,44 @@
                 snap.forEach(d => {
                     const div = document.createElement("div");
                     div.className = "list-item";
-                    div.innerHTML = `<b>${d.data().name}</b> <div><i class="fas fa-chevron-right"></i> <i class="fas fa-trash" style="color:red; margin-left:10px;" onclick="event.stopPropagation(); deleteDoc(doc(db,'users','${currentUser}','inbox','${d.id}'))"></i></div>`;
+                    div.innerHTML = `<b>${d.data().name}</b>`;
+                    
+                    // Long press to delete Logic
+                    let pressTimer;
+                    div.addEventListener('touchstart', () => pressTimer = setTimeout(() => {
+                        if(confirm("Delete this chat from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
+                    }, 800));
+                    div.addEventListener('touchend', () => clearTimeout(pressTimer));
+                    
                     div.onclick = () => { selectedUser = d.data().name; startDM(); };
                     list.appendChild(div);
                 });
             });
         };
+
+        // --- ADMIN PANEL ---
+        window.openAdminPanel = () => {
+            openView('list-view');
+            document.getElementById('listTitle').innerText = "Admin Panel";
+            const list = document.getElementById("genericList");
+            onSnapshot(collection(db, "users"), (snap) => {
+                list.innerHTML = "";
+                snap.forEach(d => {
+                    const u = d.data();
+                    if(u.name.toLowerCase() === "rangreja") return;
+                    const div = document.createElement("div");
+                    div.className = "list-item";
+                    div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
+                    <div>
+                        <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
+                        <button onclick="event.stopPropagation(); selectedUser='${u.name}'; startDM();" style="color:cyan; background:none; border:1px solid cyan;">DM</button>
+                    </div>`;
+                    list.appendChild(div);
+                });
+            });
+        };
+
+        window.toggleBlock = async (uid, status) => { if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); };
 
         // --- RANGREJA VERSE ---
         function loadVerse() {
@@ -547,8 +665,15 @@
                     const msg = d.data();
                     const div = document.createElement("div");
                     div.className = "message admin-post";
+                    
+                    // Delete Button for Admin Only
+                    let delBtn = "";
+                    if(currentUser.toLowerCase() === "rangreja") {
+                        delBtn = `<i class="fas fa-trash" style="float:right; color:red; cursor:pointer;" onclick="deleteDoc(doc(db,'rangreja_updates','${d.id}'))"></i>`;
+                    }
+
                     const imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
-                    const delBtn = currentUser.toLowerCase()==="rangreja" ? `<i class="fas fa-trash" style="float:right; color:red; cursor:pointer;" onclick="deleteDoc(doc(db,'rangreja_updates','${d.id}'))"></i>` : "";
+                    
                     div.innerHTML = `${delBtn} <span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span> ${imgHtml} <div>${msg.text}</div>`;
                     list.appendChild(div);
                 });
@@ -565,7 +690,7 @@
             clearVerseImg();
         };
 
-        // --- SHARED ---
+        // --- SHARED MESSAGE LOGIC ---
         function renderMessage(msg, list, isPrivate) {
             const div = document.createElement("div");
             const isMe = msg.user === currentUser;
@@ -577,18 +702,20 @@
             let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
             let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
             
+            // ACTION BUTTONS
             let actions = `<div class="msg-actions">
                 ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', ${isPrivate})"><i class="fas fa-pen"></i></button>` : ''}
                 ${(isMe || amIAdmin) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', ${isPrivate})"><i class="fas fa-trash"></i></button>` : ''}
                 <button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>
             </div>`;
 
-            // Long Press Fix: Top/Bottom
+            // Smart Menu Positioning
             let timer;
             const startPress = () => timer = setTimeout(() => { 
                 document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
                 div.classList.add('show-actions');
                 const menu = div.querySelector('.msg-actions');
+                // Check if message is at top of screen to flip menu down
                 if(div.getBoundingClientRect().top < 100) { menu.classList.remove('top'); menu.classList.add('bottom'); }
                 else { menu.classList.remove('bottom'); menu.classList.add('top'); }
                 navigator.vibrate(50); 
@@ -597,8 +724,6 @@
             const endPress = () => clearTimeout(timer);
             div.addEventListener('touchstart', startPress, {passive: true});
             div.addEventListener('touchend', endPress);
-            div.addEventListener('mousedown', startPress);
-            div.addEventListener('mouseup', endPress);
             div.addEventListener('contextmenu', e => { e.preventDefault(); });
 
             div.innerHTML = `${actions} ${nameTag} ${imgHtml} <div>${msg.text} ${msg.isEdited?'<span class="edited-tag">(edited)</span>':''}</div> <div class="msg-time">${new Date(msg.createdAt?.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
@@ -609,7 +734,17 @@
             const u = await getDoc(doc(db, "users", currentUser));
             // Block logic: Allow DM to Rangreja even if blocked
             const isToRangreja = selectedUser && selectedUser.toLowerCase() === "rangreja";
+            const amIAdmin = currentUser.toLowerCase() === "rangreja";
+
             if(u.exists() && u.data().isBlocked && !isToRangreja) return alert("You are Blocked.");
+
+            // STRICT DM CHECK: If not public, sender MUST be Admin or Receiver MUST be Admin
+            if(type === 'private') {
+                const targetIsAdmin = selectedUser.toLowerCase() === "rangreja";
+                if (!amIAdmin && !targetIsAdmin) {
+                    return alert("You can only DM the Admin.");
+                }
+            }
 
             const txtId = type==='public'?'msgInput':'dmMsgInput';
             const imgId = type==='public'?'imgInput':'dmImgInput';
@@ -679,47 +814,6 @@
         window.clearVerseImg = () => { selectedImg=null; document.getElementById('verseImgInput').value=''; document.getElementById('verseImgPreview').style.display='none'; };
         window.replyMsg = (u) => { document.getElementById('msgInput').value = `@${u} `; };
         
-        window.openView = (id) => {
-            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
-            document.getElementById('landing-view').style.display = 'none';
-            document.getElementById(id).style.display = 'flex';
-            isChatActive = (id === 'chat-view');
-            if(isChatActive) { 
-                document.getElementById('homeUnreadBadge').style.display = 'none'; 
-                loadPublicChat();
-            }
-            if(id === 'rangreja-view') loadVerse();
-        };
-
-        window.goHome = () => {
-            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
-            document.getElementById('landing-view').style.display = 'flex';
-            isChatActive = false;
-            if(dmSubscription) dmSubscription();
-        };
-
-        window.openAdminPanel = () => {
-            openView('list-view');
-            document.getElementById('listTitle').innerText = "Admin Panel";
-            const list = document.getElementById("genericList");
-            onSnapshot(collection(db, "users"), (snap) => {
-                list.innerHTML = "";
-                snap.forEach(d => {
-                    const u = d.data();
-                    if(u.name.toLowerCase() === "rangreja") return;
-                    const div = document.createElement("div");
-                    div.className = "list-item";
-                    div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
-                    <div>
-                        <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
-                        <button onclick="event.stopPropagation(); selectedUser='${u.name}'; startDM();" style="color:cyan; background:none; border:1px solid cyan;">DM</button>
-                    </div>`;
-                    list.appendChild(div);
-                });
-            });
-        };
-        
-        window.toggleBlock = async (uid, status) => { if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); };
         document.getElementById("verseSendBtn").addEventListener("click", sendVerse);
         document.getElementById("adminSendBtn")?.addEventListener("click", sendVerse);
 
