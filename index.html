@@ -42,10 +42,9 @@
         #onlineCanvas {
             position: fixed; top: 15px; right: 15px; z-index: 3000;
             pointer-events: none; 
-            /* Drop shadow will be handled in JS now for better contrast */
         }
 
-        /* --- IMAGE VIEWER MODAL --- */
+        /* --- IMAGE VIEWER MODAL (LIGHTBOX) --- */
         #imageViewer {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000;
@@ -83,11 +82,19 @@
         .match-ended-label { font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--danger); text-transform: uppercase; background: rgba(255, 59, 48, 0.1); padding: 5px 10px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255, 59, 48, 0.3); }
 
         .btn-group { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; margin-top: 30px; }
-        .big-btn { border: none; padding: 16px 0; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s; text-decoration: none; }
+        .big-btn { border: none; padding: 16px 0; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s; text-decoration: none; position: relative; }
         .big-btn:active { transform: scale(0.95); }
         .chat-btn-style { background: linear-gradient(135deg, #ff4081, #c60055); color: white; box-shadow: 0 10px 30px rgba(255, 64, 129, 0.4); }
         .syllabus-btn-style { background: linear-gradient(135deg, #ffffff, #e0e0e0); color: #333; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1); }
         .rangreja-btn-style { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3); }
+
+        /* Notification Dot on Landing Page */
+        .notif-dot {
+            position: absolute; top: 15px; right: 20px;
+            width: 12px; height: 12px; background: #00e676; 
+            border-radius: 50%; box-shadow: 0 0 5px #00e676;
+            display: none;
+        }
 
         /* --- COMMON VIEW STYLES --- */
         .app-view { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--chat-bg); animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; }
@@ -98,9 +105,15 @@
         .chat-status { font-size: 11px; color: var(--accent); }
 
         /* --- MESSAGES --- */
-        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 5; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 5; background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff4081' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); scroll-behavior: smooth; }
 
-        .message { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; position: relative; color: #ffd1dc; box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px); word-wrap: break-word; cursor: pointer; overflow: visible; transition: transform 0.1s, filter 0.2s; }
+        .message { 
+            max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 14px; 
+            line-height: 1.4; position: relative; color: #ffd1dc; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); backdrop-filter: blur(4px); 
+            word-wrap: break-word; cursor: pointer; overflow: visible; 
+            transition: transform 0.1s, filter 0.2s;
+        }
         .message:active { transform: scale(0.98); filter: brightness(1.1); } 
         .message.others { align-self: flex-start; background: var(--other-msg); border: 1px solid var(--glass-border); border-top-left-radius: 0; }
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
@@ -123,6 +136,21 @@
         .delete-btn { background: var(--danger); }
         .reply-btn { background: #444; border: 1px solid #666; }
         .edit-btn { background: var(--verified-blue); }
+
+        /* --- SCROLL DOWN BUTTON --- */
+        #scrollDownBtn {
+            position: absolute; bottom: 80px; right: 20px;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: #2a0a18; border: 1px solid var(--accent);
+            color: #fff; display: none; justify-content: center; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 90;
+            cursor: pointer; animation: fadeIn 0.3s;
+        }
+        #scrollDownBtn .unread-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: #00e676; color: #000; font-size: 10px; font-weight: 700;
+            padding: 3px 6px; border-radius: 10px; display: none;
+        }
 
         .chat-footer { background: var(--header-bg); border-top: 1px solid var(--glass-border); padding: 10px; padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; z-index: 20; width: 100%; }
         #imgPreviewArea { display: none; padding: 10px 15px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--glass-border); }
@@ -181,7 +209,10 @@
         <h1 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h1>
         <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Join the discussion for assignments.</p>
         <div class="btn-group">
-            <button class="big-btn chat-btn-style" onclick="switchView('chat-view')"><i class="fas fa-comments"></i> Open Chat</button>
+            <button class="big-btn chat-btn-style" onclick="switchView('chat-view')">
+                <i class="fas fa-comments"></i> Open Chat
+                <span id="landingBadge" class="notif-dot"></span>
+            </button>
             <button class="big-btn rangreja-btn-style" onclick="openRangrejaVerse()"><i class="fas fa-crown"></i> Rangreja Verse</button>
             <button class="big-btn syllabus-btn-style" onclick="switchView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
         </div>
@@ -197,7 +228,14 @@
                 </div>
             </div>
         </div>
+        
         <div class="chat-messages" id="messagesList"></div>
+        
+        <div id="scrollDownBtn" onclick="scrollToBottomManual()">
+            <i class="fas fa-arrow-down"></i>
+            <span id="scrollBadge" class="unread-badge">0</span>
+        </div>
+
         <div class="chat-footer">
             <div id="editModeIndicator" class="edit-mode-indicator">Editing Message <i class="fas fa-times" style="margin-left:5px; cursor:pointer;" onclick="cancelEdit()"></i></div>
             <div id="imgPreviewArea">
@@ -395,7 +433,12 @@
         let selectedImage = null; 
         let adminImage = null;
         let editingMessageId = null;
-        let isLightMode = false; // To track active view for canvas color
+        let isLightMode = false;
+        
+        // Scroll Logic Vars
+        let isChatActive = false;
+        let isAtBottom = true;
+        let unreadScrollCount = 0;
 
         if (!currentUserName) modal.style.display = "flex";
 
@@ -439,24 +482,30 @@
             ctx.fillStyle = '#00e676'; 
             ctx.shadowBlur = 10; ctx.shadowColor = '#00e676';
             ctx.fill(); ctx.shadowBlur = 0; 
-            
             ctx.font = '600 14px Inter, sans-serif'; 
-            // DYNAMIC COLOR: Black in Syllabus, White elsewhere
             ctx.fillStyle = isLightMode ? '#000000' : '#ffffff';
-            
             const displayCount = (onlineCount === 0) ? 1 : onlineCount; 
             ctx.fillText(`${displayCount} Online`, 28, 25);
         }
         drawOnlineStatus();
 
+        // --- NAVIGATION & SCROLL LOGIC ---
         window.switchView = (viewId) => {
             document.querySelectorAll('.app-view').forEach(d => d.style.display = 'none');
             document.getElementById('landing-view').style.display = 'none'; 
             document.getElementById(viewId).style.display = 'flex';
             
-            // Check if switching to syllabus (Checklist) to change canvas color
             isLightMode = (viewId === 'checklist-view');
-            drawOnlineStatus(); // Redraw with correct color
+            drawOnlineStatus();
+
+            // Chat Activation Logic
+            if(viewId === 'chat-view') {
+                isChatActive = true;
+                document.getElementById('landingBadge').style.display = 'none';
+                window.scrollToBottomManual(); // Auto scroll on open
+            } else {
+                isChatActive = false;
+            }
         };
 
         window.openRangrejaVerse = () => {
@@ -468,6 +517,32 @@
             }
         };
 
+        /* --- SCROLL HANDLER --- */
+        const messagesList = document.getElementById("messagesList");
+        const scrollBtn = document.getElementById("scrollDownBtn");
+        const scrollBadge = document.getElementById("scrollBadge");
+
+        messagesList.onscroll = () => {
+            // Check if user is near bottom (150px threshold)
+            const diff = messagesList.scrollHeight - messagesList.scrollTop - messagesList.clientHeight;
+            isAtBottom = diff < 150;
+
+            if(isAtBottom) {
+                scrollBtn.style.display = 'none';
+                unreadScrollCount = 0;
+                scrollBadge.style.display = 'none';
+            } else {
+                scrollBtn.style.display = 'flex';
+            }
+        };
+
+        window.scrollToBottomManual = () => {
+            messagesList.scrollTo({ top: messagesList.scrollHeight, behavior: 'smooth' });
+            unreadScrollCount = 0;
+            scrollBadge.style.display = 'none';
+        };
+
+        /* --- VIEWER --- */
         window.viewImage = (src) => {
             const viewer = document.getElementById('imageViewer');
             document.getElementById('fullImage').src = src;
@@ -475,6 +550,7 @@
         };
         window.closeImageViewer = () => { document.getElementById('imageViewer').style.display = 'none'; };
 
+        /* --- IMAGE SELECT --- */
         window.handleImageSelect = (type) => {
             const fileInput = document.getElementById(type === 'admin' ? 'adminImageInput' : 'imageInput');
             const file = fileInput.files[0];
@@ -607,11 +683,20 @@
             } catch (e) { console.error(e); }
         };
 
+        /* --- LISTENER --- */
         const q = query(messagesRef, orderBy("createdAt", "desc"), limit(50));
         onSnapshot(q, (snapshot) => {
             const list = document.getElementById("messagesList");
+            const wasAtBottom = isAtBottom; // Check position BEFORE update
+            
             list.innerHTML = "";
             const msgs = [];
+            let isNewMessageAdded = false;
+
+            snapshot.docChanges().forEach((change) => {
+                if(change.type === "added") isNewMessageAdded = true;
+            });
+
             snapshot.forEach((doc) => { const d = doc.data(); d.id = doc.id; msgs.push(d); });
             msgs.reverse().forEach((msg) => {
                 const div = document.createElement("div");
@@ -644,7 +729,24 @@
                 div.innerHTML = `${actions} ${quote} ${nameTag} ${imageHtml} <div>${msg.text} ${editedTag}</div> <div class="msg-footer"><span class="msg-time">${time}</span></div>`;
                 list.appendChild(div);
             });
-            list.scrollTop = list.scrollHeight;
+
+            // SCROLL & NOTIFICATION LOGIC
+            if (isNewMessageAdded) {
+                if (isChatActive) {
+                    if (wasAtBottom) {
+                        // User was at bottom, keep them there
+                        setTimeout(() => list.scrollTop = list.scrollHeight, 50);
+                    } else {
+                        // User was up, don't scroll, but increment badge
+                        unreadScrollCount++;
+                        document.getElementById("scrollBadge").innerText = unreadScrollCount;
+                        document.getElementById("scrollBadge").style.display = 'block';
+                    }
+                } else {
+                    // Not in chat view
+                    document.getElementById('landingBadge').style.display = 'block';
+                }
+            }
         });
 
         const q2 = query(updatesRef, orderBy("createdAt", "desc"), limit(20));
