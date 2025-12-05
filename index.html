@@ -66,15 +66,15 @@
         .btn-admin { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; }
         .btn-verse { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
         .btn-inbox { background: linear-gradient(135deg, #2D8CFF, #0055ff); }
-        .btn-syllabus { background: #eee; color: #333; }
         .btn-feedback { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 
-        /* RED DOT FOR UNREAD MSG */
-        .notif-dot {
-            position: absolute; top: 15px; right: 25px;
-            width: 12px; height: 12px; background: #00e676;
-            border-radius: 50%; border: 2px solid var(--my-msg);
-            display: none;
+        /* NUMERIC BADGE */
+        .notif-badge {
+            position: absolute; top: -5px; right: 10px;
+            background: #00e676; color: #000;
+            border-radius: 50%; width: 22px; height: 22px;
+            display: none; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; border: 2px solid #000;
         }
 
         /* --- MESSAGES --- */
@@ -149,30 +149,10 @@
             background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; border-bottom: 1px solid #333;
         }
         .list-item:active { background: #333; }
-        .tab-bar { display: flex; gap: 10px; margin-bottom: 10px; }
-        .tab-btn { flex: 1; padding: 10px; background: #333; border: none; color: #888; cursor: pointer; border-radius: 5px; }
-        .tab-btn.active { background: var(--accent); color: white; font-weight: bold; }
         
-        /* --- CHECKLIST STYLE (Notion White) --- */
-        #checklist-content { 
-            background: #ffffff !important; 
-            color: #000000 !important; 
-            height: 100%; overflow-y: auto; padding: 20px; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-        #checklist-content h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #000; }
-        #checklist-content h3 { font-size: 18px; font-weight: 600; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; color: #000; }
-        #checklist-content p, #checklist-content blockquote { color: #333; }
-        .to-do-list { padding: 0; list-style: none; }
-        .to-do-list li { 
-            padding: 8px 0; display: flex; align-items: flex-start; 
-            border-bottom: 1px solid #f5f5f5; color: #000;
-        }
-        .custom-checkbox { 
-            width: 18px; height: 18px; margin-right: 12px; flex-shrink: 0; 
-            cursor: pointer; accent-color: #2D8CFF;
-        }
-        .completed-text { text-decoration: line-through; opacity: 0.5; color: #888; }
+        .admin-tabs { display: flex; gap: 10px; padding: 10px; border-bottom: 1px solid #333; }
+        .tab-btn { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #aaa; border-radius: 8px; cursor: pointer; }
+        .tab-btn.active { background: var(--admin-gold); color: #000; border-color: var(--admin-gold); font-weight: bold; }
 
         /* --- MODALS --- */
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
@@ -220,16 +200,15 @@
         <div class="btn-group">
             <button class="big-btn btn-chat" onclick="openView('chat-view')">
                 <i class="fas fa-comments"></i> Public Chat
-                <span id="homeUnreadBadge" class="notif-dot"></span>
+                <span id="homeUnreadBadge" class="notif-badge">0</span>
             </button>
             <button class="big-btn btn-inbox" onclick="openInbox()">
                 <i class="fas fa-envelope"></i> My Inbox 📩
-                <span id="inboxBadge" class="notif-dot"></span>
+                <span id="inboxBadge" class="notif-badge">0</span>
             </button>
             <button class="big-btn btn-verse" onclick="openView('rangreja-view')"><i class="fas fa-crown"></i> Rangreja Verse</button>
-            <button class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
+            <button id="feedbackBtn" class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
-            <button class="big-btn btn-syllabus" onclick="openView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
         </div>
     </div>
 
@@ -240,7 +219,7 @@
             <div style="width:30px;"></div>
         </div>
         <div class="chat-messages" id="messagesList"></div>
-        <div id="scrollDownBtn" onclick="scrollToBottom()"><i class="fas fa-arrow-down"></i><span id="scrollBadge" class="scroll-badge">0</span></div>
+        <div id="scrollDownBtn" onclick="scrollToBottom()"><i class="fas fa-arrow-down"></i><span id="scrollBadge" class="scroll-badge" style="display:none;">0</span></div>
         <div class="chat-footer">
             <div id="editModeIndicator" class="edit-mode-indicator">Editing <i class="fas fa-times" onclick="cancelEdit()"></i></div>
             <div id="imgPreview" class="preview-area"><img id="thumb"> <i class="fas fa-times" onclick="clearImg()"></i></div>
@@ -289,6 +268,26 @@
         </div>
     </div>
 
+    <div id="list-view" class="app-view">
+        <div class="chat-header">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title" id="listTitle">List</div></div>
+        </div>
+        <div class="chat-messages" id="genericList"></div>
+    </div>
+
+    <div id="admin-view" class="app-view">
+        <div class="chat-header">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title">Admin Panel</div></div>
+        </div>
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchAdminTab('users', this)">Users</button>
+            <button class="tab-btn" onclick="switchAdminTab('feedbacks', this)">Feedbacks</button>
+        </div>
+        <div class="chat-messages" id="adminList"></div>
+    </div>
+
     <div id="feedback-view" class="app-view">
         <div class="chat-header">
             <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
@@ -296,98 +295,8 @@
         </div>
         <div style="padding:20px;">
             <h3>Tell us what features you want! 💡</h3>
-            <p style="color:#aaa; font-size:13px; margin-bottom:20px;">Or report any bugs you find.</p>
             <textarea id="feedbackText" placeholder="I want this feature..."></textarea>
             <button class="big-btn btn-chat" onclick="sendFeedback()">Submit Feedback</button>
-        </div>
-    </div>
-
-    <div id="list-view" class="app-view">
-        <div class="chat-header">
-            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title" id="listTitle">List</div></div>
-        </div>
-        <div id="adminTabBar" style="display:none; padding:10px; gap:10px;">
-            <button class="big-btn btn-syllabus" style="font-size:12px; padding:8px;" onclick="switchAdminTab('users')">Users</button>
-            <button class="big-btn btn-syllabus" style="font-size:12px; padding:8px;" onclick="switchAdminTab('feedbacks')">Feedbacks</button>
-        </div>
-        <div class="chat-messages" id="genericList"></div>
-    </div>
-
-    <div id="checklist-view" class="app-view">
-        <div class="chat-header" style="background:#fff; border-bottom:1px solid #ccc;">
-            <button class="back-btn" style="background:none; border:none; color:#333; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus</div></div>
-        </div>
-        <div id="checklist-content">
-            <h1>Class 10 Syllabus</h1>
-            <blockquote>Checkboxes are saved automatically.</blockquote>
-            
-            <h3>Mathematics</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
-            </ul>
-
-            <h3>Science</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Control Coordination</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Light</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
-            </ul>
-
-            <h3>Social Science</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in Europe</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Global World</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Resources</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Agriculture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
-            </ul>
-            
-            <h3>English</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>A Letter to God</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nelson Mandela</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Two Stories Flying</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Anne Frank</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Glimpses of India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Madam Rides Bus</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Sermon at Benares</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Dust of Snow</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Fire and Ice</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Tiger in Zoo</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>The Ball Poem</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Amanda</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Triumph of Surgery</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>The Thief Story</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Footprints without Feet</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Bholi</span></li>
-            </ul>
         </div>
     </div>
 
@@ -426,7 +335,7 @@
         let editingId = null;
         let isAtBottom = true;
         let isChatActive = false;
-        let unreadCount = 0; // Proper count var
+        let unreadCount = 0;
 
         if(!currentUser) {
             document.getElementById('nameModal').style.display = 'flex';
@@ -451,6 +360,7 @@
             if(currentUser.toLowerCase() === "rangreja") {
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminInputArea').classList.remove('hidden');
+                document.getElementById('feedbackBtn').style.display = 'none'; // Admin doesn't need to send feedback
                 monitorInbox();
             } else {
                 monitorInbox(); 
@@ -477,7 +387,7 @@
                 const cvs = document.getElementById('onlineCanvas');
                 const ctx = cvs.getContext('2d');
                 ctx.clearRect(0,0,120,40);
-                ctx.fillStyle = document.getElementById('checklist-view').style.display === 'flex' ? 'black' : 'white';
+                ctx.fillStyle = 'white';
                 ctx.font = 'bold 14px Inter';
                 ctx.fillText(`● ${count} Online`, 20, 25);
             });
@@ -515,17 +425,16 @@
                 snapshot.docChanges().forEach(c => { if(c.type === 'added') hasNew = true; });
 
                 snapshot.forEach(d => msgs.push({id:d.id, ...d.data()}));
-                msgs.reverse().forEach(msg => renderMessage(msg, list, false));
+                msgs.reverse().forEach(msg => renderMessage(msg, list, false, 'messages'));
                 
-                // Logic for Scroll Badge & Unread Count
                 if(hasNew) {
                     if(isChatActive) {
                         if(isAtBottom) {
-                            list.scrollTop = list.scrollHeight; // Auto scroll
-                            unreadCount = 0; // Reset
+                            list.scrollTop = list.scrollHeight;
+                            unreadCount = 0;
                             updateScrollBadge();
                         } else {
-                            unreadCount++; // Increment
+                            unreadCount++;
                             updateScrollBadge();
                         }
                     } else {
@@ -562,7 +471,7 @@
             updateScrollBadge();
         };
 
-        // --- DM SYSTEM RESTRICTION ---
+        // --- DM SYSTEM ---
         window.openUserModal = (name) => {
             if(name === currentUser) return;
             selectedUser = name;
@@ -570,7 +479,7 @@
             const iamAdmin = currentUser.toLowerCase() === "rangreja";
             const targetIsAdmin = name.toLowerCase() === "rangreja";
             
-            // Only Admin can DM anyone, Others can ONLY DM Admin
+            // STRICT PRIVACY: User can only DM Admin. Admin can DM anyone.
             if(iamAdmin || targetIsAdmin) {
                 document.getElementById('dmOption').style.display = 'block';
             } else {
@@ -603,24 +512,25 @@
             dmSubscription = onSnapshot(q, (snap) => {
                 const list = document.getElementById("dmList");
                 list.innerHTML = "";
-                snap.forEach(d => renderMessage({id:d.id, ...d.data()}, list, true));
+                snap.forEach(d => renderMessage({id:d.id, ...d.data()}, list, true, 'private_chats', chatId));
                 list.scrollTop = list.scrollHeight;
             });
         };
 
         function monitorInbox() {
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
-                let hasChanges = false;
-                snap.docChanges().forEach(c => { if(c.type === 'added' || c.type === 'modified') hasChanges = true; });
-                if(hasChanges) document.getElementById('inboxBadge').style.display = 'block';
+                if(snap.size > 0) {
+                    document.getElementById('inboxBadge').innerText = snap.size;
+                    document.getElementById('inboxBadge').style.display = 'flex';
+                } else {
+                    document.getElementById('inboxBadge').style.display = 'none';
+                }
             });
         }
 
         window.openInbox = () => {
-            document.getElementById('inboxBadge').style.display = 'none';
             openView('list-view');
             document.getElementById('listTitle').innerText = "My Inbox";
-            document.getElementById('adminTabBar').style.display = 'none'; // Hide admin tabs
             const list = document.getElementById("genericList");
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
                 list.innerHTML = "";
@@ -642,27 +552,30 @@
             });
         };
 
-        // --- FEEDBACK SYSTEM ---
+        // --- FEEDBACK & ADMIN ---
         window.sendFeedback = async () => {
             const txt = document.getElementById('feedbackText').value.trim();
             if(!txt) return;
             await addDoc(collection(db, "feedbacks"), { text: txt, user: currentUser, createdAt: serverTimestamp() });
-            alert("Feedback Sent! Thank you.");
+            alert("Feedback Sent!");
             document.getElementById('feedbackText').value = "";
             goHome();
-        }
-
-        // --- ADMIN PANEL ---
-        window.openAdminPanel = () => {
-            openView('list-view');
-            document.getElementById('listTitle').innerText = "Admin Panel";
-            document.getElementById('adminTabBar').style.display = 'flex';
-            switchAdminTab('users');
         };
 
-        window.switchAdminTab = (tab) => {
-            const list = document.getElementById("genericList");
+        window.openAdminPanel = () => {
+            openView('admin-view');
+            switchAdminTab('users', null);
+        };
+
+        window.switchAdminTab = (tab, btn) => {
+            if(btn) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            
+            const list = document.getElementById("adminList");
             list.innerHTML = "Loading...";
+            
             if(tab === 'users') {
                 onSnapshot(collection(db, "users"), (snap) => {
                     list.innerHTML = "";
@@ -679,14 +592,14 @@
                         list.appendChild(div);
                     });
                 });
-            } else if(tab === 'feedbacks') {
+            } else {
                 onSnapshot(collection(db, "feedbacks"), (snap) => {
                     list.innerHTML = "";
                     snap.forEach(d => {
                         const f = d.data();
                         const div = document.createElement("div");
                         div.className = "list-item";
-                        div.style.flexDirection = "column"; div.style.alignItems = "flex-start";
+                        div.style.flexDirection = "column"; div.style.alignItems="flex-start";
                         div.innerHTML = `<b style="color:var(--accent)">${f.user}</b> <p>${f.text}</p>`;
                         list.appendChild(div);
                     });
@@ -704,19 +617,7 @@
                 list.innerHTML = "";
                 snap.forEach(d => {
                     const msg = d.data();
-                    const div = document.createElement("div");
-                    div.className = "message admin-post";
-                    
-                    // Delete Button for Admin Only
-                    let delBtn = "";
-                    if(currentUser.toLowerCase() === "rangreja") {
-                        delBtn = `<i class="fas fa-trash" style="float:right; color:red; cursor:pointer;" onclick="deleteDoc(doc(db,'rangreja_updates','${d.id}'))"></i>`;
-                    }
-
-                    const imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
-                    
-                    div.innerHTML = `${delBtn} <span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span> ${imgHtml} <div>${msg.text}</div>`;
-                    list.appendChild(div);
+                    renderMessage({id:d.id, ...msg}, list, false, 'rangreja_updates');
                 });
             });
         }
@@ -732,24 +633,36 @@
         };
 
         // --- SHARED MESSAGE LOGIC ---
-        function renderMessage(msg, list, isPrivate) {
+        function renderMessage(msg, list, isPrivate, collectionName, chatId) {
             const div = document.createElement("div");
             const isMe = msg.user === currentUser;
-            const isAdminMsg = msg.user.toLowerCase() === "rangreja";
+            const isAdminMsg = msg.user && msg.user.toLowerCase() === "rangreja";
             const amIAdmin = currentUser.toLowerCase() === "rangreja";
             
-            div.className = `message ${isMe ? 'me' : 'others'} ${isAdminMsg ? 'admin-msg' : ''}`;
+            // Special styling for Verse
+            if(collectionName === 'rangreja_updates') {
+                div.className = "message admin-post";
+            } else {
+                div.className = `message ${isMe ? 'me' : 'others'} ${isAdminMsg ? 'admin-msg' : ''}`;
+            }
             
             let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
-            let nameTag = isMe ? "" : `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
+            
+            // Name Tag
+            let nameTag = "";
+            if (collectionName === 'rangreja_updates') {
+                nameTag = `<span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span>`;
+            } else if (!isMe) {
+                nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
+            }
             
             let actions = `<div class="msg-actions">
-                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', ${isPrivate})"><i class="fas fa-pen"></i></button>` : ''}
-                ${(isMe || amIAdmin) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', ${isPrivate})"><i class="fas fa-trash"></i></button>` : ''}
-                <button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>
+                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', '${collectionName}', '${chatId}')"><i class="fas fa-pen"></i></button>` : ''}
+                ${(isMe || amIAdmin) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', '${collectionName}', '${chatId}')"><i class="fas fa-trash"></i></button>` : ''}
+                ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>` : ''}
             </div>`;
 
-            // Smart Menu Positioning
+            // Long Press
             let timer;
             const startPress = () => timer = setTimeout(() => { 
                 document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
@@ -773,13 +686,11 @@
 
         window.sendMsg = async (type) => {
             const u = await getDoc(doc(db, "users", currentUser));
-            // Block logic
             const isToRangreja = selectedUser && selectedUser.toLowerCase() === "rangreja";
             const amIAdmin = currentUser.toLowerCase() === "rangreja";
 
             if(u.exists() && u.data().isBlocked && !isToRangreja) return alert("You are Blocked.");
 
-            // STRICT DM CHECK: Only DM if one party is Admin
             if(type === 'private') {
                 const targetIsAdmin = selectedUser.toLowerCase() === "rangreja";
                 if (!amIAdmin && !targetIsAdmin) {
@@ -808,22 +719,63 @@
             clearImg(); clearDmImg();
         };
 
-        window.delMsg = async (id, isPrivate) => {
+        window.delMsg = async (id, collName, chatId) => {
             if(!confirm("Delete?")) return;
-            if(isPrivate) {
-                const chatId = [currentUser, selectedUser].sort().join("_");
+            if(collName === 'private_chats') {
                 await deleteDoc(doc(db, "private_chats", chatId, "messages", id));
             } else {
-                await deleteDoc(doc(db, "messages", id));
+                await deleteDoc(doc(db, collName, id));
             }
         };
 
-        window.editMsg = (id, txt, isPriv) => {
-            editingId = id; 
-            const input = document.getElementById(isPriv ? 'dmMsgInput' : 'msgInput');
+        window.editMsg = (id, txt, collName, chatId) => {
+            // Store context for edit
+            editingId = { id, collName, chatId };
+            
+            // Determine input box
+            let inputId = 'msgInput';
+            if(collName === 'private_chats') inputId = 'dmMsgInput';
+            if(collName === 'rangreja_updates') inputId = 'verseInput';
+
+            const input = document.getElementById(inputId);
             input.value = txt; input.focus();
-            document.querySelector(isPriv ? '#dmSendBtn' : '#sendBtn').style.color = '#00e676';
+            
+            // Override Send logic temporarily for Edit
+            // (Simplified: just alert user they are editing)
+            alert("Editing message... Press send to update.");
+            
+            // Hook into the send buttons to handle update instead of add
+            // NOTE: For simplicity in this single-file, we'll just update logic in sendMsg to check editingId
         };
+        
+        // Override send logic for editing
+        const originalSendMsg = window.sendMsg;
+        window.sendMsg = async (type) => {
+            if(editingId && editingId.collName !== 'rangreja_updates') {
+                await updateDoc(doc(db, editingId.collName, editingId.collName==='private_chats'?editingId.chatId+'/messages/'+editingId.id : editingId.id), {
+                    text: document.getElementById(type==='public'?'msgInput':'dmMsgInput').value,
+                    isEdited: true
+                });
+                editingId = null;
+                document.getElementById(type==='public'?'msgInput':'dmMsgInput').value = "";
+            } else {
+                originalSendMsg(type);
+            }
+        }
+        
+        const originalSendVerse = window.sendVerse;
+        window.sendVerse = async () => {
+             if(editingId && editingId.collName === 'rangreja_updates') {
+                await updateDoc(doc(db, "rangreja_updates", editingId.id), {
+                    text: document.getElementById("verseInput").value,
+                    isEdited: true
+                });
+                editingId = null;
+                document.getElementById("verseInput").value = "";
+             } else {
+                 originalSendVerse();
+             }
+        }
 
         window.handleImg = (type) => {
             const input = document.getElementById(type==='public'?'imgInput':(type==='private'?'dmImgInput':'verseImgInput'));
@@ -857,18 +809,6 @@
         
         document.getElementById("verseSendBtn").addEventListener("click", sendVerse);
         document.getElementById("adminSendBtn")?.addEventListener("click", sendVerse);
-
-        // Checklist
-        document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
-            const label = cb.nextElementSibling;
-            cb.checked = localStorage.getItem('cb_'+i) === 'true';
-            if(cb.checked) label.classList.add('completed-text');
-            cb.onclick = () => {
-                localStorage.setItem('cb_'+i, cb.checked);
-                label.classList.toggle('completed-text', cb.checked);
-            };
-        });
     </script>
 </body>
 </html>
-
