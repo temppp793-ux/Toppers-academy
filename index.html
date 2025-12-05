@@ -42,8 +42,8 @@
             position: fixed;
             top: 15px;
             right: 15px;
-            z-index: 3000; /* High z-index to sit on top of everything */
-            pointer-events: none; /* Let clicks pass through to buttons below */
+            z-index: 3000;
+            pointer-events: none;
             filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.4));
         }
 
@@ -428,8 +428,10 @@
     </div>
 
     <script type="module">
+        // Import Realtime Database functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getDatabase, ref, onValue, push, onDisconnect, set, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyA9HL7EEx35kDraxZAH8mT_YhZGiruy_rY",
@@ -437,16 +439,19 @@
           projectId: "toppers-chat",
           storageBucket: "toppers-chat.firebasestorage.app",
           messagingSenderId: "855764275912",
-          appId: "1:855764275912:web:c3098e8239c93fb1f54bfd"
+          appId: "1:855764275912:web:c3098e8239c93fb1f54bfd",
+          databaseURL: "https://toppers-chat-default-rtdb.firebaseio.com" // Just in case, usually auto-detected but sometimes needed
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const rtdb = getDatabase(app); // Realtime Database Instance
         const messagesRef = collection(db, "messages");
         
         let currentUserName = localStorage.getItem("chatUserName");
         const modal = document.getElementById("nameModal");
         let replyingTo = null;
+        let onlineCount = 0;
 
         if (!currentUserName) modal.style.display = "flex";
 
@@ -460,8 +465,68 @@
                 currentUserName = name;
                 localStorage.setItem("chatUserName", name);
                 modal.style.display = "none";
+                setupPresence(); // Start tracking presence after name is set
             }
         };
+
+        // --- REAL PRESENCE SYSTEM (REALTIME DATABASE) ---
+        // This function handles "I am online" logic
+        function setupPresence() {
+            // Reference to the list of online users
+            const onlineUsersRef = ref(rtdb, 'online_users');
+            // Create a new reference for THIS user
+            const myUserRef = push(onlineUsersRef);
+
+            // When I disconnect, remove myself
+            onDisconnect(myUserRef).remove();
+
+            // Add myself to the list
+            set(myUserRef, {
+                user: currentUserName,
+                time: Date.now()
+            });
+
+            // Listen for changes in the list to update count
+            onValue(onlineUsersRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    // Count how many children (users) are in the list
+                    onlineCount = snapshot.size;
+                } else {
+                    onlineCount = 0;
+                }
+                drawOnlineStatus();
+            });
+        }
+
+        // If user already logged in previously, start presence immediately
+        if(currentUserName) {
+            setupPresence();
+        }
+
+        // --- CANVAS DRAWING ---
+        const canvas = document.getElementById('onlineCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawOnlineStatus() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw Green Dot (Glowing)
+            ctx.beginPath();
+            ctx.arc(15, 20, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#00e676'; // Bright green
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00e676';
+            ctx.fill();
+            ctx.shadowBlur = 0; // Reset shadow for text
+
+            // Draw Text
+            ctx.font = '600 14px Inter, sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`${onlineCount} Online`, 28, 25);
+        }
+        
+        // Initial draw (will show 0 until data loads)
+        drawOnlineStatus();
 
         // --- NAVIGATION FUNCTIONS ---
         window.openChat = () => {
@@ -483,38 +548,6 @@
             document.getElementById("checklist-view").style.display = "none";
             document.getElementById("landing-view").style.display = "flex";
         };
-
-        // --- CANVAS ONLINE COUNT LOGIC ---
-        const canvas = document.getElementById('onlineCanvas');
-        const ctx = canvas.getContext('2d');
-        let onlineCount = 114; // Start with a realistic number
-
-        function drawOnlineStatus() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw Green Dot (Glowing)
-            ctx.beginPath();
-            ctx.arc(15, 20, 5, 0, 2 * Math.PI);
-            ctx.fillStyle = '#00e676'; // Bright green
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#00e676';
-            ctx.fill();
-            ctx.shadowBlur = 0; // Reset shadow for text
-
-            // Draw Text
-            ctx.font = '600 14px Inter, sans-serif';
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText(`${onlineCount} Online`, 28, 25);
-        }
-
-        // Simulate fluctuation (randomly add/remove 1-3 people)
-        setInterval(() => {
-            const change = Math.floor(Math.random() * 5) - 2; // -2 to +2
-            onlineCount = Math.max(15, onlineCount + change); 
-            drawOnlineStatus();
-        }, 3000);
-
-        drawOnlineStatus(); // Initial draw
 
         // --- CHAT LOGIC ---
         window.toggleActions = (el, e) => {
@@ -602,7 +635,6 @@
         document.getElementById("msgInput").addEventListener("keypress", (e) => { if(e.key==="Enter") sendMessage(); });
 
         // --- CHECKLIST LOGIC ---
-        // Initialize checkboxes with local storage state
         document.querySelectorAll("ul.to-do-list > li").forEach((li, i) => {
             const fake = li.querySelector(".checkbox");
             const text = li.querySelector("span");
@@ -614,7 +646,6 @@
             real.className = "custom-checkbox";
             real.dataset.id = "cbox_" + i;
 
-            // Load saved state
             const saved = localStorage.getItem(real.dataset.id);
             if (saved !== null) {
                 real.checked = saved === "true";
