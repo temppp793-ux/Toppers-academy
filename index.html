@@ -66,7 +66,10 @@
         .btn-admin { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; }
         .btn-verse { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
         .btn-inbox { background: linear-gradient(135deg, #2D8CFF, #0055ff); }
+        .btn-syllabus { background: #eee; color: #333; }
         .btn-feedback { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        /* CRICKET BUTTON STYLE */
+        .btn-cricket { background: linear-gradient(135deg, #1e88e5, #1565c0); color: white; box-shadow: 0 0 15px rgba(30, 136, 229, 0.5); }
 
         /* NUMERIC BADGE */
         .notif-badge {
@@ -170,6 +173,20 @@
             color: #fff; padding: 15px; border-radius: 10px; resize: none; font-family: inherit; margin-bottom: 20px;
         }
 
+        /* --- CHECKLIST STYLE --- */
+        #checklist-content { 
+            background: #ffffff !important; color: #000000 !important; 
+            height: 100%; overflow-y: auto; padding: 20px; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        #checklist-content h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #000; }
+        #checklist-content h3 { font-size: 18px; font-weight: 600; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; color: #000; }
+        #checklist-content p, #checklist-content blockquote { color: #333; }
+        .to-do-list { padding: 0; list-style: none; }
+        .to-do-list li { padding: 8px 0; display: flex; align-items: flex-start; border-bottom: 1px solid #f5f5f5; color: #000; }
+        .custom-checkbox { width: 18px; height: 18px; margin-right: 12px; flex-shrink: 0; cursor: pointer; accent-color: #2D8CFF; }
+        .completed-text { text-decoration: line-through; opacity: 0.5; color: #888; }
+
         /* --- CANVAS --- */
         #onlineCanvas { position: fixed; top: 15px; right: 15px; z-index: 3000; pointer-events: none; }
 
@@ -198,17 +215,22 @@
         <h2 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h2>
         
         <div class="btn-group">
+            <button class="big-btn btn-cricket" onclick="openView('cricket-view')"><i class="fas fa-tv"></i> Live Cricket 🏏</button>
+            
             <button class="big-btn btn-chat" onclick="openView('chat-view')">
                 <i class="fas fa-comments"></i> Public Chat
-                <span id="homeUnreadBadge" class="notif-badge"></span>
+                <span id="homeUnreadBadge" class="notif-badge">0</span>
             </button>
+            
             <button class="big-btn btn-inbox" onclick="openInbox()">
                 <i class="fas fa-envelope"></i> My Inbox 📩
-                <span id="inboxBadge" class="notif-badge"></span>
+                <span id="inboxBadge" class="notif-badge">0</span>
             </button>
+            
             <button class="big-btn btn-verse" onclick="openView('rangreja-view')"><i class="fas fa-crown"></i> Rangreja Verse</button>
             <button id="feedbackBtn" class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
+            <button class="big-btn btn-syllabus" onclick="openView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
         </div>
     </div>
 
@@ -268,24 +290,24 @@
         </div>
     </div>
 
+    <div id="cricket-view" class="app-view">
+        <div class="chat-header">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title">Live Cricket</div></div>
+        </div>
+        <iframe src="https://cricketstan.github.io/Willow-Cricbuzz-/" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+
     <div id="list-view" class="app-view">
         <div class="chat-header">
             <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
             <div class="header-info"><div class="chat-title" id="listTitle">List</div></div>
         </div>
-        <div class="chat-messages" id="genericList"></div>
-    </div>
-
-    <div id="admin-view" class="app-view">
-        <div class="chat-header">
-            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title">Admin Panel</div></div>
-        </div>
-        <div class="admin-tabs">
+        <div id="adminTabBar" style="display:none; padding:10px; gap:10px;">
             <button class="tab-btn active" onclick="switchAdminTab('users', this)">Users</button>
             <button class="tab-btn" onclick="switchAdminTab('feedbacks', this)">Feedbacks</button>
         </div>
-        <div class="chat-messages" id="adminList"></div>
+        <div class="chat-messages" id="genericList"></div>
     </div>
 
     <div id="feedback-view" class="app-view">
@@ -297,6 +319,83 @@
             <h3>Tell us what features you want! 💡</h3>
             <textarea id="feedbackText" placeholder="I want this feature..."></textarea>
             <button class="big-btn btn-chat" onclick="sendFeedback()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <div id="checklist-view" class="app-view">
+        <div class="chat-header" style="background:#fff; border-bottom:1px solid #ccc;">
+            <button class="back-btn" style="background:none; border:none; color:#333; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus</div></div>
+        </div>
+        <div id="checklist-content">
+            <h1>Class 10 Syllabus</h1>
+            <blockquote>Checkboxes are saved automatically.</blockquote>
+            
+            <h3>Mathematics</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
+            </ul>
+
+            <h3>Science</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Control Coordination</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Light</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
+            </ul>
+
+            <h3>Social Science</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in Europe</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Global World</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Resources</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Agriculture</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
+            </ul>
+            
+            <h3>English</h3>
+            <ul class="to-do-list">
+                <li><input type="checkbox" class="custom-checkbox"> <span>A Letter to God</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Nelson Mandela</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Two Stories Flying</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Anne Frank</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Glimpses of India</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Madam Rides Bus</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Sermon at Benares</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Dust of Snow</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Fire and Ice</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Tiger in Zoo</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>The Ball Poem</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Amanda</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Triumph of Surgery</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>The Thief Story</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Footprints without Feet</span></li>
+                <li><input type="checkbox" class="custom-checkbox"> <span>Bholi</span></li>
+            </ul>
         </div>
     </div>
 
@@ -387,7 +486,7 @@
                 const cvs = document.getElementById('onlineCanvas');
                 const ctx = cvs.getContext('2d');
                 ctx.clearRect(0,0,120,40);
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = document.getElementById('checklist-view').style.display === 'flex' ? 'black' : 'white';
                 ctx.font = 'bold 14px Inter';
                 ctx.fillText(`● ${count} Online`, 20, 25);
             });
@@ -438,7 +537,7 @@
                             updateScrollBadge();
                         }
                     } else {
-                        document.getElementById('homeUnreadBadge').style.display = 'block';
+                        document.getElementById('homeUnreadBadge').style.display = 'flex'; // Show Green Dot
                     }
                 }
             });
@@ -471,7 +570,7 @@
             updateScrollBadge();
         };
 
-        // --- DM SYSTEM ---
+        // --- DM SYSTEM RESTRICTION ---
         window.openUserModal = (name) => {
             if(name === currentUser) return;
             selectedUser = name;
@@ -519,8 +618,9 @@
 
         function monitorInbox() {
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
-                if(snap.size > 0) {
-                    document.getElementById('inboxBadge').innerText = snap.size;
+                const count = snap.size;
+                if(count > 0) {
+                    document.getElementById('inboxBadge').innerText = count;
                     document.getElementById('inboxBadge').style.display = 'flex';
                 } else {
                     document.getElementById('inboxBadge').style.display = 'none';
@@ -529,8 +629,10 @@
         }
 
         window.openInbox = () => {
+            document.getElementById('inboxBadge').style.display = 'none';
             openView('list-view');
             document.getElementById('listTitle').innerText = "My Inbox";
+            document.getElementById('adminTabBar').style.display = 'none';
             const list = document.getElementById("genericList");
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
                 list.innerHTML = "";
@@ -545,6 +647,7 @@
                         if(confirm("Delete this chat from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
                     }, 800));
                     div.addEventListener('touchend', () => clearTimeout(pressTimer));
+                    div.addEventListener('contextmenu', (e) => { e.preventDefault(); if(confirm("Delete from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id)); });
                     
                     div.onclick = () => { selectedUser = d.data().name; startDM(); };
                     list.appendChild(div);
@@ -563,8 +666,10 @@
         };
 
         window.openAdminPanel = () => {
-            openView('admin-view');
-            switchAdminTab('users', null);
+            openView('list-view');
+            document.getElementById('listTitle').innerText = "Admin Panel";
+            document.getElementById('adminTabBar').style.display = 'flex';
+            switchAdminTab('users', document.querySelector('.tab-btn'));
         };
 
         window.switchAdminTab = (tab, btn) => {
@@ -573,7 +678,7 @@
                 btn.classList.add('active');
             }
             
-            const list = document.getElementById("adminList");
+            const list = document.getElementById("genericList");
             list.innerHTML = "Loading...";
             
             if(tab === 'users') {
@@ -656,8 +761,9 @@
                 nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
             }
             
+            // ACTIONS - ALLOW DELETE FOR RANGREJA IN VERSE TOO
             let actions = `<div class="msg-actions">
-                ${isMe ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', '${collectionName}', '${chatId}')"><i class="fas fa-pen"></i></button>` : ''}
+                ${(isMe && collectionName !== 'rangreja_updates') ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text}', '${collectionName}', '${chatId}')"><i class="fas fa-pen"></i></button>` : ''}
                 ${(isMe || amIAdmin) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', '${collectionName}', '${chatId}')"><i class="fas fa-trash"></i></button>` : ''}
                 ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>` : ''}
             </div>`;
@@ -729,26 +835,14 @@
         };
 
         window.editMsg = (id, txt, collName, chatId) => {
-            // Store context for edit
             editingId = { id, collName, chatId };
-            
-            // Determine input box
             let inputId = 'msgInput';
             if(collName === 'private_chats') inputId = 'dmMsgInput';
-            if(collName === 'rangreja_updates') inputId = 'verseInput';
-
             const input = document.getElementById(inputId);
             input.value = txt; input.focus();
-            
-            // Override Send logic temporarily for Edit
-            // (Simplified: just alert user they are editing)
             alert("Editing message... Press send to update.");
-            
-            // Hook into the send buttons to handle update instead of add
-            // NOTE: For simplicity in this single-file, we'll just update logic in sendMsg to check editingId
         };
         
-        // Override send logic for editing
         const originalSendMsg = window.sendMsg;
         window.sendMsg = async (type) => {
             if(editingId && editingId.collName !== 'rangreja_updates') {
@@ -809,6 +903,17 @@
         
         document.getElementById("verseSendBtn").addEventListener("click", sendVerse);
         document.getElementById("adminSendBtn")?.addEventListener("click", sendVerse);
+
+        // Checklist
+        document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
+            const label = cb.nextElementSibling;
+            cb.checked = localStorage.getItem('cb_'+i) === 'true';
+            if(cb.checked) label.classList.add('completed-text');
+            cb.onclick = () => {
+                localStorage.setItem('cb_'+i, cb.checked);
+                label.classList.toggle('completed-text', cb.checked);
+            };
+        });
     </script>
 </body>
 </html>
