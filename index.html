@@ -19,7 +19,6 @@
             --glass-border: rgba(255, 105, 180, 0.2);
             --admin-gold: #FFD700;
             --verified-blue: #1DA1F2;
-            --reply-bg: rgba(255, 255, 255, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -41,7 +40,6 @@
         .app-view { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--chat-bg); animation: fadeIn 0.3s ease; }
         .hidden { display: none !important; }
         
-        /* --- HEADER --- */
         .chat-header { 
             padding: 12px 15px; background: var(--header-bg); 
             border-bottom: 1px solid var(--glass-border); 
@@ -52,7 +50,6 @@
         .chat-title { font-size: 16px; font-weight: 700; }
         .chat-status { font-size: 11px; color: var(--accent); }
 
-        /* --- LANDING --- */
         #landing-view {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100%; width: 100%; text-align: center; padding: 20px;
@@ -69,9 +66,8 @@
         .btn-admin { background: linear-gradient(135deg, #FFD700, #B8860B); color: #000; }
         .btn-verse { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
         .btn-inbox { background: linear-gradient(135deg, #2D8CFF, #0055ff); }
-        .btn-syllabus { background: #eee; color: #333; }
+        .btn-feedback { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 
-        /* NOTIFICATIONS */
         .notif-badge {
             position: absolute; top: 15px; right: 25px;
             width: 12px; height: 12px; background: #00e676;
@@ -83,7 +79,6 @@
             padding: 2px 6px; border-radius: 10px; margin-left: 10px;
         }
 
-        /* --- MESSAGES --- */
         .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; position: relative; scroll-behavior: smooth; }
         
         .message { 
@@ -96,7 +91,6 @@
         .message.me { align-self: flex-end; background: var(--my-msg); border: 1px solid rgba(255,64,129,0.3); border-top-right-radius: 0; }
         .message.admin-msg { border: 1px solid var(--admin-gold); }
         .message.vibha-msg { border: 1px solid var(--verified-blue); }
-        
         .message.admin-post { 
             width: 90%; max-width: 90%; align-self: center; 
             background: rgba(40, 30, 10, 0.9); border: 1px solid var(--admin-gold); 
@@ -108,9 +102,7 @@
         .message.admin-post .sender-name { justify-content: center; color: var(--admin-gold); }
         .verified-tick { color: var(--verified-blue); font-size: 12px; }
         .msg-time { font-size: 9px; opacity: 0.6; float: right; margin-left: 8px; margin-top: 4px; }
-        .edited-tag { font-size: 10px; color: #aaa; font-style: italic; margin-left: 4px; }
         
-        /* QUOTED REPLY STYLE */
         .reply-quote {
             background: rgba(0,0,0,0.2); border-left: 3px solid var(--accent);
             padding: 5px; margin-bottom: 5px; border-radius: 4px; font-size: 11px; color: #ddd;
@@ -119,25 +111,19 @@
         .reply-sender { color: var(--accent); font-weight: bold; margin-bottom: 2px; }
 
         .chat-img { max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 5px; object-fit: contain; cursor: zoom-in; }
-        .message.admin-post .chat-img { margin: 10px auto; display: block; }
-
-        /* --- ACTIONS (Long Press) --- */
+        
         .msg-actions { 
             position: absolute; background: #222; padding: 5px 10px; border-radius: 25px; 
             display: none; align-items: center; gap: 10px; z-index: 100; border: 1px solid var(--glass-border); 
         }
         .msg-actions.top { top: -45px; }
         .msg-actions.bottom { top: 100%; margin-top: 5px; }
-        
         .message.show-actions .msg-actions { display: flex; }
-        .message.others .msg-actions { left: 0; }
-        .message.me .msg-actions { right: 0; }
         .action-btn { width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: none; color: #fff; cursor: pointer; }
         .btn-del { background: var(--danger); }
         .btn-edit { background: var(--verified-blue); }
         .btn-reply { background: #444; }
 
-        /* --- SCROLL BTN --- */
         #scrollDownBtn { 
             position: absolute; bottom: 80px; right: 20px; width: 45px; height: 45px; 
             border-radius: 50%; background: #2a0a18; border: 1px solid var(--accent); 
@@ -149,10 +135,8 @@
             display: none;
         }
 
-        /* --- FOOTER & INPUT --- */
         .chat-footer { background: var(--header-bg); border-top: 1px solid var(--glass-border); padding: 10px; }
         
-        /* Reply Preview Bar Above Input */
         .reply-preview-bar {
             display: none; background: #222; padding: 8px; border-radius: 8px; margin-bottom: 8px;
             border-left: 4px solid var(--accent); justify-content: space-between; align-items: center;
@@ -169,7 +153,6 @@
         .edit-mode-indicator { display: none; background: var(--verified-blue); color: white; padding: 5px 12px; font-size: 11px; border-radius: 6px 6px 0 0; width: fit-content; margin-left: 15px; }
         .edit-mode-indicator.show { display: block; }
 
-        /* --- INBOX LIST --- */
         .list-item { 
             display: flex; justify-content: space-between; align-items: center; padding: 15px; 
             background: #1a1a1a; margin-bottom: 5px; border-radius: 8px; cursor: pointer; border-bottom: 1px solid #333;
@@ -179,19 +162,6 @@
         .tab-btn { flex: 1; padding: 10px; background: #222; border: 1px solid #444; color: #aaa; border-radius: 8px; cursor: pointer; }
         .tab-btn.active { background: var(--admin-gold); color: #000; border-color: var(--admin-gold); font-weight: bold; }
 
-        /* --- CHECKLIST (Notion Style) --- */
-        #checklist-content { 
-            background: #ffffff !important; color: #000000 !important; 
-            height: 100%; overflow-y: auto; padding: 20px; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-        #checklist-content h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; color: #000; }
-        #checklist-content h3 { font-size: 18px; font-weight: 600; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; color: #000; }
-        .to-do-list li { padding: 8px 0; display: flex; align-items: flex-start; border-bottom: 1px solid #f5f5f5; color: #000; }
-        .custom-checkbox { width: 18px; height: 18px; margin-right: 12px; flex-shrink: 0; cursor: pointer; accent-color: #2D8CFF; }
-        .completed-text { text-decoration: line-through; opacity: 0.5; color: #888; }
-
-        /* --- MODALS --- */
         .overlay-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; display: none; }
         .action-modal { 
             position: fixed; bottom: 0; left: 0; width: 100%; background: #1e1e1e; 
@@ -201,9 +171,12 @@
         .action-modal.open { transform: translateY(0); }
         .modal-option { padding: 15px; background: #333; margin-bottom: 10px; text-align: center; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
-        /* --- CANVAS --- */
-        #onlineCanvas { position: fixed; top: 15px; right: 15px; z-index: 3000; pointer-events: none; }
+        #feedback-view textarea {
+            width: 100%; height: 150px; background: #222; border: 1px solid #444; 
+            color: #fff; padding: 15px; border-radius: 10px; resize: none; font-family: inherit; margin-bottom: 20px;
+        }
 
+        #onlineCanvas { position: fixed; top: 15px; right: 15px; z-index: 3000; pointer-events: none; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -238,8 +211,8 @@
                 <span id="inboxBadge" class="notif-badge"></span>
             </button>
             <button class="big-btn btn-verse" onclick="openView('rangreja-view')"><i class="fas fa-crown"></i> Rangreja Verse</button>
+            <button id="feedbackBtn" class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
-            <button class="big-btn btn-syllabus" onclick="openView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
         </div>
     </div>
 
@@ -251,20 +224,18 @@
         </div>
         <div class="chat-messages" id="messagesList"></div>
         <div id="scrollDownBtn" onclick="scrollToBottom()"><i class="fas fa-arrow-down"></i><span id="scrollBadge" class="scroll-badge" style="display:none;">0</span></div>
-        
         <div class="chat-footer">
             <div id="editModeIndicator" class="edit-mode-indicator">Editing <i class="fas fa-times" onclick="cancelEdit()"></i></div>
-            
-            <div id="imgPreview" class="preview-area"><img id="thumb"> <i class="fas fa-times" onclick="clearImg()"></i></div>
             
             <div id="replyPreviewBar" class="reply-preview-bar">
                 <div>
                     <span class="reply-preview-label">Replying to <span id="replyToUser">User</span></span>
-                    <span id="replyToText" class="reply-preview-content">Message text...</span>
+                    <span id="replyToText" class="reply-preview-content">Msg</span>
                 </div>
                 <i class="fas fa-times" style="color:#aaa; cursor:pointer;" onclick="cancelReply()"></i>
             </div>
 
+            <div id="imgPreview" class="preview-area"><img id="thumb"> <i class="fas fa-times" onclick="clearImg()"></i></div>
             <div class="chat-input-area">
                 <input type="file" id="imgInput" hidden accept="image/*" onchange="handleImg('public')">
                 <button class="icon-btn" style="background:none; border:none; color:#aaa; font-size:20px;" onclick="document.getElementById('imgInput').click()"><i class="fas fa-paperclip"></i></button>
@@ -285,7 +256,7 @@
             <div id="dmReplyPreviewBar" class="reply-preview-bar">
                 <div>
                     <span class="reply-preview-label">Replying to <span id="dmReplyToUser">User</span></span>
-                    <span id="dmReplyToText" class="reply-preview-content">Message text...</span>
+                    <span id="dmReplyToText" class="reply-preview-content">Msg</span>
                 </div>
                 <i class="fas fa-times" style="color:#aaa; cursor:pointer;" onclick="cancelReply()"></i>
             </div>
@@ -329,75 +300,15 @@
         <div class="chat-messages" id="genericList"></div>
     </div>
 
-    <div id="checklist-view" class="app-view">
-        <div class="chat-header" style="background:#fff; border-bottom:1px solid #ccc;">
-            <button class="back-btn" style="background:none; border:none; color:#333; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title" style="color:#333;">Syllabus</div></div>
+    <div id="feedback-view" class="app-view">
+        <div class="chat-header">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title">Feedback</div></div>
         </div>
-        <div id="checklist-content">
-            <h1>Class 10 Syllabus</h1>
-            <h3>Mathematics</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Real Numbers</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Polynomials</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Linear Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Quadratic Equations</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Arithmetic Progressions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Triangles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Coordinate Geometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Trigonometry</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Areas Related to Circles</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Surface Areas and Volumes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Statistics</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Probability</span></li>
-            </ul>
-            <h3>Science</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Chemical Reactions</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Acids, Bases, Salts</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Metals Non-Metals</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Carbon Compounds</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Life Processes</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Control Coordination</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Reproduction</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Heredity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Light</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Human Eye</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Electricity</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Magnetic Effects</span></li>
-            </ul>
-            <h3>Social Science</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in Europe</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nationalism in India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Global World</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Print Culture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Resources</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Agriculture</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Power Sharing</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Federalism</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Political Parties</span></li>
-            </ul>
-            <h3>English</h3>
-            <ul class="to-do-list">
-                <li><input type="checkbox" class="custom-checkbox"> <span>A Letter to God</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Nelson Mandela</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Two Stories Flying</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Anne Frank</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Glimpses of India</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Madam Rides Bus</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Sermon at Benares</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Dust of Snow</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Fire and Ice</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Tiger in Zoo</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>The Ball Poem</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Amanda</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Triumph of Surgery</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>The Thief Story</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Footprints without Feet</span></li>
-                <li><input type="checkbox" class="custom-checkbox"> <span>Bholi</span></li>
-            </ul>
+        <div style="padding:20px;">
+            <h3>Tell us what features you want! 💡</h3>
+            <textarea id="feedbackText" placeholder="I want this feature..."></textarea>
+            <button class="big-btn btn-chat" onclick="sendFeedback()">Submit Feedback</button>
         </div>
     </div>
 
@@ -434,7 +345,7 @@
         let dmSubscription = null;
         let selectedImg = null;
         let editingId = null;
-        let replyData = null; // Stores info about msg being replied to
+        let replyData = null;
         let isAtBottom = true;
         let isChatActive = false;
         let unreadCount = 0;
@@ -459,9 +370,13 @@
         function initApp() {
             registerUser();
             setupPresence();
-            if(currentUser.toLowerCase() === "rangreja") {
-                document.getElementById('adminBtn').classList.remove('hidden');
-                document.getElementById('adminInputArea').classList.remove('hidden');
+            const lowerName = currentUser.toLowerCase();
+            if(lowerName === "rangreja" || lowerName === "vibha") {
+                document.getElementById('adminBtn').classList.remove('hidden'); // Vibha & Rangreja see admin
+                if(lowerName === "rangreja") {
+                    document.getElementById('adminInputArea').classList.remove('hidden');
+                    document.getElementById('feedbackBtn').style.display = 'none';
+                }
                 monitorInbox();
             } else {
                 monitorInbox(); 
@@ -488,7 +403,7 @@
                 const cvs = document.getElementById('onlineCanvas');
                 const ctx = cvs.getContext('2d');
                 ctx.clearRect(0,0,120,40);
-                ctx.fillStyle = document.getElementById('checklist-view').style.display === 'flex' ? 'black' : 'white';
+                ctx.fillStyle = 'white';
                 ctx.font = 'bold 14px Inter';
                 ctx.fillText(`● ${count} Online`, 20, 25);
             });
@@ -539,7 +454,8 @@
                             updateScrollBadge();
                         }
                     } else {
-                        document.getElementById('homeUnreadBadge').style.display = 'block'; 
+                        document.getElementById('homeUnreadBadge').innerText = "+"; 
+                        document.getElementById('homeUnreadBadge').style.display = 'flex';
                     }
                 }
             });
@@ -572,7 +488,7 @@
             updateScrollBadge();
         };
 
-        // --- DM SYSTEM ---
+        // --- DM SYSTEM RESTRICTION ---
         window.openUserModal = (name) => {
             if(name === currentUser) return;
             selectedUser = name;
@@ -604,7 +520,7 @@
             document.getElementById('dm-view').style.display = 'flex';
             document.getElementById('dmTitle').innerText = selectedUser;
             
-            // Record last read time for this specific chat
+            // Mark as read instantly
             localStorage.setItem('read_' + selectedUser, Date.now());
 
             const chatId = [currentUser, selectedUser].sort().join("_");
@@ -618,13 +534,11 @@
                 list.innerHTML = "";
                 snap.forEach(d => renderMessage({id:d.id, ...d.data()}, list, true, 'private_chats', chatId));
                 list.scrollTop = list.scrollHeight;
-                
-                // Update read time on new message
+                // Update read status
                 localStorage.setItem('read_' + selectedUser, Date.now());
             });
         };
 
-        // Inbox Dot Logic
         function monitorInbox() {
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
                 let hasUnread = false;
@@ -632,11 +546,11 @@
                     const data = d.data();
                     const lastMsgTime = data.lastMsg ? data.lastMsg.toMillis() : 0;
                     const lastReadTime = parseInt(localStorage.getItem('read_' + data.name) || '0');
-                    if (lastMsgTime > lastReadTime) hasUnread = true;
+                    if(lastMsgTime > lastReadTime) hasUnread = true;
                 });
                 
                 if(hasUnread) {
-                    document.getElementById('inboxBadge').style.display = 'flex'; // Show RED DOT
+                    document.getElementById('inboxBadge').style.display = 'flex';
                 } else {
                     document.getElementById('inboxBadge').style.display = 'none';
                 }
@@ -644,11 +558,11 @@
         }
 
         window.openInbox = () => {
+            document.getElementById('inboxBadge').style.display = 'none';
             openView('list-view');
             document.getElementById('listTitle').innerText = "My Inbox";
             document.getElementById('adminTabBar').style.display = 'none';
             const list = document.getElementById("genericList");
-            
             onSnapshot(collection(db, "users", currentUser, "inbox"), (snap) => {
                 list.innerHTML = "";
                 snap.forEach(d => {
@@ -656,16 +570,16 @@
                     const div = document.createElement("div");
                     div.className = "list-item";
                     
-                    // Check Unread Status per user
                     const lastMsgTime = data.lastMsg ? data.lastMsg.toMillis() : 0;
                     const lastReadTime = parseInt(localStorage.getItem('read_' + data.name) || '0');
                     const isNew = lastMsgTime > lastReadTime;
 
                     div.innerHTML = `<b>${data.name} ${isNew ? '<span class="list-badge">New</span>' : ''}</b>`;
                     
+                    // Long press to delete Logic
                     let pressTimer;
                     div.addEventListener('touchstart', () => pressTimer = setTimeout(() => {
-                        if(confirm("Delete this chat from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
+                        if(confirm("Delete from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
                     }, 800));
                     div.addEventListener('touchend', () => clearTimeout(pressTimer));
                     div.addEventListener('contextmenu', (e) => { e.preventDefault(); if(confirm("Delete from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id)); });
@@ -676,7 +590,16 @@
             });
         };
 
-        // --- ADMIN ---
+        // --- FEEDBACK & ADMIN ---
+        window.sendFeedback = async () => {
+            const txt = document.getElementById('feedbackText').value.trim();
+            if(!txt) return;
+            await addDoc(collection(db, "feedbacks"), { text: txt, user: currentUser, createdAt: serverTimestamp() });
+            alert("Feedback Sent!");
+            document.getElementById('feedbackText').value = "";
+            goHome();
+        };
+
         window.openAdminPanel = () => {
             openView('list-view');
             document.getElementById('listTitle').innerText = "Admin Panel";
@@ -698,19 +621,20 @@
                     list.innerHTML = "";
                     snap.forEach(d => {
                         const u = d.data();
+                        // Rangreja cannot be seen/blocked in this list
                         if(u.name.toLowerCase() === "rangreja") return;
+                        
                         const div = document.createElement("div");
                         div.className = "list-item";
                         div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
                         <div>
-                            <button onclick="event.stopPropagation(); toggleBlock('${d.id}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
+                            <button onclick="event.stopPropagation(); toggleBlock('${d.id}', '${u.name}', ${u.isBlocked})" style="color:red; background:none; border:1px solid red; margin-right:5px;">${u.isBlocked?'Unblock':'Block'}</button>
                             <button onclick="event.stopPropagation(); selectedUser='${u.name}'; startDM();" style="color:cyan; background:none; border:1px solid cyan;">DM</button>
                         </div>`;
                         list.appendChild(div);
                     });
                 });
             } else {
-                // FEEDBACKS
                 onSnapshot(collection(db, "feedbacks"), (snap) => {
                     list.innerHTML = "";
                     snap.forEach(d => {
@@ -725,7 +649,11 @@
             }
         };
 
-        window.toggleBlock = async (uid, status) => { if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); };
+        window.toggleBlock = async (uid, name, status) => { 
+            // Safety Check
+            if(name.toLowerCase() === 'rangreja') return alert("Cannot block Head Admin.");
+            if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); 
+        };
 
         // --- RANGREJA VERSE ---
         function loadVerse() {
@@ -752,9 +680,11 @@
 
         // --- SHARED MESSAGE LOGIC ---
         function linkify(text) {
-            var urlRegex = /(https?:\/\/[^\s]+)/g;
+            var urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
             return text.replace(urlRegex, function(url) {
-                return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                let href = url;
+                if(!url.startsWith('http')) href = 'http://' + url;
+                return '<a href="' + href + '" target="_blank">' + url + '</a>';
             });
         }
 
@@ -768,7 +698,10 @@
             const amIVibha = currentUser.toLowerCase() === "vibha";
             const targetIsAdmin = msg.user && msg.user.toLowerCase() === "rangreja";
 
-            // Vibha Logic: Can delete others, but NOT Rangreja
+            // Delete Logic: 
+            // Me -> My Msg (Yes)
+            // Rangreja -> Anyone (Yes)
+            // Vibha -> Anyone EXCEPT Rangreja (Yes)
             let canDelete = false;
             if(isMe) canDelete = true;
             else if(amIAdmin) canDelete = true;
@@ -788,28 +721,27 @@
             if (collectionName === 'rangreja_updates') {
                 nameTag = `<span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span>`;
             } else if (!isMe) {
-                // Show Blue Tick for Rangreja OR Vibha
                 let badge = (isAdminMsg || isVibha) ? '<i class="fas fa-check-circle verified-tick"></i>' : '';
                 nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${badge}</span>`;
             }
             
-            // Reply Bubble
+            // Reply Quote
             let replyHtml = "";
             if(msg.replyTo) {
                 replyHtml = `<div class="reply-quote"><span class="reply-sender">${msg.replyTo.user}</span><span>${msg.replyTo.text}</span></div>`;
             }
 
-            // Text with Links
+            // Linkify
             let textHtml = linkify(msg.text || "");
 
             // Actions Menu
             let actions = `<div class="msg-actions">
                 ${(isMe && collectionName !== 'rangreja_updates') ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text.replace(/'/g,"\\'")}', '${collectionName}', '${chatId}')"><i class="fas fa-pen"></i></button>` : ''}
                 ${(canDelete) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', '${collectionName}', '${chatId}')"><i class="fas fa-trash"></i></button>` : ''}
-                ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyToMsg('${msg.user}', '${msg.text.replace(/'/g,"\\'")}', '${isPrivate}')"><i class="fas fa-reply"></i></button>` : ''}
+                ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyToMsg('${msg.user}', '${msg.text.replace(/'/g,"\\'")}', ${isPrivate})"><i class="fas fa-reply"></i></button>` : ''}
             </div>`;
 
-            // Long Press Logic
+            // Long Press
             let timer;
             const startPress = () => timer = setTimeout(() => { 
                 document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
@@ -831,25 +763,23 @@
             list.appendChild(div);
         }
 
-        // --- REPLY LOGIC ---
-        window.replyToMsg = (user, text, isPrivate) => {
+        // --- REPLY FUNCTION ---
+        window.replyToMsg = (user, text, isPriv) => {
             replyData = { user, text };
-            // Show preview bar
-            const barId = isPrivate ? 'dmReplyPreviewBar' : 'replyPreviewBar';
-            const userId = isPrivate ? 'dmReplyToUser' : 'replyToUser';
-            const textId = isPrivate ? 'dmReplyToText' : 'replyToText';
-            
-            document.getElementById(userId).innerText = user;
-            document.getElementById(textId).innerText = text;
+            const barId = isPriv ? 'dmReplyPreviewBar' : 'replyPreviewBar';
+            const uId = isPriv ? 'dmReplyToUser' : 'replyToUser';
+            const tId = isPriv ? 'dmReplyToText' : 'replyToText';
+            const inputId = isPriv ? 'dmMsgInput' : 'msgInput';
+
+            document.getElementById(uId).innerText = user;
+            document.getElementById(tId).innerText = text;
             document.getElementById(barId).style.display = 'flex';
-            
-            // Focus input
-            document.getElementById(isPrivate ? 'dmMsgInput' : 'msgInput').focus();
+            document.getElementById(inputId).focus();
         };
 
         window.cancelReply = () => {
             replyData = null;
-            document.querySelectorAll('.reply-preview-bar').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.reply-preview-bar').forEach(e => e.style.display = 'none');
         };
 
         window.sendMsg = async (type) => {
@@ -876,7 +806,7 @@
             let imgData = selectedImg;
             const data = { text: txt, user: currentUser, createdAt: serverTimestamp() };
             if(imgData) data.image = imgData;
-            if(replyData) data.replyTo = replyData; // Add Reply Data
+            if(replyData) data.replyTo = replyData;
 
             if(type === 'public') await addDoc(collection(db, "messages"), data);
             else {
@@ -903,16 +833,8 @@
             if(collName === 'private_chats') inputId = 'dmMsgInput';
             const input = document.getElementById(inputId);
             input.value = txt; input.focus();
-            document.querySelector(inputId === 'msgInput' ? '#sendBtn' : '#dmSendBtn').style.color = '#00e676';
-            document.querySelector(inputId === 'msgInput' ? '#editModeIndicator' : '').style.display = 'block'; // Simplified indicator
+            alert("Editing message... Press send to update.");
         };
-        
-        window.cancelEdit = () => {
-            editingId = null;
-            document.getElementById('msgInput').value = "";
-            document.getElementById('sendBtn').style.color = "#fff";
-            document.getElementById('editModeIndicator').style.display = 'none';
-        }
         
         const originalSendMsg = window.sendMsg;
         window.sendMsg = async (type) => {
@@ -921,7 +843,8 @@
                     text: document.getElementById(type==='public'?'msgInput':'dmMsgInput').value,
                     isEdited: true
                 });
-                cancelEdit();
+                editingId = null;
+                document.getElementById(type==='public'?'msgInput':'dmMsgInput').value = "";
             } else {
                 originalSendMsg(type);
             }
@@ -969,20 +892,10 @@
         window.clearImg = () => { selectedImg=null; document.getElementById('imgInput').value=''; document.getElementById('imgPreview').style.display='none'; };
         window.clearDmImg = () => { selectedImg=null; document.getElementById('dmImgInput').value=''; document.getElementById('dmImgPreview').style.display='none'; };
         window.clearVerseImg = () => { selectedImg=null; document.getElementById('verseImgInput').value=''; document.getElementById('verseImgPreview').style.display='none'; };
+        window.replyMsg = (u) => { document.getElementById('msgInput').value = `@${u} `; };
         
         document.getElementById("verseSendBtn").addEventListener("click", sendVerse);
         document.getElementById("adminSendBtn")?.addEventListener("click", sendVerse);
-
-        // Checklist
-        document.querySelectorAll('.custom-checkbox').forEach((cb, i) => {
-            const label = cb.nextElementSibling;
-            cb.checked = localStorage.getItem('cb_'+i) === 'true';
-            if(cb.checked) label.classList.add('completed-text');
-            cb.onclick = () => {
-                localStorage.setItem('cb_'+i, cb.checked);
-                label.classList.toggle('completed-text', cb.checked);
-            };
-        });
     </script>
 </body>
 </html>
