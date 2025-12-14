@@ -226,7 +226,6 @@
         <div id="scrollDownBtn" onclick="scrollToBottom()"><i class="fas fa-arrow-down"></i><span id="scrollBadge" class="scroll-badge" style="display:none;">0</span></div>
         <div class="chat-footer">
             <div id="editModeIndicator" class="edit-mode-indicator">Editing <i class="fas fa-times" onclick="cancelEdit()"></i></div>
-            
             <div id="replyPreviewBar" class="reply-preview-bar">
                 <div>
                     <span class="reply-preview-label">Replying to <span id="replyToUser">User</span></span>
@@ -234,7 +233,6 @@
                 </div>
                 <i class="fas fa-times" style="color:#aaa; cursor:pointer;" onclick="cancelReply()"></i>
             </div>
-
             <div id="imgPreview" class="preview-area"><img id="thumb"> <i class="fas fa-times" onclick="clearImg()"></i></div>
             <div class="chat-input-area">
                 <input type="file" id="imgInput" hidden accept="image/*" onchange="handleImg('public')">
@@ -260,7 +258,6 @@
                 </div>
                 <i class="fas fa-times" style="color:#aaa; cursor:pointer;" onclick="cancelReply()"></i>
             </div>
-
             <div id="dmImgPreview" class="preview-area"><img id="dmThumb"> <i class="fas fa-times" onclick="clearDmImg()"></i></div>
             <div class="chat-input-area">
                 <input type="file" id="dmImgInput" hidden accept="image/*" onchange="handleImg('private')">
@@ -360,7 +357,14 @@
         window.saveName = () => {
             const name = document.getElementById('nameInput').value.trim();
             if(!name) return;
-            if(name.toLowerCase() === "rangreja" && prompt("Admin Pass:") !== "admin123") return;
+            const lowerName = name.toLowerCase();
+            
+            if(lowerName === "rangreja") {
+                if(prompt("Admin Password:") !== "admin123") return alert("Wrong Password");
+            } else if(lowerName === "vibha") {
+                if(prompt("Vibha's Password:") !== "Vibha0001") return alert("Wrong Password");
+            }
+            
             localStorage.setItem("chatUserName", name);
             currentUser = name;
             document.getElementById('nameModal').style.display = 'none';
@@ -372,10 +376,10 @@
             setupPresence();
             const lowerName = currentUser.toLowerCase();
             if(lowerName === "rangreja" || lowerName === "vibha") {
-                document.getElementById('adminBtn').classList.remove('hidden'); // Vibha & Rangreja see admin
+                document.getElementById('adminBtn').classList.remove('hidden'); 
                 if(lowerName === "rangreja") {
                     document.getElementById('adminInputArea').classList.remove('hidden');
-                    document.getElementById('feedbackBtn').style.display = 'none';
+                    document.getElementById('feedbackBtn').style.display = 'none'; 
                 }
                 monitorInbox();
             } else {
@@ -496,7 +500,6 @@
             const iamAdmin = currentUser.toLowerCase() === "rangreja";
             const targetIsAdmin = name.toLowerCase() === "rangreja";
             
-            // STRICT PRIVACY: User can only DM Admin. Admin can DM anyone.
             if(iamAdmin || targetIsAdmin) {
                 document.getElementById('dmOption').style.display = 'block';
             } else {
@@ -520,7 +523,6 @@
             document.getElementById('dm-view').style.display = 'flex';
             document.getElementById('dmTitle').innerText = selectedUser;
             
-            // Mark as read instantly
             localStorage.setItem('read_' + selectedUser, Date.now());
 
             const chatId = [currentUser, selectedUser].sort().join("_");
@@ -534,7 +536,6 @@
                 list.innerHTML = "";
                 snap.forEach(d => renderMessage({id:d.id, ...d.data()}, list, true, 'private_chats', chatId));
                 list.scrollTop = list.scrollHeight;
-                // Update read status
                 localStorage.setItem('read_' + selectedUser, Date.now());
             });
         };
@@ -576,10 +577,9 @@
 
                     div.innerHTML = `<b>${data.name} ${isNew ? '<span class="list-badge">New</span>' : ''}</b>`;
                     
-                    // Long press to delete Logic
                     let pressTimer;
                     div.addEventListener('touchstart', () => pressTimer = setTimeout(() => {
-                        if(confirm("Delete from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
+                        if(confirm("Delete this chat from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
                     }, 800));
                     div.addEventListener('touchend', () => clearTimeout(pressTimer));
                     div.addEventListener('contextmenu', (e) => { e.preventDefault(); if(confirm("Delete from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id)); });
@@ -621,9 +621,7 @@
                     list.innerHTML = "";
                     snap.forEach(d => {
                         const u = d.data();
-                        // Rangreja cannot be seen/blocked in this list
                         if(u.name.toLowerCase() === "rangreja") return;
-                        
                         const div = document.createElement("div");
                         div.className = "list-item";
                         div.innerHTML = `<span>${u.name} ${u.isBlocked?'(🔴)':''}</span> 
@@ -650,7 +648,6 @@
         };
 
         window.toggleBlock = async (uid, name, status) => { 
-            // Safety Check
             if(name.toLowerCase() === 'rangreja') return alert("Cannot block Head Admin.");
             if(confirm("Change Status?")) await updateDoc(doc(db, "users", uid), { isBlocked: !status }); 
         };
@@ -698,16 +695,11 @@
             const amIVibha = currentUser.toLowerCase() === "vibha";
             const targetIsAdmin = msg.user && msg.user.toLowerCase() === "rangreja";
 
-            // Delete Logic: 
-            // Me -> My Msg (Yes)
-            // Rangreja -> Anyone (Yes)
-            // Vibha -> Anyone EXCEPT Rangreja (Yes)
             let canDelete = false;
             if(isMe) canDelete = true;
             else if(amIAdmin) canDelete = true;
             else if(amIVibha && !targetIsAdmin) canDelete = true;
 
-            // CSS Class
             if(collectionName === 'rangreja_updates') {
                 div.className = "message admin-post";
             } else {
@@ -716,7 +708,6 @@
             
             let imgHtml = msg.image ? `<img src="${msg.image}" class="chat-img" onclick="event.stopPropagation(); document.getElementById('imageViewer').style.display='flex'; document.getElementById('fullImage').src=this.src;">` : "";
             
-            // Name Tag
             let nameTag = "";
             if (collectionName === 'rangreja_updates') {
                 nameTag = `<span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span>`;
@@ -725,23 +716,19 @@
                 nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${badge}</span>`;
             }
             
-            // Reply Quote
             let replyHtml = "";
             if(msg.replyTo) {
                 replyHtml = `<div class="reply-quote"><span class="reply-sender">${msg.replyTo.user}</span><span>${msg.replyTo.text}</span></div>`;
             }
 
-            // Linkify
             let textHtml = linkify(msg.text || "");
 
-            // Actions Menu
             let actions = `<div class="msg-actions">
                 ${(isMe && collectionName !== 'rangreja_updates') ? `<button class="action-btn btn-edit" onclick="editMsg('${msg.id}', '${msg.text.replace(/'/g,"\\'")}', '${collectionName}', '${chatId}')"><i class="fas fa-pen"></i></button>` : ''}
                 ${(canDelete) ? `<button class="action-btn btn-del" onclick="delMsg('${msg.id}', '${collectionName}', '${chatId}')"><i class="fas fa-trash"></i></button>` : ''}
                 ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyToMsg('${msg.user}', '${msg.text.replace(/'/g,"\\'")}', ${isPrivate})"><i class="fas fa-reply"></i></button>` : ''}
             </div>`;
 
-            // Long Press
             let timer;
             const startPress = () => timer = setTimeout(() => { 
                 document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
@@ -763,7 +750,6 @@
             list.appendChild(div);
         }
 
-        // --- REPLY FUNCTION ---
         window.replyToMsg = (user, text, isPriv) => {
             replyData = { user, text };
             const barId = isPriv ? 'dmReplyPreviewBar' : 'replyPreviewBar';
