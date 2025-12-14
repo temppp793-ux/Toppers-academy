@@ -68,8 +68,6 @@
         .btn-inbox { background: linear-gradient(135deg, #2D8CFF, #0055ff); }
         .btn-syllabus { background: #eee; color: #333; }
         .btn-feedback { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
-        /* CRICKET BUTTON STYLE */
-        .btn-cricket { background: linear-gradient(135deg, #1e88e5, #1565c0); color: white; box-shadow: 0 0 15px rgba(30, 136, 229, 0.5); }
 
         /* NUMERIC BADGE */
         .notif-badge {
@@ -215,18 +213,14 @@
         <h2 class="scold-headline">"Ab tau match khtm ho gya padhle!" 😡</h2>
         
         <div class="btn-group">
-            <button class="big-btn btn-cricket" onclick="openView('cricket-view')"><i class="fas fa-tv"></i> Live Cricket 🏏</button>
-            
             <button class="big-btn btn-chat" onclick="openView('chat-view')">
                 <i class="fas fa-comments"></i> Public Chat
                 <span id="homeUnreadBadge" class="notif-badge">0</span>
             </button>
-            
             <button class="big-btn btn-inbox" onclick="openInbox()">
                 <i class="fas fa-envelope"></i> My Inbox 📩
                 <span id="inboxBadge" class="notif-badge">0</span>
             </button>
-            
             <button class="big-btn btn-verse" onclick="openView('rangreja-view')"><i class="fas fa-crown"></i> Rangreja Verse</button>
             <button id="feedbackBtn" class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
@@ -288,14 +282,6 @@
                 <button class="send-btn" id="verseSendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-    </div>
-
-    <div id="cricket-view" class="app-view">
-        <div class="chat-header">
-            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
-            <div class="header-info"><div class="chat-title">Live Cricket</div></div>
-        </div>
-        <iframe src="https://cricketstan.github.io/Willow-Cricbuzz-/" style="width:100%; height:100%; border:none;"></iframe>
     </div>
 
     <div id="list-view" class="app-view">
@@ -459,7 +445,7 @@
             if(currentUser.toLowerCase() === "rangreja") {
                 document.getElementById('adminBtn').classList.remove('hidden');
                 document.getElementById('adminInputArea').classList.remove('hidden');
-                document.getElementById('feedbackBtn').style.display = 'none'; // Admin doesn't need to send feedback
+                document.getElementById('feedbackBtn').style.display = 'none'; 
                 monitorInbox();
             } else {
                 monitorInbox(); 
@@ -537,7 +523,8 @@
                             updateScrollBadge();
                         }
                     } else {
-                        document.getElementById('homeUnreadBadge').style.display = 'flex'; // Show Green Dot
+                        document.getElementById('homeUnreadBadge').innerText = "+"; 
+                        document.getElementById('homeUnreadBadge').style.display = 'flex';
                     }
                 }
             });
@@ -578,7 +565,6 @@
             const iamAdmin = currentUser.toLowerCase() === "rangreja";
             const targetIsAdmin = name.toLowerCase() === "rangreja";
             
-            // STRICT PRIVACY: User can only DM Admin. Admin can DM anyone.
             if(iamAdmin || targetIsAdmin) {
                 document.getElementById('dmOption').style.display = 'block';
             } else {
@@ -641,7 +627,6 @@
                     div.className = "list-item";
                     div.innerHTML = `<b>${d.data().name}</b>`;
                     
-                    // Long press to delete Logic
                     let pressTimer;
                     div.addEventListener('touchstart', () => pressTimer = setTimeout(() => {
                         if(confirm("Delete this chat from inbox?")) deleteDoc(doc(db,'users',currentUser,'inbox',d.id));
@@ -755,10 +740,13 @@
             
             // Name Tag
             let nameTag = "";
+            const isVibha = msg.user && msg.user.toLowerCase() === "vibha";
+            const isVerified = isAdminMsg || isVibha;
+
             if (collectionName === 'rangreja_updates') {
                 nameTag = `<span class="sender-name">Rangreja <i class="fas fa-check-circle verified-tick"></i></span>`;
             } else if (!isMe) {
-                nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isAdminMsg ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
+                nameTag = `<span class="sender-name" onclick="openUserModal('${msg.user}')">${msg.user} ${isVerified ? '<i class="fas fa-check-circle verified-tick"></i>' : ''}</span>`;
             }
             
             // ACTIONS - ALLOW DELETE FOR RANGREJA IN VERSE TOO
@@ -768,7 +756,7 @@
                 ${collectionName !== 'rangreja_updates' ? `<button class="action-btn btn-reply" onclick="replyMsg('${msg.user}')"><i class="fas fa-reply"></i></button>` : ''}
             </div>`;
 
-            // Long Press
+            // Smart Menu Positioning
             let timer;
             const startPress = () => timer = setTimeout(() => { 
                 document.querySelectorAll('.message').forEach(m=>m.classList.remove('show-actions'));
