@@ -191,11 +191,68 @@
 
         #onlineCanvas { position: fixed; top: 15px; right: 15px; z-index: 3000; pointer-events: none; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .notification-bell { position: relative; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 5px; }
+        .notification-badge { position: absolute; top: -5px; right: -5px; background: #ff3b30; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 50%; border: 2px solid var(--header-bg); }
+
+        .notification-center {
+            position: fixed; top: 50px; right: 15px; width: 320px;
+            background: #1a1a1a; border: 1px solid var(--glass-border);
+            border-radius: 12px; z-index: 5000; display: none;
+            max-height: 400px; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .notification-center.open { display: block; animation: slideDown 0.3s ease; }
+        .notif-header { padding: 15px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .notif-header h3 { font-size: 14px; font-weight: 700; }
+        .clear-notif-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; }
+        .notification-item {
+            padding: 12px 15px; border-bottom: 1px solid #222; cursor: pointer;
+            transition: background 0.2s; display: flex; gap: 10px; align-items: flex-start;
+        }
+        .notification-item:hover { background: #222; }
+        .notification-item.unread { background: rgba(255, 64, 129, 0.1); }
+        .notif-icon { font-size: 18px; min-width: 24px; text-align: center; }
+        .notif-content { flex: 1; min-width: 0; }
+        .notif-title { font-size: 13px; font-weight: 600; color: #fff; }
+        .notif-body { font-size: 12px; color: #aaa; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .notif-time { font-size: 10px; color: #666; margin-top: 4px; }
+        .notif-empty { padding: 30px 15px; text-align: center; color: #666; font-size: 12px; }
+
+        .toast-notification {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #222; border: 1px solid var(--accent);
+            border-radius: 12px; padding: 15px 20px; color: #fff;
+            z-index: 6000; animation: slideUp 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.2);
+            max-width: 300px;
+        }
+        .toast-notification.success { border-color: #00e676; }
+        .toast-notification.error { border-color: #ff3b30; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .notification-preferences { padding: 20px; }
+        .pref-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #333; }
+        .pref-label { font-size: 14px; color: #fff; }
+        .toggle-switch { width: 50px; height: 28px; background: #333; border-radius: 14px; border: none; cursor: pointer; position: relative; transition: background 0.3s; }
+        .toggle-switch.active { background: var(--accent); }
+        .toggle-switch::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.3s; }
+        .toggle-switch.active::after { left: 24px; }
     </style>
 </head>
 <body>
 
     <canvas id="onlineCanvas" width="120" height="40"></canvas>
+
+    <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 6000;"></div>
+
+    <div id="notificationCenter" class="notification-center">
+        <div class="notif-header">
+            <h3>Notifications</h3>
+            <button class="clear-notif-btn" onclick="clearAllNotifications()">Clear All</button>
+        </div>
+        <div id="notificationsList"></div>
+    </div>
 
     <div id="imageViewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:7000; justify-content:center; align-items:center;">
         <button onclick="document.getElementById('imageViewer').style.display='none'" style="position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px;">&times;</button>
@@ -230,6 +287,7 @@
             <button id="feedbackBtn" class="big-btn btn-feedback" onclick="openView('feedback-view')">💡 Send Feedback</button>
             <button id="adminBtn" class="big-btn btn-admin hidden" onclick="openAdminPanel()"><i class="fas fa-shield-alt"></i> Admin Panel</button>
             <button class="big-btn btn-syllabus" onclick="openView('checklist-view')"><i class="fas fa-tasks"></i> Syllabus Checklist</button>
+            <button class="big-btn" style="background:linear-gradient(135deg,#17a2b8,#0c5460);" onclick="openView('settings-view')"><i class="fas fa-bell"></i> Notifications</button>
         </div>
     </div>
 
@@ -237,7 +295,10 @@
         <div class="chat-header">
             <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
             <div class="header-info"><div class="chat-title">Public Chat</div><div class="chat-status" id="onlineCount">● Loading...</div></div>
-            <div style="width:30px;"></div>
+            <button class="notification-bell" id="notifBell" onclick="toggleNotificationCenter()">
+                <i class="fas fa-bell"></i>
+                <span id="notifBadge" class="notification-badge" style="display:none;">0</span>
+            </button>
         </div>
         <div class="chat-messages" id="messagesList"></div>
         <div id="scrollDownBtn" onclick="scrollToBottom()"><i class="fas fa-arrow-down"></i><span id="scrollBadge" class="scroll-badge" style="display:none;">0</span></div>
@@ -323,6 +384,39 @@
             <h3>Tell us what features you want! 💡</h3>
             <textarea id="feedbackText" placeholder="I want this feature..."></textarea>
             <button class="big-btn btn-chat" onclick="sendFeedback()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <div id="settings-view" class="app-view">
+        <div class="chat-header">
+            <button class="back-btn" style="background:none; border:none; color:white; font-size:18px;" onclick="goHome()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-info"><div class="chat-title">Notification Settings</div></div>
+        </div>
+        <div style="flex:1; overflow-y:auto;">
+            <div class="notification-preferences">
+                <h3 style="color:#fff; margin-bottom:20px;">Push Notifications</h3>
+                <div class="pref-item">
+                    <span class="pref-label">Direct Messages</span>
+                    <button class="toggle-switch active" id="dmToggle" onclick="updatePreference('dm_notifications', this)"></button>
+                </div>
+                <div class="pref-item">
+                    <span class="pref-label">Public Chat</span>
+                    <button class="toggle-switch" id="chatToggle" onclick="updatePreference('public_chat_notifications', this)"></button>
+                </div>
+                <div class="pref-item">
+                    <span class="pref-label">Admin Updates</span>
+                    <button class="toggle-switch active" id="adminToggle" onclick="updatePreference('admin_updates', this)"></button>
+                </div>
+                <div class="pref-item">
+                    <span class="pref-label">All Notifications</span>
+                    <button class="toggle-switch active" id="pushToggle" onclick="updatePreference('push_enabled', this)"></button>
+                </div>
+                <h3 style="color:#fff; margin-top:30px; margin-bottom:20px;">Email Notifications</h3>
+                <div class="pref-item">
+                    <span class="pref-label">Email Alerts</span>
+                    <button class="toggle-switch" id="emailToggle" onclick="updatePreference('email_enabled', this)"></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -463,16 +557,17 @@
         function initApp() {
             registerUser();
             setupPresence();
+            initNotifications();
             const lowerName = currentUser.toLowerCase();
             if(lowerName === "rangreja" || lowerName === "vibha") {
-                document.getElementById('adminBtn').classList.remove('hidden'); 
+                document.getElementById('adminBtn').classList.remove('hidden');
                 if(lowerName === "rangreja") {
                     document.getElementById('adminInputArea').classList.remove('hidden');
-                    document.getElementById('feedbackBtn').style.display = 'none'; 
+                    document.getElementById('feedbackBtn').style.display = 'none';
                 }
                 monitorInbox();
             } else {
-                monitorInbox(); 
+                monitorInbox();
             }
         }
 
@@ -742,11 +837,22 @@
         };
 
         // --- RANGREJA VERSE ---
+        let lastVerseUpdate = localStorage.getItem('last_verse_' + currentUser) || 0;
         function loadVerse() {
             const q = query(collection(db, "rangreja_updates"), orderBy("createdAt", "desc"));
             onSnapshot(q, snap => {
                 const list = document.getElementById("verseList");
                 list.innerHTML = "";
+                snap.docChanges().forEach(c => {
+                    if(c.type === 'added') {
+                        const timestamp = c.doc.data().createdAt?.seconds * 1000 || Date.now();
+                        if(timestamp > lastVerseUpdate && currentUser.toLowerCase() !== "rangreja") {
+                            createNotification('update', 'New Admin Update', c.doc.data().text.substring(0, 50), 'Rangreja');
+                            lastVerseUpdate = timestamp;
+                            localStorage.setItem('last_verse_' + currentUser, timestamp);
+                        }
+                    }
+                });
                 snap.forEach(d => {
                     const msg = d.data();
                     renderMessage({id:d.id, ...msg}, list, false, 'rangreja_updates');
@@ -883,12 +989,14 @@
             if(imgData) data.image = imgData;
             if(replyData) data.replyTo = replyData;
 
-            if(type === 'public') await addDoc(collection(db, "messages"), data);
-            else {
+            if(type === 'public') {
+                await addDoc(collection(db, "messages"), data);
+            } else {
                 const id = [currentUser, selectedUser].sort().join("_");
                 await addDoc(collection(db, "private_chats", id, "messages"), data);
+                createNotification('dm', 'New Message', `${currentUser}: ${txt.substring(0, 40)}`, currentUser, {from: currentUser, to: selectedUser});
             }
-            
+
             document.getElementById(txtId).value = "";
             clearImg(); clearDmImg(); cancelReply();
         };
@@ -989,6 +1097,220 @@
                 label.classList.toggle('completed-text', cb.checked);
             };
         });
+
+        // --- NOTIFICATION SYSTEM ---
+        let notificationPreferences = {};
+        let unreadNotificationsCount = 0;
+
+        async function initNotifications() {
+            loadNotificationPreferences();
+            listenForNotifications();
+        }
+
+        function loadNotificationPreferences() {
+            const prefs = localStorage.getItem('notif_prefs_' + currentUser);
+            if(prefs) {
+                notificationPreferences = JSON.parse(prefs);
+            } else {
+                notificationPreferences = {
+                    push_enabled: true,
+                    email_enabled: false,
+                    dm_notifications: true,
+                    public_chat_notifications: false,
+                    admin_updates: true
+                };
+                saveNotificationPreferences();
+            }
+            updatePreferenceUI();
+        }
+
+        function saveNotificationPreferences() {
+            localStorage.setItem('notif_prefs_' + currentUser, JSON.stringify(notificationPreferences));
+        }
+
+        window.updatePreference = (key, btn) => {
+            notificationPreferences[key] = !notificationPreferences[key];
+            btn.classList.toggle('active', notificationPreferences[key]);
+            saveNotificationPreferences();
+            showToast('Preference updated', 'success');
+        };
+
+        function updatePreferenceUI() {
+            document.getElementById('dmToggle').classList.toggle('active', notificationPreferences.dm_notifications);
+            document.getElementById('chatToggle').classList.toggle('active', notificationPreferences.public_chat_notifications);
+            document.getElementById('adminToggle').classList.toggle('active', notificationPreferences.admin_updates);
+            document.getElementById('pushToggle').classList.toggle('active', notificationPreferences.push_enabled);
+            document.getElementById('emailToggle').classList.toggle('active', notificationPreferences.email_enabled);
+        }
+
+        function listenForNotifications() {
+            const unreadNotifications = JSON.parse(localStorage.getItem('notifications_' + currentUser) || '[]');
+            unreadNotificationsCount = unreadNotifications.length;
+            updateNotificationBadge();
+        }
+
+        function createNotification(type, title, body, fromUser = null, data = {}) {
+            const notification = {
+                id: Date.now(),
+                type,
+                title,
+                body,
+                from_user: fromUser,
+                data,
+                is_read: false,
+                created_at: new Date().toISOString()
+            };
+
+            const notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser) || '[]');
+            notifications.unshift(notification);
+            localStorage.setItem('notifications_' + currentUser, JSON.stringify(notifications.slice(0, 50)));
+
+            unreadNotificationsCount++;
+            updateNotificationBadge();
+
+            renderNotification(notification);
+            if(notificationPreferences.push_enabled) {
+                showToast(title, notification.type === 'dm' ? 'dm' : 'success');
+            }
+
+            return notification;
+        }
+
+        function renderNotification(notif) {
+            const list = document.getElementById('notificationsList');
+            if(!list) return;
+
+            const item = document.createElement('div');
+            item.className = 'notification-item' + (notif.is_read ? '' : ' unread');
+
+            let icon = '🔔';
+            if(notif.type === 'dm') icon = '💬';
+            else if(notif.type === 'update') icon = '👑';
+            else if(notif.type === 'feedback_reply') icon = '💡';
+
+            const time = new Date(notif.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+            item.innerHTML = `
+                <div class="notif-icon">${icon}</div>
+                <div class="notif-content">
+                    <div class="notif-title">${notif.title}</div>
+                    <div class="notif-body">${notif.body}</div>
+                    <div class="notif-time">${time}</div>
+                </div>
+            `;
+
+            item.onclick = () => markNotificationAsRead(notif.id, item);
+            list.insertBefore(item, list.firstChild);
+        }
+
+        function markNotificationAsRead(notifId, element) {
+            const notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser) || '[]');
+            const notif = notifications.find(n => n.id === notifId);
+            if(notif) {
+                notif.is_read = true;
+                localStorage.setItem('notifications_' + currentUser, JSON.stringify(notifications));
+                element.classList.remove('unread');
+                unreadNotificationsCount = Math.max(0, unreadNotificationsCount - 1);
+                updateNotificationBadge();
+            }
+        }
+
+        window.clearAllNotifications = () => {
+            localStorage.setItem('notifications_' + currentUser, '[]');
+            document.getElementById('notificationsList').innerHTML = '<div class="notif-empty">No notifications</div>';
+            unreadNotificationsCount = 0;
+            updateNotificationBadge();
+        };
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notifBadge');
+            if(unreadNotificationsCount > 0) {
+                badge.innerText = unreadNotificationsCount;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        window.toggleNotificationCenter = () => {
+            const center = document.getElementById('notificationCenter');
+            center.classList.toggle('open');
+
+            if(center.classList.contains('open')) {
+                const list = document.getElementById('notificationsList');
+                const notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser) || '[]');
+                list.innerHTML = '';
+                if(notifications.length === 0) {
+                    list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
+                } else {
+                    notifications.forEach(n => renderNotification(n));
+                }
+            }
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification ' + (type === 'success' ? 'success' : type === 'error' ? 'error' : 'info');
+            toast.textContent = message;
+            toast.style.marginBottom = '10px';
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Close notification center when clicking outside
+        document.addEventListener('click', (e) => {
+            const center = document.getElementById('notificationCenter');
+            const bell = document.getElementById('notifBell');
+            if(!center.contains(e.target) && !bell.contains(e.target)) {
+                center.classList.remove('open');
+            }
+        });
+
+        // --- BROWSER PUSH NOTIFICATIONS ---
+        async function registerServiceWorker() {
+            if('serviceWorker' in navigator && 'PushManager' in window) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('Service Worker registered');
+                    requestNotificationPermission();
+                } catch(err) {
+                    console.log('Service Worker registration failed:', err);
+                }
+            }
+        }
+
+        async function requestNotificationPermission() {
+            if('Notification' in window && Notification.permission === 'default') {
+                try {
+                    const permission = await Notification.requestPermission();
+                    if(permission === 'granted') {
+                        showToast('Notifications enabled', 'success');
+                    }
+                } catch(err) {
+                    console.log('Notification permission error:', err);
+                }
+            }
+        }
+
+        function sendBrowserNotification(title, options = {}) {
+            if('Notification' in window && Notification.permission === 'granted' && 'serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.showNotification(title, {
+                        icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                        badge: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                        ...options
+                    });
+                });
+            }
+        }
+
+        registerServiceWorker();
     </script>
 </body>
 </html>
